@@ -1,0 +1,45 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="section" style="padding-top: 9rem;">
+  <div class="container">
+    <div class="section-header reveal-on-scroll">
+      <span class="badge badge-purple"><i data-lucide="help-circle"></i> Help Center</span>
+      <h1 class="section-title">Frequently Asked Questions</h1>
+      <p style="font-size: 1.25rem;">
+        Find fast answers regarding Beyounge app installation, AI workout coach, nutrition camera scanner, and privacy.
+      </p>
+    </div>
+
+    <!-- Live Search Input -->
+    <div class="search-box reveal-on-scroll">
+      <i data-lucide="search" class="search-icon"></i>
+      <input type="text" id="faqSearchInput" placeholder="Search questions (e.g. offline, refund, AI coach, calories)..." class="search-input">
+    </div>
+
+    <div class="faq-list">
+      <% faqs.forEach((faq, index) => { %>
+        <div class="faq-item <%= index === 0 ? 'active' : '' %>">
+          <button class="faq-question">
+            <span><%= faq.q %></span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p><%= faq.a %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div style="text-align: center; margin-top: 4rem;" class="reveal-on-scroll">
+      <h3>Still have questions?</h3>
+      <p style="margin-bottom: 1.5rem;">Our customer support team is available 24/7 to assist you.</p>
+      <a href="/contact" class="btn btn-primary">
+        <i data-lucide="mail"></i>
+        <span>Contact Customer Support</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

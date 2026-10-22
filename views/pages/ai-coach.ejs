@@ -1,0 +1,69 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="section" style="padding-top: 9rem;">
+  <div class="container">
+    <div class="section-header reveal-on-scroll">
+      <span class="badge badge-purple"><i data-lucide="cpu"></i> AI Coach Technology</span>
+      <h1 class="section-title">The Most Intelligent Fitness Engine Ever Built</h1>
+      <p style="font-size: 1.25rem;">
+        Beyounge AI Coach analyzes over 20 biometric and mechanical data points to optimize your physical adaptations in real time.
+      </p>
+    </div>
+
+    <!-- AI Pillars -->
+    <div class="grid-2" style="margin-bottom: 4rem;">
+      <div class="glass-card reveal-on-scroll">
+        <div class="feature-icon-box feature-icon-purple"><i data-lucide="zap"></i></div>
+        <h3>Adaptive Periodization</h3>
+        <p>Traditional programs stay static for 8-12 weeks regardless of how your body responds. Beyounge adjusts weight, set volume, and exercise selection after every single set you complete.</p>
+      </div>
+
+      <div class="glass-card reveal-on-scroll">
+        <div class="feature-icon-box"><i data-lucide="activity"></i></div>
+        <h3>Biometric Readiness Score</h3>
+        <p>By connecting with Android Health Connect, Beyounge monitors sleep duration, Heart Rate Variability (HRV), and resting heart rate to score your central nervous system readiness each morning.</p>
+      </div>
+
+      <div class="glass-card reveal-on-scroll">
+        <div class="feature-icon-box feature-icon-cyan"><i data-lucide="shield-alert"></i></div>
+        <h3>Joint Health & Injury Prevention</h3>
+        <p>If you report shoulder or lower back tightness, Beyounge automatically swaps high-impact movements (like overhead press) with joint-friendly dumbbell equivalents.</p>
+      </div>
+
+      <div class="glass-card reveal-on-scroll">
+        <div class="feature-icon-box feature-icon-coral"><i data-lucide="trending-up"></i></div>
+        <h3>PR Prediction Model</h3>
+        <p>Predict your future 1-Rep Max benchmarks based on velocity loss and multi-set rep endurance data with high statistical accuracy.</p>
+      </div>
+    </div>
+
+    <!-- Embedded AI Demo Widget -->
+    <div class="ai-demo-card reveal-on-scroll" style="margin-bottom: 4rem;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span class="badge badge-emerald" style="margin-bottom: 0.5rem;">Live Playground</span>
+        <h2>Test the AI Coach Right Now</h2>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Ask any workout or nutrition question to receive an instant live AI recommendation.</p>
+      </div>
+
+      <form id="aiCoachDemoForm" style="max-width: 700px; margin: 0 auto;">
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <input type="text" name="prompt" placeholder="e.g. How do I break through a bench press plateau?" required class="input-custom" style="min-width: 280px;">
+          <button type="submit" class="btn btn-primary btn-glow">
+            <i data-lucide="sparkles"></i>
+            <span>Ask AI Coach</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="ai-response-box" id="aiCoachResponseBox" style="max-width: 700px; margin: 1.5rem auto 0 auto;">
+        <div style="color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="bot"></i> Ready for your input!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta') %>
+<%- include('../partials/footer') %>

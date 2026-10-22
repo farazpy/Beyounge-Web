@@ -1,0 +1,8 @@
+{
+  "name": "Beyounge Web - Live",
+  "description": "AI-powered workouts, nutrition, wellness, progress tracking, and fitness community in one app.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

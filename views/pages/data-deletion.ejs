@@ -1,0 +1,72 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="section" style="padding-top: 9rem;">
+  <div class="container container-narrow">
+    <div class="section-header reveal-on-scroll">
+      <span class="badge badge-coral"><i data-lucide="trash-2"></i> GDPR Compliance</span>
+      <h1 class="section-title">Data Deletion Request</h1>
+      <p style="font-size: 1.15rem;">
+        Explain how you can request permanent removal of your account, workout records, biometrics, and photos.
+      </p>
+    </div>
+
+    <div class="glass-card prose reveal-on-scroll" style="margin-bottom: 2.5rem;">
+      <h2>How Data Deletion Works</h2>
+      <p>When a data deletion request is completed, the following data is <strong>permanently removed</strong> from our cloud production databases within 14 business days:</p>
+      <ul>
+        <li>Your user account profile, email address, and authentication tokens</li>
+        <li>All historical workout logs, set volume, PRs, and exercise notes</li>
+        <li>All meal photographs and nutritional scan records</li>
+        <li>Body weight logs, body fat measurements, and progress photos</li>
+        <li>Social feed posts, comments, and challenge leaderboard entries</li>
+      </ul>
+    </div>
+
+    <!-- Data Deletion Interactive Form -->
+    <div class="glass-card reveal-on-scroll">
+      <h3 style="margin-bottom: 1.25rem;">Submit Account Deletion Request</h3>
+
+      <div id="deletionSuccessBox" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--primary-emerald); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; color: var(--text-primary);">
+        <h4 style="color: #34D399; margin-bottom: 0.25rem;">✓ Request Submitted Successfully</h4>
+        <p style="font-size: 0.9rem;">We have logged your request. A confirmation verification email has been dispatched to your address.</p>
+      </div>
+
+      <form id="dataDeletionForm">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="fullName" required placeholder="John Doe" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Account Email Address *</label>
+          <input type="email" name="email" required placeholder="john@example.com" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Beyounge Username (Optional)</label>
+          <input type="text" name="accountUsername" placeholder="@johndoe" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Reason for Leaving (Optional)</label>
+          <textarea name="reason" placeholder="Help us improve Beyounge..." class="form-textarea" style="min-height: 90px;"></textarea>
+        </div>
+
+        <div class="form-group" style="flex-direction: row; align-items: flex-start; gap: 0.75rem;">
+          <input type="checkbox" name="confirmCheck" required id="confirmCheck" style="margin-top: 0.35rem; width: 18px; height: 18px; accent-color: var(--primary-emerald);">
+          <label for="confirmCheck" style="font-size: 0.875rem; color: var(--text-secondary);">
+            I understand that submitting this request will permanently erase all my workout logs, personal records, and biometrics. This action cannot be reversed. *
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-glow" style="width: 100%; background: var(--primary-emerald); color: #FFFFFF;">
+          <i data-lucide="trash-2"></i>
+          <span>Confirm Permanent Data Deletion Request</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

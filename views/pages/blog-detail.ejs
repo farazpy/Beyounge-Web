@@ -1,0 +1,57 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="section" style="padding-top: 9rem;">
+  <div class="container container-narrow">
+    <a href="/blog" class="btn btn-secondary btn-sm" style="margin-bottom: 2rem;">
+      <i data-lucide="arrow-left"></i> Back to All Articles
+    </a>
+
+    <div class="blog-card-meta" style="margin-bottom: 1rem;">
+      <span class="badge badge-emerald"><%= post.category %></span>
+      <span><%= post.readTime %></span>
+      <span>• <%= post.publishedDate %></span>
+    </div>
+
+    <h1 style="font-size: clamp(2rem, 4vw, 3.25rem); margin-bottom: 1.5rem; line-height: 1.15;">
+      <%= post.title %>
+    </h1>
+
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+      <div class="avatar-circle" style="background: var(--primary-emerald); color: #022C22; width: 44px; height: 44px; font-weight: 800;">
+        <%= post.author.name.charAt(0) %>
+      </div>
+      <div>
+        <div style="font-weight: 700; color: var(--text-primary);"><%= post.author.name %></div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);"><%= post.author.role %></div>
+      </div>
+    </div>
+
+    <!-- Article Body Prose -->
+    <div class="glass-card prose" style="padding: 3rem; border-radius: var(--radius-xl);">
+      <%- post.content %>
+    </div>
+
+    <!-- Related Articles -->
+    <% if (relatedPosts && relatedPosts.length > 0) { %>
+      <div style="margin-top: 5rem;">
+        <h3 style="margin-bottom: 2rem;">Related Articles</h3>
+        <div class="blog-grid">
+          <% relatedPosts.forEach(rel => { %>
+            <div class="glass-card blog-card">
+              <span class="badge badge-purple" style="font-size: 0.65rem; width: fit-content; margin-bottom: 0.5rem;"><%= rel.category %></span>
+              <h4 style="margin-bottom: 0.5rem;"><%= rel.title %></h4>
+              <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;"><%= rel.excerpt %></p>
+              <a href="/blog/<%= rel.slug %>" style="color: var(--primary-emerald); font-size: 0.875rem; font-weight: 600; margin-top: auto;">
+                Read Article →
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/cta') %>
+<%- include('../partials/footer') %>

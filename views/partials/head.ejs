@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="<%= process.env.APP_URL || '' %><%= canonical %>">
+
+  <!-- OpenGraph Meta Tags -->
+  <meta property="og:site_name" content="Beyounge">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= description %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= process.env.APP_URL || '' %><%= canonical %>">
+  <meta property="og:image" content="<%= process.env.APP_URL || '' %>/images/og-beyounge.png">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= title %>">
+  <meta name="twitter:description" content="<%= description %>">
+  <meta name="twitter:image" content="<%= process.env.APP_URL || '' %>/images/og-beyounge.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Ambient Glassmorphism Backdrop Glowing Orbs -->
+  <div class="ambient-glow ambient-emerald"></div>
+  <div class="ambient-glow ambient-purple"></div>
+  <div class="ambient-glow ambient-cyan"></div>

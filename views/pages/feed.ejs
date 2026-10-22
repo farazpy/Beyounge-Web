@@ -1,0 +1,151 @@
+<%- include('../partials/head') %>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <main style="padding-top: 100px; padding-bottom: 80px; background-color: var(--bg-surface);">
+    
+    <!-- Hero / Intro -->
+    <section class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
+      <div class="container container-narrow">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <h1 style="margin-bottom: 0.5rem;">Community <span class="gradient-text">Feed</span></h1>
+          <p>Discover real-time workouts, nutrition updates, and fitness reels from the Beyounge community.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reels Section -->
+    <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+      <div class="container container-narrow">
+        <h3 style="font-size: 1.25rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="play-circle" style="color: var(--primary-emerald);"></i> Trending Reels
+        </h3>
+        
+        <!-- Horizontal Scrollable Reels Container -->
+        <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;" class="hide-scrollbar">
+          <% reels.forEach(reel => { %>
+            <div style="flex: 0 0 160px; height: 280px; position: relative; border-radius: var(--radius-md); overflow: hidden; scroll-snap-align: start;  cursor: pointer;" class="reel-card">
+              <img src="<%= reel.video %>" alt="Reel by <%= reel.user %>" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" class="reel-thumbnail">
+              <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); pointer-events: none;"></div>
+              
+              <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; color: white;">
+                <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.2rem;">
+                  <img src="<%= reel.avatar %>" alt="<%= reel.user %>" style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid white;">
+                  <span style="font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= reel.user %></span>
+                </div>
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 0.2rem;">
+                  <i data-lucide="eye" style="width: 12px; height: 12px;"></i> <%= reel.views %>
+                </div>
+              </div>
+
+              <!-- Play Button Overlay -->
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;" class="reel-play-overlay">
+                 <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.3);  display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="play" style="color: white; width: 20px; height: 20px; margin-left: 2px;"></i>
+                 </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feed Posts Section -->
+    <section class="section" style="padding-top: 1rem;">
+      <div class="container container-narrow">
+        <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="message-square" style="color: var(--primary-emerald);"></i> Latest Posts
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          <% posts.forEach(post => { %>
+            <div class="glass-card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+              
+              <!-- Post Header -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <h4 style="font-size: 1rem; margin: 0;"><%= post.user.name %></h4>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><%= post.user.handle %> • <%= post.time %></span>
+                  </div>
+                </div>
+                <button style="background: none; border: none; color: var(--text-muted); cursor: pointer;"><i data-lucide="more-horizontal"></i></button>
+              </div>
+
+              <!-- Post Content -->
+              <div style="margin-bottom: 1rem;">
+                <p style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.05rem;"><%= post.content %></p>
+                <% if(post.image) { %>
+                  <div style="border-radius: var(--radius-md); overflow: hidden; max-height: 400px;">
+                    <img src="<%= post.image %>" alt="Post Image" style="width: 100%; height: auto; object-fit: cover; display: block;">
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Post Actions -->
+              <div style="display: flex; align-items: center; gap: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem; color: var(--text-muted);">
+                <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s;">
+                  <i data-lucide="heart" style="width: 20px; height: 20px;"></i> <span><%= post.likes %></span>
+                </button>
+                <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s;">
+                  <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i> <span><%= post.comments %></span>
+                </button>
+                <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s; margin-left: auto;">
+                  <i data-lucide="share-2" style="width: 20px; height: 20px;"></i>
+                </button>
+              </div>
+            </div>
+          <% }); %>
+          
+          <div class="glass-card" style="text-align: center; padding: 3rem 2rem; margin-top: 2rem; border: 1px solid var(--border-subtle); background: #F8FAFC;">
+            <div style="width: 60px; height: 60px; background: #ECFDF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+              <i data-lucide="smartphone" style="color: var(--primary-emerald); width: 30px; height: 30px;"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Unlock the Full Experience</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+              Download the Beyounge app to see more posts, track your macros, and get personalized AI coaching.
+            </p>
+            <a href="/download" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
+              Download App Now
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <style>
+    /* Custom Hide Scrollbar */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .reel-card:hover .reel-thumbnail {
+      transform: scale(1.05);
+    }
+    .reel-card:hover .reel-play-overlay {
+      opacity: 1 !important;
+    }
+
+    .post-action-btn:hover {
+      color: var(--primary-emerald) !important;
+    }
+  </style>
+
+  <%- include('../partials/footer') %>
+
+  <!-- Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="section" style="padding-top: 9rem;">
+  <div class="container container-narrow">
+    <div class="section-header reveal-on-scroll">
+      <span class="badge badge-emerald"><i data-lucide="git-commit"></i> Product Evolution</span>
+      <h1 class="section-title">Changelog & Updates</h1>
+      <p style="font-size: 1.15rem;">
+        Follow our rapid release cadence as we continuously improve Beyounge on Android.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <% changelog.forEach((item, idx) => { %>
+        <div class="timeline-item reveal-on-scroll">
+          <div class="timeline-dot" style="<%= idx > 0 ? 'background: var(--accent-cyan); ' : '' %>"></div>
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
+            <span class="badge badge-emerald"><%= item.version %></span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);"><%= item.date %></span>
+          </div>
+          <h2 style="font-size: 1.5rem; margin-bottom: 1rem;"><%= item.title %></h2>
+          <div class="glass-card">
+            <ul style="padding-left: 1.25rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.5rem;">
+              <% item.highlights.forEach(h => { %>
+                <li><%= h %></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

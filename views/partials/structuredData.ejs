@@ -1,0 +1,27 @@
+<!-- Structured Data JSON-LD for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Beyounge",
+  "operatingSystem": "Android",
+  "applicationCategory": "HealthAndFitnessApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "<%= description %>",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "12840"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Beyounge Technologies Inc.",
+    "url": "<%= process.env.APP_URL || 'https://beyounge.app' %>",
+    "logo": "<%= process.env.APP_URL || 'https://beyounge.app' %>/images/favicon.svg"
+  }
+}
+</script>
