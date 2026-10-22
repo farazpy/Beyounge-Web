@@ -95,225 +95,182 @@ const DEFAULT_CAREERS = [
   { id: 'job-3', title: 'Head of Growth & Performance Marketing', location: 'Remote / London', type: 'Full-time', department: 'Marketing', description: 'Drive user acquisition across Google Play, organic SEO, influencer partnerships, and viral community referral loops.' }
 ];
 
-// Query real feed posts from existing 'posts' table filtered by postType column
-async function getDbPosts(limit: number = 5) {
+// Fetch Main Feed Posts using the exact MySQL schema
+async function getDbPosts(limit: number = 20) {
   try {
+    const safeLimit = Math.max(1, Math.min(100, Number(limit) || 20));
     const rows: any = await query(`
-      SELECT p.id, p.content, p.imageUrl, p.image, p.postType, p.timestamp, p.time_ago,
-             COALESCE(p.likes, 0) AS likes, COALESCE(p.comments, 0) AS comments,
-             COALESCE(u.displayName, u.full_name, u.username, 'Beyounge Member') AS name,
-             COALESCE(u.username, u.handle, 'beyounge') AS handle,
-             COALESCE(u.photoUrl, u.avatar, 'https://i.pravatar.cc/150') AS avatar
+      SELECT 
+          p.id, p.userId, p.content, p.imageUrl, p.videoUrl, p.coverImageUrl, 
+          p.postType, p.privacy, p.tags, p.timestamp,
+          u.username, u.displayName, u.photoUrl, u.is_verified,
+          (SELECT COUNT(*) FROM post_likes WHERE postId = p.id) AS likeCount,
+          (SELECT COUNT(*) FROM post_comments WHERE postId = p.id) AS commentCount,
+          (SELECT COUNT(*) FROM post_shares WHERE postId = p.id) AS shareCount
       FROM posts p
-      LEFT JOIN users u ON p.userId = u.uid
-      WHERE p.postType IS NULL OR p.postType = 'post' OR p.postType != 'reel'
-      ORDER BY p.timestamp DESC, p.id DESC
-      LIMIT ?
-    `, [limit]);
+      JOIN users u ON p.userId = u.uid
+      WHERE p.postType = 'post' AND p.privacy = 'public'
+      ORDER BY p.timestamp DESC
+      LIMIT ${safeLimit} OFFSET 0
+    `);
 
     if (Array.isArray(rows) && rows.length > 0) {
       return rows.map((r: any) => {
-        const handleStr = r.handle ? (r.handle.startsWith('@') ? r.handle : `@${r.handle}`) : '@beyounge';
+        const rawUsername = r.username || r.displayName || r.userId || 'user';
+        const handleStr = rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`;
         return {
           id: String(r.id),
+          userId: String(r.userId),
           user: {
-            name: r.name || 'Beyounge Member',
+            name: r.displayName || r.username || 'User',
             handle: handleStr,
-            avatar: r.avatar || 'https://i.pravatar.cc/150'
+            avatar: r.photoUrl || '',
+            isVerified: Boolean(r.is_verified)
           },
-          time: formatTimeAgo(r.timestamp, r.time_ago),
-          content: r.content || 'Sharing fitness progress with the Beyounge community!',
-          image: r.imageUrl || r.image || null,
-          likes: Number(r.likes || 0),
-          comments: Number(r.comments || 0)
+          time: formatTimeAgo(r.timestamp),
+          content: r.content || '',
+          image: r.imageUrl || r.coverImageUrl || null,
+          videoUrl: r.videoUrl || null,
+          tags: r.tags || '',
+          likes: Number(r.likeCount || 0),
+          comments: Number(r.commentCount || 0),
+          shares: Number(r.shareCount || 0)
         };
       });
     }
   } catch (err: any) {
-    console.log('Notice querying posts from MySQL:', err?.message || err);
+    console.error('Error querying posts from MySQL:', err?.message || err);
   }
   return [];
 }
 
-// Query real reels from existing 'posts' table using postType column
-async function getDbReels() {
+// Fetch Reels Feed using the exact MySQL schema
+async function getDbReels(limit: number = 10) {
   try {
+    const safeLimit = Math.max(1, Math.min(50, Number(limit) || 10));
     const rows: any = await query(`
-      SELECT p.id, p.content, p.imageUrl, p.videoUrl, p.postType, p.timestamp,
-             COALESCE(u.username, u.handle, 'beyounge') AS user,
-             COALESCE(u.photoUrl, u.avatar, 'https://i.pravatar.cc/150') AS avatar
+      SELECT 
+          p.id, p.userId, p.content, p.videoUrl, p.coverImageUrl, p.imageUrl, p.timestamp,
+          u.username, u.displayName, u.photoUrl, u.is_verified,
+          (SELECT COUNT(*) FROM post_likes WHERE postId = p.id) AS likeCount,
+          (SELECT COUNT(*) FROM post_comments WHERE postId = p.id) AS commentCount,
+          (SELECT COUNT(*) FROM post_shares WHERE postId = p.id) AS shareCount
       FROM posts p
-      LEFT JOIN users u ON p.userId = u.uid
-      WHERE p.postType = 'reel' OR p.postType = 'video' OR (p.videoUrl IS NOT NULL AND p.videoUrl != '')
-      ORDER BY p.timestamp DESC, p.id DESC
+      JOIN users u ON p.userId = u.uid
+      WHERE p.postType = 'reel'
+      ORDER BY p.timestamp DESC
+      LIMIT ${safeLimit}
     `);
 
     if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((r: any) => ({
-        id: String(r.id),
-        user: r.user ? (r.user.startsWith('@') ? r.user : `@${r.user}`) : '@beyounge',
-        avatar: r.avatar || 'https://i.pravatar.cc/150',
-        video: r.videoUrl || r.imageUrl || 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80',
-        views: '12K'
-      }));
+      return rows.map((r: any) => {
+        const rawUsername = r.username || r.displayName || r.userId || 'user';
+        const handleStr = rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`;
+        return {
+          id: String(r.id),
+          userId: String(r.userId),
+          user: handleStr,
+          displayName: r.displayName || r.username || 'User',
+          avatar: r.photoUrl || '',
+          isVerified: Boolean(r.is_verified),
+          content: r.content || '',
+          videoUrl: r.videoUrl || '',
+          video: r.coverImageUrl || r.imageUrl || r.videoUrl || '',
+          likes: Number(r.likeCount || 0),
+          comments: Number(r.commentCount || 0),
+          shares: Number(r.shareCount || 0)
+        };
+      });
     }
   } catch (err: any) {
-    console.log('Notice querying reels from MySQL:', err?.message || err);
+    console.error('Error querying reels from MySQL:', err?.message || err);
   }
+  return [];
+}
 
-  // Fallback reels dataset if no post items with postType='reel' exist
-  return [
-    {
-      id: 'reel-1',
-      user: '@sarah_fit',
-      avatar: 'https://i.pravatar.cc/150?u=sarah',
-      video: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80',
-      views: '12.4K'
-    },
-    {
-      id: 'reel-2',
-      user: '@mike_lifts',
-      avatar: 'https://i.pravatar.cc/150?u=mike',
-      video: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80',
-      views: '8.5K'
-    },
-    {
-      id: 'reel-3',
-      user: '@emma_yoga',
-      avatar: 'https://i.pravatar.cc/150?u=emma',
-      video: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80',
-      views: '24.1K'
+// Fetch Top / Discoverable Users from the 'users' table using the exact MySQL schema
+async function getDbUsers(limit: number = 10) {
+  try {
+    const safeLimit = Math.max(1, Math.min(50, Number(limit) || 10));
+    const rows: any = await query(`
+      SELECT 
+          u.uid, u.username, u.displayName, u.photoUrl, u.is_verified, u.bio, u.fitnessGoal, u.role,
+          (SELECT COUNT(*) FROM workouts WHERE userId = u.uid) AS totalWorkouts,
+          (SELECT COUNT(*) FROM user_follows WHERE followingId = u.uid) AS followerCount
+      FROM users u
+      ORDER BY totalWorkouts DESC, followerCount DESC
+      LIMIT ${safeLimit}
+    `);
+
+    if (Array.isArray(rows) && rows.length > 0) {
+      return rows.map((r: any) => {
+        const rawUsername = r.username || r.displayName || r.uid;
+        return {
+          uid: String(r.uid),
+          username: rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`,
+          displayName: r.displayName || r.username || 'Member',
+          photoUrl: r.photoUrl || '',
+          isVerified: Boolean(r.is_verified),
+          bio: r.bio || '',
+          fitnessGoal: r.fitnessGoal || r.role || 'Member',
+          totalWorkouts: Number(r.totalWorkouts || 0),
+          followerCount: Number(r.followerCount || 0)
+        };
+      });
     }
-  ];
+  } catch (err: any) {
+    console.error('Error querying users from MySQL:', err?.message || err);
+  }
+  return [];
 }
 
 async function getDbBlogPosts(limit?: number) {
-  try {
-    const sql = limit 
-      ? `SELECT * FROM blog_posts ORDER BY id ASC LIMIT ${limit}`
-      : `SELECT * FROM blog_posts ORDER BY id ASC`;
-    const rows: any = await query(sql);
-
-    if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((r: any) => ({
-        id: String(r.id),
-        slug: r.slug,
-        title: r.title,
-        excerpt: r.excerpt,
-        category: r.category,
-        readTime: r.read_time,
-        publishedDate: r.published_date,
-        author: { name: r.author_name, role: r.author_role, avatar: r.author_avatar },
-        image: r.image,
-        content: r.content
-      }));
-    }
-  } catch {
-    // Return default blog array if blog_posts table does not exist
-  }
   return limit ? DEFAULT_BLOGS.slice(0, limit) : DEFAULT_BLOGS;
 }
 
 async function getDbBlogPostBySlug(slug: string) {
-  try {
-    const rows: any = await query(`SELECT * FROM blog_posts WHERE slug = ? LIMIT 1`, [slug]);
-    if (Array.isArray(rows) && rows.length > 0) {
-      const r = rows[0];
-      return {
-        id: String(r.id),
-        slug: r.slug,
-        title: r.title,
-        excerpt: r.excerpt,
-        category: r.category,
-        readTime: r.read_time,
-        publishedDate: r.published_date,
-        author: { name: r.author_name, role: r.author_role, avatar: r.author_avatar },
-        image: r.image,
-        content: r.content
-      };
-    }
-  } catch {
-    // Fallback to searching local dataset
-  }
   return DEFAULT_BLOGS.find(b => b.slug === slug) || null;
 }
 
 async function getDbFaqs() {
-  try {
-    const rows: any = await query(`SELECT question AS q, answer AS a FROM faqs ORDER BY display_order ASC, id ASC`);
-    if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((r: any) => ({ q: r.q, a: r.a }));
-    }
-  } catch {
-    // Return default FAQs array if faqs table does not exist
-  }
   return DEFAULT_FAQS;
 }
 
 async function getDbChangelog() {
-  try {
-    const rows: any = await query(`SELECT version, date, title, highlights_json FROM changelog_items ORDER BY id ASC`);
-    if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((r: any) => {
-        let highlights = [];
-        try {
-          highlights = typeof r.highlights_json === 'string' ? JSON.parse(r.highlights_json) : r.highlights_json;
-        } catch {
-          highlights = [];
-        }
-        return {
-          version: r.version,
-          date: r.date,
-          title: r.title,
-          highlights
-        };
-      });
-    }
-  } catch {
-    // Return default changelog if table does not exist
-  }
   return DEFAULT_CHANGELOG;
 }
 
 async function getDbCareers() {
-  try {
-    const rows: any = await query(`SELECT id, title, location, type, department, description FROM career_openings ORDER BY id ASC`);
-    if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((r: any) => ({
-        id: String(r.id),
-        title: r.title,
-        location: r.location,
-        type: r.type,
-        department: r.department,
-        description: r.description
-      }));
-    }
-  } catch {
-    // Return default career openings if table does not exist
-  }
   return DEFAULT_CAREERS;
 }
 
 // Controller methods fetching real MySQL data
 export const pageController = {
   getFeed: async (req: Request, res: Response) => {
-    const posts = await getDbPosts(5);
-    const reels = await getDbReels();
+    const [posts, reels, users] = await Promise.all([
+      getDbPosts(20),
+      getDbReels(10),
+      getDbUsers(10)
+    ]);
     res.render('pages/feed', {
       title: 'Community Feed | Beyounge',
       description: 'See what the Beyounge community is up to. Discover real workouts, recipes, and motivation.',
       canonical: '/feed',
       pageName: 'feed',
       posts,
-      reels
+      reels,
+      users
     });
   },
 
   getHome: async (req: Request, res: Response) => {
-    const posts = await getDbPosts(5);
-    const reels = await getDbReels();
-    const faqs = await getDbFaqs();
-    const recentBlogs = await getDbBlogPosts(3);
+    const [posts, reels, users, faqs, recentBlogs] = await Promise.all([
+      getDbPosts(20),
+      getDbReels(10),
+      getDbUsers(10),
+      getDbFaqs(),
+      getDbBlogPosts(3)
+    ]);
     res.render('pages/index', {
       title: 'Beyounge - AI Fitness, Workouts & Wellness Platform',
       description: 'Beyounge is an AI-powered fitness app with personalized workouts, macro nutrition tracking, personal record analytics, and community challenges.',
@@ -322,7 +279,8 @@ export const pageController = {
       faqs,
       recentBlogs,
       posts,
-      reels
+      reels,
+      users
     });
   },
 
