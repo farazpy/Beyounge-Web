@@ -1,0 +1,164 @@
+<%- include('../partials/head') %>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <main style="padding-top: 100px; padding-bottom: 80px; background-color: var(--bg-surface); min-height: 100vh;">
+    <div class="container container-narrow">
+      
+      <div style="margin-bottom: 2rem;">
+        <a href="/feed" class="sidebar-link" style="display: inline-flex; width: auto; margin-bottom: 1.5rem;">
+          <i data-lucide="arrow-left"></i> Back to Feed
+        </a>
+      </div>
+
+      <div class="glass-card post-card" style="padding: 2rem; border-radius: 24px;">
+        <!-- Post Header -->
+        <div class="post-header">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <% if (post.user.avatar) { %>
+              <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" class="post-avatar" style="width: 56px; height: 56px;">
+            <% } else { %>
+              <div class="post-avatar" style="width: 56px; height: 56px; background: var(--primary-emerald); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">
+                <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
+              </div>
+            <% } %>
+            <div>
+              <h1 style="font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 0.4rem; color: var(--text-primary);">
+                <%= post.user.name %>
+                <% if (post.user.isVerified) { %>
+                  <i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--primary-emerald);"></i>
+                <% } %>
+              </h1>
+              <span class="post-meta" style="font-size: 0.95rem;"><%= post.user.handle %> • <%= post.time %></span>
+            </div>
+          </div>
+          <button class="icon-btn"><i data-lucide="more-horizontal"></i></button>
+        </div>
+
+        <!-- Post Content -->
+        <div style="margin: 1.5rem 0;">
+          <% if (post.content) { %>
+            <p class="post-text" style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 1.5rem;"><%= post.content %></p>
+          <% } %>
+          
+          <% if (post.postType === 'reel' && post.videoUrl) { %>
+            <div style="border-radius: 20px; overflow: hidden; background: #000; position: relative; aspect-ratio: 9/16; max-height: 70vh; margin: 0 auto;">
+              <video src="<%= post.videoUrl %>" controls autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+            </div>
+          <% } else if (post.image) { %>
+            <div class="post-image-container" style="border-radius: 20px; overflow: hidden;">
+              <img src="<%= post.image %>" alt="Post Image" class="post-image" style="max-height: none;">
+            </div>
+          <% } %>
+        </div>
+
+        <% if (post.tags) { %>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <% post.tags.split(',').forEach(tag => { %>
+              <span style="padding: 0.35rem 0.85rem; background: rgba(16, 185, 129, 0.1); color: var(--primary-emerald); font-size: 0.85rem; border-radius: 20px; font-weight: 600;">
+                #<%= tag.trim() %>
+              </span>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <!-- Post Actions -->
+        <div class="post-actions" style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; margin-top: 1.5rem;">
+          <button class="post-action-btn" style="font-size: 1.05rem;">
+            <i data-lucide="heart" style="width: 24px; height: 24px;"></i> <span><%= post.likes %></span>
+          </button>
+          <button class="post-action-btn" style="font-size: 1.05rem;">
+            <i data-lucide="message-circle" style="width: 24px; height: 24px;"></i> <span><%= post.comments %></span>
+          </button>
+          <button class="post-action-btn" style="margin-left: auto; font-size: 1.05rem;">
+            <i data-lucide="share-2" style="width: 24px; height: 24px;"></i> <span><%= post.shares %></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card" style="text-align: center; padding: 3rem 2rem; margin-top: 3rem; border: 1px solid var(--border-subtle); background: #F8FAFC; border-radius: 24px;">
+        <div style="width: 60px; height: 60px; background: #ECFDF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+          <i data-lucide="smartphone" style="color: var(--primary-emerald); width: 30px; height: 30px;"></i>
+        </div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Join the Conversation</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+          Download the Beyounge app to like, comment, and share with your fitness community.
+        </p>
+        <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
+          Download App Now
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <style>
+    .container-narrow {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .post-card {
+      background: white;
+      border: 1px solid var(--border-subtle);
+    }
+    .post-avatar {
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .post-meta {
+      color: var(--text-muted);
+    }
+    .post-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .post-action-btn:hover {
+      color: var(--primary-emerald);
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+      text-decoration: none;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .sidebar-link i {
+      color: var(--primary-emerald);
+      width: 20px;
+      height: 20px;
+    }
+    .sidebar-link:hover {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--primary-emerald);
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+  </style>
+
+  <%- include('../partials/footer') %>
+
+  <!-- Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

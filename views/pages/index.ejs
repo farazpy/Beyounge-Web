@@ -14,7 +14,7 @@
                <h2 style="font-size: 1.4rem; margin: 0;">Beyounge</h2>
             </div>
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Your ultimate AI-powered fitness, nutrition, and wellness community.</p>
-            <a href="/download" class="btn btn-primary" style="width: 100%; margin-bottom: 1.5rem; font-size: 0.95rem; padding: 0.75rem;">
+            <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%; margin-bottom: 1.5rem; font-size: 0.95rem; padding: 0.75rem;">
               <i data-lucide="smartphone"></i> Get the App
             </a>
             
@@ -54,7 +54,7 @@
             <h1 style="font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 1rem; line-height: 1.15; letter-spacing: -0.02em;">Transform your body with <br><span class="gradient-text">AI Precision</span></h1>
             <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 500px;">Join thousands of athletes sharing their progress, routines, and meals in real-time. Let AI guide your daily wellness.</p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-               <a href="/download" class="btn btn-primary"><i data-lucide="user-plus"></i> Join Community</a>
+               <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary"><i data-lucide="user-plus"></i> Join Community</a>
                <a href="/features" class="btn btn-secondary">Explore Platform</a>
             </div>
          </div>
@@ -68,7 +68,7 @@
             <% if (reels && reels.length > 0) { %>
               <div class="reels-container hide-scrollbar">
                 <% reels.forEach(reel => { %>
-                  <div class="reel-card">
+                  <div class="reel-card" data-video="<%= reel.videoUrl %>">
                     <% if (reel.video) { %>
                       <img src="<%= reel.video %>" alt="Reel by <%= reel.user %>" class="reel-thumbnail">
                     <% } else { %>
@@ -130,12 +130,14 @@
                           </div>
                         <% } %>
                         <div>
-                          <h4 class="post-name" style="display: flex; align-items: center; gap: 0.35rem;">
-                            <%= post.user.name %>
-                            <% if (post.user.isVerified) { %>
-                              <i data-lucide="check-circle-2" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
-                            <% } %>
-                          </h4>
+                          <a href="/post/<%= post.id %>" style="text-decoration: none;">
+                            <h4 class="post-name" style="display: flex; align-items: center; gap: 0.35rem;">
+                              <%= post.user.name %>
+                              <% if (post.user.isVerified) { %>
+                                <i data-lucide="check-circle-2" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
+                              <% } %>
+                            </h4>
+                          </a>
                           <span class="post-meta"><%= post.user.handle %> • <%= post.time %></span>
                         </div>
                       </div>
@@ -144,12 +146,14 @@
 
                     <div style="margin-bottom: 1rem;">
                       <% if (post.content) { %>
-                        <p class="post-text"><%= post.content %></p>
+                        <a href="/post/<%= post.id %>" style="text-decoration: none; color: inherit;"><p class="post-text"><%= post.content %></p></a>
                       <% } %>
                       <% if (post.image) { %>
-                        <div class="post-image-container">
-                          <img src="<%= post.image %>" alt="Post Image" class="post-image">
-                        </div>
+                        <a href="/post/<%= post.id %>">
+                          <div class="post-image-container">
+                            <img src="<%= post.image %>" alt="Post Image" class="post-image">
+                          </div>
+                        </a>
                       <% } %>
                     </div>
 
@@ -181,7 +185,7 @@
                 <p style="color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.6;">
                   Download the Beyounge app to see more posts, track your macros, and get personalized AI coaching.
                 </p>
-                <a href="/download" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
+                <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
                   Download App Now
                 </a>
               </div>
@@ -250,6 +254,13 @@
       </aside>
     </div>
   </main>
+
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+      <button class="video-modal-close" id="closeVideoModal"><i data-lucide="x"></i></button>
+      <video id="reelVideo" controls autoplay playsinline class="video-player"></video>
+    </div>
+  </div>
 
   <style>
     .hover-emerald:hover {
@@ -340,58 +351,61 @@
     }
 
     .reel-card {
-       flex: 0 0 150px;
-       height: 260px;
+       flex: 0 0 180px;
+       height: 300px;
        position: relative;
-       border-radius: var(--radius-md);
+       border-radius: 20px;
        overflow: hidden;
        scroll-snap-align: start;
-       
        cursor: pointer;
+       background: #000;
+       border: 1px solid rgba(255,255,255,0.1);
     }
     .reel-thumbnail {
        width: 100%;
        height: 100%;
        object-fit: cover;
-       transition: transform 0.3s ease;
+       transition: transform 0.5s ease;
     }
-    .reel-card:hover .reel-thumbnail { transform: scale(1.05); }
+    .reel-card:hover .reel-thumbnail { transform: scale(1.1); }
     
     .reel-gradient {
        position: absolute;
        inset: 0;
-       background: rgba(0,0,0,0.3);
+       background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.8) 100%);
        pointer-events: none;
     }
 
     .reel-info {
        position: absolute;
-       bottom: 12px;
-       left: 12px;
-       right: 12px;
+       bottom: 15px;
+       left: 15px;
+       right: 15px;
        color: white;
        z-index: 2;
     }
     .reel-avatar {
-       width: 24px;
-       height: 24px;
+       width: 28px;
+       height: 28px;
        border-radius: 50%;
-       border: 1px solid white;
+       border: 1.5px solid white;
+       object-fit: cover;
     }
     .reel-username {
-       font-size: 0.8rem;
-       font-weight: 600;
+       font-size: 0.85rem;
+       font-weight: 700;
        white-space: nowrap;
        overflow: hidden;
        text-overflow: ellipsis;
     }
     .reel-views {
-       font-size: 0.75rem;
+       font-size: 0.8rem;
        color: rgba(255,255,255,0.9);
        display: flex;
        align-items: center;
-       gap: 0.25rem;
-       margin-top: 0.15rem;
+       gap: 0.4rem;
+       margin-top: 0.35rem;
+       font-weight: 600;
     }
 
     .reel-play-overlay {
@@ -401,20 +415,71 @@
        align-items: center;
        justify-content: center;
        opacity: 0;
-       transition: opacity 0.2s;
+       transition: opacity 0.3s;
        z-index: 3;
+       background: rgba(0,0,0,0.2);
     }
     .reel-card:hover .reel-play-overlay { opacity: 1; }
     
     .reel-play-btn {
-       width: 44px;
-       height: 44px;
+       width: 50px;
+       height: 50px;
        border-radius: 50%;
-       background: rgba(255,255,255,0.25);
-       
+       background: rgba(255,255,255,0.2);
+       backdrop-filter: blur(4px);
        display: flex;
        align-items: center;
        justify-content: center;
+       border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .video-modal.active {
+      display: flex;
+    }
+    .video-modal-content {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 80vh;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .video-player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .video-modal-close:hover {
+      background: rgba(255,255,255,0.1);
     }
 
     .post-card {
@@ -514,7 +579,7 @@
        }
        .left-sidebar { 
           display: none; 
-       }
+        }
        .feed-main { max-width: 100%; }
        .hero-banner {
           padding: 1.75rem;
@@ -531,6 +596,37 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     lucide.createIcons();
+
+    // Reel Player Logic
+    const videoModal = document.getElementById('videoModal');
+    const reelVideo = document.getElementById('reelVideo');
+    const closeVideoModal = document.getElementById('closeVideoModal');
+    const reelCards = document.querySelectorAll('.reel-card');
+
+    reelCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const videoUrl = card.getAttribute('data-video');
+        if (videoUrl) {
+          reelVideo.src = videoUrl;
+          videoModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          reelVideo.play();
+        }
+      });
+    });
+
+    function stopReel() {
+      videoModal.classList.remove('active');
+      reelVideo.pause();
+      reelVideo.src = '';
+      document.body.style.overflow = '';
+    }
+
+    closeVideoModal.addEventListener('click', stopReel);
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) stopReel();
+    });
   </script>
 </body>
 </html>
+

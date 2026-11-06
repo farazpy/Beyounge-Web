@@ -93,12 +93,14 @@
                       </div>
                     <% } %>
                     <div>
-                      <h4 style="font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 0.35rem;">
-                        <%= post.user.name %>
-                        <% if (post.user.isVerified) { %>
-                          <i data-lucide="check-circle-2" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
-                        <% } %>
-                      </h4>
+                      <a href="/post/<%= post.id %>" style="text-decoration: none;">
+                        <h4 style="font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 0.35rem;">
+                          <%= post.user.name %>
+                          <% if (post.user.isVerified) { %>
+                            <i data-lucide="check-circle-2" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
+                          <% } %>
+                        </h4>
+                      </a>
                       <span style="font-size: 0.85rem; color: var(--text-muted);"><%= post.user.handle %> • <%= post.time %></span>
                     </div>
                   </div>
@@ -108,12 +110,14 @@
                 <!-- Post Content -->
                 <div style="margin-bottom: 1rem;">
                   <% if (post.content) { %>
-                    <p style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.05rem;"><%= post.content %></p>
+                    <a href="/post/<%= post.id %>" style="text-decoration: none; color: inherit;"><p style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.05rem;"><%= post.content %></p></a>
                   <% } %>
                   <% if (post.image) { %>
-                    <div style="border-radius: var(--radius-md); overflow: hidden; max-height: 400px;">
-                      <img src="<%= post.image %>" alt="Post Image" style="width: 100%; height: auto; object-fit: cover; display: block;">
-                    </div>
+                    <a href="/post/<%= post.id %>">
+                      <div style="border-radius: var(--radius-md); overflow: hidden; max-height: 400px;">
+                        <img src="<%= post.image %>" alt="Post Image" style="width: 100%; height: auto; object-fit: cover; display: block;">
+                      </div>
+                    </a>
                   <% } %>
                 </div>
 
@@ -146,7 +150,7 @@
             <p style="color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.6;">
               Download the Beyounge app to see more posts, track your macros, and get personalized AI coaching.
             </p>
-            <a href="/download" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
+            <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-flex; justify-content: center; width: auto; padding: 0.85rem 2rem;">
               Download App Now
             </a>
           </div>
@@ -156,6 +160,13 @@
     </section>
 
   </main>
+
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+      <button class="video-modal-close" id="closeVideoModal"><i data-lucide="x"></i></button>
+      <video id="reelVideo" controls autoplay playsinline class="video-player"></video>
+    </div>
+  </div>
 
   <style>
     /* Custom Hide Scrollbar */
@@ -167,11 +178,100 @@
       scrollbar-width: none;
     }
 
+    .reel-card {
+       flex: 0 0 180px;
+       height: 300px;
+       position: relative;
+       border-radius: 20px;
+       overflow: hidden;
+       scroll-snap-align: start;
+       cursor: pointer;
+       background: #000;
+       border: 1px solid rgba(255,255,255,0.1);
+    }
+    .reel-thumbnail {
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+       transition: transform 0.5s ease;
+    }
     .reel-card:hover .reel-thumbnail {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     .reel-card:hover .reel-play-overlay {
       opacity: 1 !important;
+    }
+
+    .reel-play-overlay {
+       position: absolute;
+       inset: 0;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       opacity: 0;
+       transition: opacity 0.3s;
+       z-index: 3;
+       background: rgba(0,0,0,0.2);
+    }
+    .reel-play-btn {
+       width: 50px;
+       height: 50px;
+       border-radius: 50%;
+       background: rgba(255,255,255,0.2);
+       backdrop-filter: blur(4px);
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .video-modal.active {
+      display: flex;
+    }
+    .video-modal-content {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 80vh;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .video-player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .video-modal-close:hover {
+      background: rgba(255,255,255,0.1);
     }
 
     .post-action-btn:hover {
@@ -185,6 +285,37 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     lucide.createIcons();
+
+    // Reel Player Logic
+    const videoModal = document.getElementById('videoModal');
+    const reelVideo = document.getElementById('reelVideo');
+    const closeVideoModal = document.getElementById('closeVideoModal');
+    const reelCards = document.querySelectorAll('.reel-card');
+
+    reelCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const videoUrl = card.getAttribute('data-video');
+        if (videoUrl) {
+          reelVideo.src = videoUrl;
+          videoModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          reelVideo.play();
+        }
+      });
+    });
+
+    function stopReel() {
+      videoModal.classList.remove('active');
+      reelVideo.pause();
+      reelVideo.src = '';
+      document.body.style.overflow = '';
+    }
+
+    closeVideoModal.addEventListener('click', stopReel);
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) stopReel();
+    });
   </script>
 </body>
 </html>
+

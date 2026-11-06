@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/', pageController.getHome);
 router.get('/feed', pageController.getFeed);
+router.get('/post/:id', pageController.getPostDetail);
 router.get('/features', pageController.getFeatures);
 router.get('/benefits', pageController.getBenefits);
 router.get('/ai-coach', pageController.getAiCoach);

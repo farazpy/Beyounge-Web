@@ -188,6 +188,53 @@ async function getDbReels(limit: number = 10) {
   return [];
 }
 
+// Fetch a single post by ID using the exact MySQL schema
+async function getDbPostById(postId: string) {
+  try {
+    const rows: any = await query(`
+      SELECT 
+          p.id, p.userId, p.content, p.imageUrl, p.videoUrl, p.coverImageUrl, 
+          p.postType, p.privacy, p.tags, p.timestamp,
+          u.username, u.displayName, u.photoUrl, u.is_verified,
+          (SELECT COUNT(*) FROM post_likes WHERE postId = p.id) AS likeCount,
+          (SELECT COUNT(*) FROM post_comments WHERE postId = p.id) AS commentCount,
+          (SELECT COUNT(*) FROM post_shares WHERE postId = p.id) AS shareCount
+      FROM posts p
+      JOIN users u ON p.userId = u.uid
+      WHERE p.id = ?
+      LIMIT 1
+    `, [postId]);
+
+    if (Array.isArray(rows) && rows.length > 0) {
+      const r = rows[0];
+      const rawUsername = r.username || r.displayName || r.userId || 'user';
+      const handleStr = rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`;
+      return {
+        id: String(r.id),
+        userId: String(r.userId),
+        user: {
+          name: r.displayName || r.username || 'User',
+          handle: handleStr,
+          avatar: r.photoUrl || '',
+          isVerified: Boolean(r.is_verified)
+        },
+        time: formatTimeAgo(r.timestamp),
+        content: r.content || '',
+        image: r.imageUrl || r.coverImageUrl || null,
+        videoUrl: r.videoUrl || null,
+        tags: r.tags || '',
+        likes: Number(r.likeCount || 0),
+        comments: Number(r.commentCount || 0),
+        shares: Number(r.shareCount || 0),
+        postType: r.postType
+      };
+    }
+  } catch (err: any) {
+    console.error('Error querying post by ID from MySQL:', err?.message || err);
+  }
+  return null;
+}
+
 // Fetch Top / Discoverable Users from the 'users' table using the exact MySQL schema
 async function getDbUsers(limit: number = 10) {
   try {
@@ -246,6 +293,26 @@ async function getDbCareers() {
 
 // Controller methods fetching real MySQL data
 export const pageController = {
+  getPostDetail: async (req: Request, res: Response) => {
+    const post = await getDbPostById(req.params.id);
+    if (!post) {
+      return res.status(404).render('pages/404', {
+        title: 'Post Not Found | Beyounge',
+        description: 'The requested community post could not be found.',
+        canonical: req.path,
+        pageName: '404'
+      });
+    }
+
+    res.render('pages/post-detail', {
+      title: `${post.user.name} on Beyounge: "${post.content ? post.content.substring(0, 50) + '...' : 'Post'}"`,
+      description: post.content || 'Check out this post on the Beyounge community feed.',
+      canonical: `/post/${post.id}`,
+      pageName: 'feed',
+      post
+    });
+  },
+
   getFeed: async (req: Request, res: Response) => {
     const [posts, reels, users] = await Promise.all([
       getDbPosts(20),
