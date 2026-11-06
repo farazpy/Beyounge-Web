@@ -1,0 +1,6 @@
+{
+  "summary": "Comprehensive implementation plan for upgrading the Beyounge /admin console into a full-featured WordPress-style (wp-admin) Content & Database Management System with complete CRUD across all 54 shared Android MySQL tables, rich specialized editors for Users, Posts/Reels, Workouts, Coaches, Nutrition, and App Config, one-click Android moderation actions, and bulk table operations.",
+  "updatedAt": "2026-11-06T18:09:58.811795474Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

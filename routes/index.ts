@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { pageController } from '../controllers/pageController.js';
+import { adminController } from '../controllers/adminController.js';
 
 const router = Router();
 
 router.get('/', pageController.getHome);
+router.get(['/admin', '/admin/:subpage'], adminController.getAdminPage);
 router.get('/feed', pageController.getFeed);
 router.get('/post/:id', pageController.getPostDetail);
 router.get('/features', pageController.getFeatures);
@@ -21,3 +23,4 @@ router.get('/press-kit', pageController.getPressKit);
 router.get('/sitemap', pageController.getSitemapPage);
 
 export default router;
+
