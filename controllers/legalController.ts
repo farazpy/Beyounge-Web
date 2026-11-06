@@ -19,6 +19,15 @@ export const legalController = {
     });
   },
 
+  getTermsOfService: (req: Request, res: Response) => {
+    res.render('pages/terms-of-service', {
+      title: 'Terms of Service | Beyounge',
+      description: 'Read our official Terms of Service governing your access and use of the Beyounge mobile application.',
+      canonical: '/terms-of-service',
+      pageName: 'terms-of-service'
+    });
+  },
+
   getDataDeletion: (req: Request, res: Response) => {
     res.render('pages/data-deletion', {
       title: 'Account Data Deletion Request | Beyounge Privacy',

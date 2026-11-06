@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
 import { query } from '../src/db/mysql.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Initialize Gemini lazily if API key exists
 let aiClient: GoogleGenAI | null = null;
@@ -163,8 +166,9 @@ export const formController = {
 
       if (ai) {
         try {
+          const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
           const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: modelName,
             contents: `You are the AI Coach for Beyounge fitness app. Provide a concise, highly motivating, expert fitness or nutrition advice (maximum 3 bullet points or 100 words) tailored to this user prompt: "${userPrompt}". Focus on evidence-based hypertrophy, strength, or nutrition science with actionable steps.`,
           });
 

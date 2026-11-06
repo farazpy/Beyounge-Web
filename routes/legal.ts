@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/privacy-policy', legalController.getPrivacyPolicy);
 router.get('/terms-and-conditions', legalController.getTerms);
+router.get('/terms-of-service', legalController.getTermsOfService);
 router.get('/data-deletion', legalController.getDataDeletion);
 router.get('/cookie-policy', legalController.getCookiePolicy);
 router.get('/refund-policy', legalController.getRefundPolicy);

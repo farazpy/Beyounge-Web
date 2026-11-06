@@ -43,17 +43,18 @@ app.get('/api/db-status', async (req: Request, res: Response) => {
     const result = await query('SELECT 1 + 1 AS test_connection');
     res.json({
       status: 'connected',
-      mysqlHost: process.env.DBHOST || process.env.DB_HOST || process.env.MYSQL_HOST || 'localhost',
-      mysqlPort: process.env.DBPORT || process.env.DB_PORT || process.env.MYSQL_PORT || '3306',
-      database: process.env.DBNAME || process.env.DB_NAME || process.env.MYSQL_DATABASE || 'beyounge',
-      testQueryResult: result
+      mysqlHost: process.env.DB_HOST || process.env.DBHOST || process.env.MYSQL_HOST || 'localhost',
+      mysqlPort: process.env.DB_PORT || process.env.DBPORT || process.env.MYSQL_PORT || '3306',
+      database: process.env.DB_NAME || process.env.DBNAME || process.env.MYSQL_DATABASE || 'beyounge',
+      testQueryResult: result,
+      envLoaded: !!process.env.DB_HOST || !!process.env.DBHOST
     });
   } catch (err: any) {
     res.status(500).json({
       status: 'disconnected_or_error',
-      mysqlHost: process.env.DBHOST || process.env.DB_HOST || process.env.MYSQL_HOST || 'localhost',
-      mysqlPort: process.env.DBPORT || process.env.DB_PORT || process.env.MYSQL_PORT || '3306',
-      database: process.env.DBNAME || process.env.DB_NAME || process.env.MYSQL_DATABASE || 'beyounge',
+      mysqlHost: process.env.DB_HOST || process.env.DBHOST || process.env.MYSQL_HOST || 'localhost',
+      mysqlPort: process.env.DB_PORT || process.env.DBPORT || process.env.MYSQL_PORT || '3306',
+      database: process.env.DB_NAME || process.env.DBNAME || process.env.MYSQL_DATABASE || 'beyounge',
       error: err.message || err
     });
   }

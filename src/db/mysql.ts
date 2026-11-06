@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Read MySQL credentials from environment variables / AI Studio secrets
-const DB_HOST = process.env.DBHOST || process.env.DB_HOST || process.env.MYSQL_HOST || 'localhost';
-const DB_PORT = parseInt(process.env.DBPORT || process.env.DB_PORT || process.env.MYSQL_PORT || '3306', 10);
-const DB_USER = process.env.DBUSER || process.env.DB_USER || process.env.MYSQL_USER || process.env.USERNAME || 'root';
-const DB_PASSWORD = process.env.DBPASSWORD || process.env.DB_PASSWORD || process.env.MYSQL_PASSWORD || process.env.PASSWORD || '';
-const DB_NAME = process.env.DBNAME || process.env.DB_NAME || process.env.MYSQL_DATABASE || process.env.DATABASE || 'beyounge';
+// Read MySQL credentials from environment variables / AI Studio secrets / .env
+const DB_HOST = process.env.DB_HOST || process.env.DBHOST || process.env.MYSQL_HOST || 'localhost';
+const DB_PORT = parseInt(process.env.DB_PORT || process.env.DBPORT || process.env.MYSQL_PORT || '3306', 10);
+const DB_USER = process.env.DB_USER || process.env.DBUSER || process.env.MYSQL_USER || process.env.USERNAME || 'root';
+const DB_PASSWORD = process.env.DB_PASSWORD || process.env.DBPASSWORD || process.env.MYSQL_PASSWORD || process.env.PASSWORD || '';
+const DB_NAME = process.env.DB_NAME || process.env.DBNAME || process.env.MYSQL_DATABASE || process.env.DATABASE || 'beyounge';
 
 console.log(`[MySQL Config] Host: ${DB_HOST}, Port: ${DB_PORT}, User: ${DB_USER}, DB: ${DB_NAME}`);
 
