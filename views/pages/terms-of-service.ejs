@@ -1,69 +1,1385 @@
 <%- include('../partials/head') %>
-<%- include('../partials/header') %>
 
-<section class="section" style="padding-top: 9rem;">
-  <div class="container container-narrow">
-    <div class="section-header reveal-on-scroll">
-      <span class="badge badge-purple"><i data-lucide="file-text"></i> Legal Agreement</span>
-      <h1 class="section-title">Terms of Service</h1>
-      <p class="last-updated">Last Updated: November 6, 2026</p>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="legal-page-main">
+    <div class="container legal-container">
+      
+      <!-- Breadcrumb Navigation -->
+      <nav class="legal-breadcrumbs" aria-label="Breadcrumbs">
+        <a href="/" class="breadcrumb-link"><i data-lucide="home"></i> Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item">Legal</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Terms of Service</span>
+      </nav>
+
+      <!-- Document Header -->
+      <header class="legal-header">
+        <div class="legal-badge-wrapper">
+          <span class="badge badge-purple">
+            <i data-lucide="file-check-2"></i> Official Legal Agreement
+          </span>
+          <span class="badge badge-emerald">
+            <i data-lucide="shield-check"></i> Standard Android & Web Terms
+          </span>
+        </div>
+        <h1 class="legal-title">Terms of Service</h1>
+        <p class="legal-subtitle">
+          These Terms of Service ("Terms") govern your access to and use of the <strong>Beyounge</strong> mobile application, AI fitness coaching tools, health synchronization integrations, and community services.
+        </p>
+
+        <!-- Document Meta Bar -->
+        <div class="legal-meta-bar">
+          <div class="meta-item">
+            <i data-lucide="calendar"></i>
+            <div>
+              <span class="meta-label">Effective Date</span>
+              <span class="meta-value">November 6, 2026</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <i data-lucide="clock"></i>
+            <div>
+              <span class="meta-label">Last Updated</span>
+              <span class="meta-value">November 6, 2026</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <i data-lucide="layers"></i>
+            <div>
+              <span class="meta-label">Version</span>
+              <span class="meta-value">v2.4.0 (Global)</span>
+            </div>
+          </div>
+          <div class="meta-actions">
+            <button onclick="window.print()" class="btn-meta-action" title="Print Terms of Service">
+              <i data-lucide="printer"></i>
+              <span>Print</span>
+            </button>
+            <button onclick="copyDocumentLink()" class="btn-meta-action" id="copyLinkBtn" title="Copy Page Link">
+              <i data-lucide="share-2"></i>
+              <span id="copyLinkText">Share</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Executive Summary / At-A-Glance Highlights -->
+      <section class="summary-section">
+        <div class="summary-card">
+          <div class="summary-header">
+            <div class="summary-icon">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <div>
+              <h2 class="summary-title">Summary of Key Points</h2>
+              <p class="summary-subtitle">A quick, plain-language overview of the most critical aspects of our Terms.</p>
+            </div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-bullet-icon"><i data-lucide="activity"></i></div>
+              <div>
+                <strong>Non-Medical Platform:</strong>
+                <p>Beyounge is a social and fitness tracking service, not a medical clinic. Our AI recommendations are informational only.</p>
+              </div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-bullet-icon"><i data-lucide="lock"></i></div>
+              <div>
+                <strong>Health Connect Permissions:</strong>
+                <p>We read and sync sensor & health data (steps, calories, sleep) with your permission to personalize your workouts.</p>
+              </div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-bullet-icon"><i data-lucide="video"></i></div>
+              <div>
+                <strong>Your Content & Reels:</strong>
+                <p>You retain full ownership of photos and videos you share, granting Beyounge a license to display them to the community.</p>
+              </div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-bullet-icon"><i data-lucide="user-x"></i></div>
+              <div>
+                <strong>Easy Account Deletion:</strong>
+                <p>You may cancel or permanently delete your account and biometrics anytime directly in-app or via our web portal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mobile Table of Contents Accordion -->
+      <div class="mobile-toc-wrapper">
+        <button class="mobile-toc-trigger" id="mobileTocTrigger" aria-expanded="false" aria-controls="mobileTocMenu">
+          <span class="toc-trigger-left">
+            <i data-lucide="list"></i>
+            <span>Table of Contents (Jump to Section)</span>
+          </span>
+          <i data-lucide="chevron-down" class="toc-chevron" id="mobileTocChevron"></i>
+        </button>
+        <div class="mobile-toc-dropdown" id="mobileTocMenu">
+          <ol class="toc-mobile-list">
+            <li><a href="#section-1" class="toc-mobile-link">1. Acceptance of Terms</a></li>
+            <li><a href="#section-2" class="toc-mobile-link">2. User Eligibility and Accounts</a></li>
+            <li><a href="#section-3" class="toc-mobile-link">3. Health and Fitness Disclaimer</a></li>
+            <li><a href="#section-4" class="toc-mobile-link">4. Integration with Health Data</a></li>
+            <li><a href="#section-5" class="toc-mobile-link">5. User-Generated Content</a></li>
+            <li><a href="#section-6" class="toc-mobile-link">6. Prohibited Activities</a></li>
+            <li><a href="#section-7" class="toc-mobile-link">7. Intellectual Property</a></li>
+            <li><a href="#section-8" class="toc-mobile-link">8. Termination</a></li>
+            <li><a href="#section-9" class="toc-mobile-link">9. Limitation of Liability</a></li>
+            <li><a href="#section-10" class="toc-mobile-link">10. Contact Us & Legal Notice</a></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Main Layout: Sidebar Navigation + Legal Body -->
+      <div class="legal-layout">
+        
+        <!-- Desktop Sticky Table of Contents -->
+        <aside class="legal-sidebar" aria-label="Table of Contents">
+          <div class="toc-card sticky-card">
+            <div class="toc-header">
+              <i data-lucide="bookmark"></i>
+              <span>Navigation Index</span>
+            </div>
+            <nav class="toc-nav">
+              <ul class="toc-list">
+                <li><a href="#section-1" class="toc-link" data-section="section-1"><span class="toc-num">01</span> Acceptance of Terms</a></li>
+                <li><a href="#section-2" class="toc-link" data-section="section-2"><span class="toc-num">02</span> User Eligibility & Accounts</a></li>
+                <li><a href="#section-3" class="toc-link" data-section="section-3"><span class="toc-num">03</span> Health & Medical Disclaimer</a></li>
+                <li><a href="#section-4" class="toc-link" data-section="section-4"><span class="toc-num">04</span> Health Data & Integrations</a></li>
+                <li><a href="#section-5" class="toc-link" data-section="section-5"><span class="toc-num">05</span> User-Generated Content (Reels)</a></li>
+                <li><a href="#section-6" class="toc-link" data-section="section-6"><span class="toc-num">06</span> Prohibited Activities</a></li>
+                <li><a href="#section-7" class="toc-link" data-section="section-7"><span class="toc-num">07</span> Intellectual Property</a></li>
+                <li><a href="#section-8" class="toc-link" data-section="section-8"><span class="toc-num">08</span> Termination & Deletion</a></li>
+                <li><a href="#section-9" class="toc-link" data-section="section-9"><span class="toc-num">09</span> Limitation of Liability</a></li>
+                <li><a href="#section-10" class="toc-link" data-section="section-10"><span class="toc-num">10</span> Contact & Inquiries</a></li>
+              </ul>
+            </nav>
+
+            <div class="sidebar-help-box">
+              <div class="help-box-icon"><i data-lucide="help-circle"></i></div>
+              <div class="help-box-content">
+                <strong>Questions or Concerns?</strong>
+                <p>Our compliance team typically replies within 24–48 hours.</p>
+                <a href="mailto:support@beyounge.com" class="help-box-link">
+                  <i data-lucide="mail"></i> support@beyounge.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Legal Content Body -->
+        <article class="legal-content">
+          
+          <!-- Preamble -->
+          <div class="content-intro-card">
+            <p>
+              Welcome to <strong>Beyounge</strong>. These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", or "your") and <strong>Beyounge Technologies Inc.</strong> ("Beyounge", "we", "us", or "our"), regarding your access to and use of the Beyounge mobile application (Android & iOS), our website located at <a href="/" class="inline-link">beyounge.com</a>, and all associated software, exercise algorithms, APIs, and community services.
+            </p>
+            <p>
+              Please read these Terms carefully before accessing or using our application. By registering an account, downloading our APK from Google Play, or using any part of the service, you confirm your understanding and agreement to be bound by these Terms and our companion <a href="/privacy-policy" class="inline-link">Privacy Policy</a>.
+            </p>
+          </div>
+
+          <!-- Section 1 -->
+          <section id="section-1" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 01</span>
+              <h2>1. Acceptance of Terms</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                By creating an account, logging in, or continuing to use the Beyounge application or website, you explicitly acknowledge that you have read, understood, and agreed to be bound by these Terms. If you do not agree to all provisions of these Terms, you must immediately cease all access and uninstall the application from your devices.
+              </p>
+              <p>
+                <strong>Modifications to Terms:</strong> We reserve the right to revise, amend, or update these Terms from time to time to reflect modifications in our features, exercise science engines, cloud architecture, or relevant statutory requirements. When significant revisions are published:
+              </p>
+              <ul class="styled-list">
+                <li>We will update the <em>"Last Updated"</em> timestamp displayed at the top of this document.</li>
+                <li>We may provide prominent in-app notices or push notifications prior to the effective date of material changes.</li>
+                <li>Your continued use of the application following the publication of revised Terms establishes your acceptance of all amended terms.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 2 -->
+          <section id="section-2" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 02</span>
+              <h2>2. User Eligibility and Accounts</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                To maintain a safe and verified fitness ecosystem, your registration and continued access are conditioned upon fulfilling all eligibility and account integrity requirements:
+              </p>
+              <ul class="styled-list">
+                <li><strong>Age Restriction:</strong> You must be at least <strong>13 years of age</strong> (or 16 in the European Economic Area / UK) to access or create an account on Beyounge. If you are under 18, you represent that your parent or legal guardian has reviewed and agreed to these Terms on your behalf.</li>
+                <li><strong>Account Confidentiality:</strong> You are solely responsible for maintaining the confidentiality of your authentication credentials, session tokens, and passwords. You agree to notify us immediately at <a href="mailto:support@beyounge.com" class="inline-link">support@beyounge.com</a> upon identifying any unauthorized access or security breach.</li>
+                <li><strong>Accuracy of Information:</strong> You agree to provide true, accurate, current, and complete registration information (including profile details and biometrics) to enable accurate volume auto-regulation and safe AI recommendations.</li>
+                <li><strong>Account Suspension & Revocation:</strong> Beyounge reserves the unilateral right to suspend, disable, or terminate accounts that provide misleading identity data, violate community safety standards, or fail to uphold these Terms.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 3: Health and Fitness Disclaimer -->
+          <section id="section-3" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 03</span>
+              <h2>3. Health and Fitness Disclaimer</h2>
+            </div>
+            <div class="section-body">
+              <p class="lead-text">
+                <strong>Beyounge is a social and fitness tracking platform, not a medical healthcare provider or clinical emergency service.</strong>
+              </p>
+
+              <!-- Warning Callout Box -->
+              <div class="callout-box warning-callout">
+                <div class="callout-icon"><i data-lucide="alert-triangle"></i></div>
+                <div class="callout-content">
+                  <strong>CRITICAL HEALTH & SAFETY NOTICE</strong>
+                  <p>
+                    Always consult with a licensed physician, cardiologist, or qualified healthcare professional before beginning any new training program, resistance workout, intense cardiovascular protocol, or caloric deficit/surplus meal plan. Never disregard professional medical advice or delay seeking treatment because of content received through Beyounge.
+                  </p>
+                </div>
+              </div>
+
+              <p>
+                The exercise guidance, demonstration videos, automated set volume adjustments, Rate of Perceived Exertion (RPE) indicators, macro estimations, and AI-generated coaching advice provided through the service are engineered for <strong>educational and informational tracking purposes only</strong>:
+              </p>
+              <ul class="styled-list">
+                <li><strong>No Medical Diagnosis or Treatment:</strong> None of the workouts, biometric telemetry, or algorithmic coaching generated by Beyounge constitutes medical diagnosis, physical therapy, or healthcare treatment.</li>
+                <li><strong>Individual Exercise Tolerance:</strong> Physical exertion carries inherent risks of strain, sprains, cardiovascular distress, or physical injury. You are solely responsible for performing exercises with proper biomechanics and within your safe physical limits.</li>
+                <li><strong>Emergency Protocol:</strong> If you experience chest tightness, sudden shortness of breath, dizziness, acute pain, or neurological distress during physical training, stop exercising immediately and call your local emergency services (e.g., 911 or 112).</li>
+                <li><strong>Assumption of Risk:</strong> Use of the app is at your own voluntary risk. To the fullest extent permitted by applicable law, Beyounge and its fitness specialists are not liable for any injuries, illness, or health complications resulting from your physical activities or reliance on in-app guidance.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 4: Health Data & Integrations -->
+          <section id="section-4" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 04</span>
+              <h2>4. Integration with Health Data & Google Health Connect</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                Beyounge integrates with <strong>Google Health Connect</strong>, Android operating system APIs, and wearable device sensors to read, record, and synchronize key biometrics (such as daily steps, active caloric expenditure, heart rate readings, and sleep duration logs).
+              </p>
+              
+              <!-- Privacy Callout Box -->
+              <div class="callout-box info-callout">
+                <div class="callout-icon"><i data-lucide="shield-check"></i></div>
+                <div class="callout-content">
+                  <strong>Granular Permission Control</strong>
+                  <p>
+                    Google Health Connect synchronization is completely opt-in. You retain 100% control to grant, adjust, or revoke individual data permissions directly within your Android system settings at any moment.
+                  </p>
+                </div>
+              </div>
+
+              <p>By enabling device sensor and Health Connect permissions:</p>
+              <ul class="styled-list">
+                <li>You grant Beyounge express authorization to process your synced fitness metrics exclusively to calculate personalized volume auto-regulation, recovery scores, and daily progression goals.</li>
+                <li>All health and sensor data is handled under strict security controls in compliance with our <a href="/privacy-policy" class="inline-link">Privacy Policy</a> and Google Play Health Data policies.</li>
+                <li>We do not sell, rent, or transfer your Google Health Connect data to advertising networks, data brokers, or third-party marketing agencies.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 5: User-Generated Content -->
+          <section id="section-5" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 05</span>
+              <h2>5. User-Generated Content (Posts, Reels & Comments)</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                Beyounge empowers users to share workout logs, photos, short video clips (<strong>Reels</strong>), and motivational comments with fellow community athletes.
+              </p>
+              <ul class="styled-list">
+                <li><strong>Content Ownership:</strong> You retain all intellectual property ownership rights in the original text, photos, and Reels videos you create and publish through Beyounge.</li>
+                <li><strong>Worldwide License:</strong> By posting content, you grant Beyounge a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to host, cache, distribute, publicly display, format, and stream your content exclusively in connection with operating and enhancing the Beyounge community services.</li>
+                <li><strong>Content Standards:</strong> You warrant that your uploads do not violate third-party rights (copyrights, trademarks, publicity, privacy) and do not depict unlawful acts, non-consensual recordings, graphic violence, or sexually explicit content.</li>
+                <li><strong>Content Moderation & Removal:</strong> Beyounge reserves the absolute right, without prior notice, to review, filter, flag, or permanently delete any content that infringes upon these Terms or harms community integrity.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 6: Prohibited Activities -->
+          <section id="section-6" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 06</span>
+              <h2>6. Prohibited Activities & Community Safety</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                To maintain a safe, welcoming, and scientifically grounded environment for all athletes, you expressly agree that you will not engage in any of the following prohibited behaviors:
+              </p>
+              <div class="prohibited-grid">
+                <div class="prohibited-item">
+                  <div class="prohibited-icon"><i data-lucide="shield-alert"></i></div>
+                  <div>
+                    <strong>Harassment & Bullying</strong>
+                    <p>Harassing, stalking, threatening, disparaging, or bullying other members, trainers, or staff.</p>
+                  </div>
+                </div>
+                <div class="prohibited-item">
+                  <div class="prohibited-icon"><i data-lucide="terminal"></i></div>
+                  <div>
+                    <strong>Hacking & Reverse Engineering</strong>
+                    <p>Attempting to reverse-engineer, decompile, scrape, or extract source code or proprietary AI weights.</p>
+                  </div>
+                </div>
+                <div class="prohibited-item">
+                  <div class="prohibited-icon"><i data-lucide="bug"></i></div>
+                  <div>
+                    <strong>Malicious Software</strong>
+                    <p>Uploading viruses, malware, trojans, worms, or automated bots designed to disrupt server operations.</p>
+                  </div>
+                </div>
+                <div class="prohibited-item">
+                  <div class="prohibited-icon"><i data-lucide="badge-alert"></i></div>
+                  <div>
+                    <strong>Commercial Exploitation & Spam</strong>
+                    <p>Posting unsolicited advertisements, affiliate spam, pyramid schemes, or unauthorized sales pitches.</p>
+                  </div>
+                </div>
+              </div>
+              <p style="margin-top: 1rem;">
+                For more details on community expectations, please review our <a href="/community-guidelines" class="inline-link">Community Guidelines</a>.
+              </p>
+            </div>
+          </section>
+
+          <!-- Section 7: Intellectual Property -->
+          <section id="section-7" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 07</span>
+              <h2>7. Intellectual Property & Proprietary Rights</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                All app software, graphical user interfaces (Dark Glass UI), logos, trademarks, exercise library footage, biomechanical diagrams, AI adaptive periodization algorithms, and original text content (excluding individual user-submitted posts) are the exclusive property of <strong>Beyounge Technologies Inc.</strong> and its licensors.
+              </p>
+              <ul class="styled-list">
+                <li>You are granted a limited, personal, non-exclusive, non-transferable, revocable license to download and use the Beyounge application for your personal, non-commercial fitness purposes.</li>
+                <li>You may not reproduce, copy, distribute, license, sell, or create derivative works based on Beyounge intellectual property without our express prior written permission.</li>
+                <li>All trademarks, service marks, and trade names of Beyounge used herein are trademarks or registered trademarks of Beyounge Technologies Inc.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 8: Termination -->
+          <section id="section-8" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 08</span>
+              <h2>8. Termination & Account Deletion</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                You maintain complete authority over your relationship with Beyounge at all times:
+              </p>
+              <ul class="styled-list">
+                <li><strong>Termination by User:</strong> You may discontinue your use of the service and delete your account anytime through the in-app settings menu (<em>Profile &gt; Security &gt; Delete Account</em>) or by submitting a formal request via our online <a href="/data-deletion" class="inline-link">Account Data Deletion Page</a>.</li>
+                <li><strong>Termination by Beyounge:</strong> We reserve the right to suspend, restrict, or permanently terminate your access to the app, with or without notice, in the event of any breach of these Terms, non-compliance with legal statutes, or to protect the safety of the community.</li>
+                <li><strong>Effect of Termination:</strong> Upon account termination, your right to access the service will cease immediately. Biometric records and profile data will be permanently wiped or anonymized in accordance with statutory retention mandates and our <a href="/privacy-policy" class="inline-link">Privacy Policy</a>.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 9: Limitation of Liability -->
+          <section id="section-9" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 09</span>
+              <h2>9. Disclaimers and Limitation of Liability</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                <strong>"As-Is" Provision:</strong> The Beyounge services, applications, software, and AI coaching outputs are provided on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without warranties of any kind, whether express, statutory, or implied, including but not limited to implied warranties of merchantability, fitness for a specific fitness objective, or uninterrupted, bug-free operation.
+              </p>
+              <p>
+                <strong>Limitation of Damages:</strong> To the maximum extent permitted by applicable law, in no event shall Beyounge Technologies Inc., its founders, officers, employees, advisors, or technology suppliers be held liable for any indirect, incidental, special, consequential, punitive, or exemplary damages, including but not limited to:
+              </p>
+              <ul class="styled-list">
+                <li>Physical bodily injury, sprains, joint trauma, or health impairments sustained during exercise sessions.</li>
+                <li>Loss of profits, revenue, biometric data, goodwill, or device hardware malfunctions.</li>
+                <li>Unauthorized access, interception, or alteration of your workout transmissions by third parties.</li>
+                <li>Any bugs, viruses, or interruptions transmitted to or through our service by third-party integrations.</li>
+              </ul>
+              <p>
+                In jurisdictions where liability limitations are constrained by consumer protection laws, our aggregate liability shall be strictly capped at the total amount paid by you to Beyounge in the twelve (12) months preceding the claim.
+              </p>
+            </div>
+          </section>
+
+          <!-- Section 10: Contact Us -->
+          <section id="section-10" class="legal-section">
+            <div class="section-title-wrapper">
+              <span class="section-badge">Section 10</span>
+              <h2>10. Governing Law, Dispute Resolution & Contact Us</h2>
+            </div>
+            <div class="section-body">
+              <p>
+                <strong>Governing Law:</strong> These Terms shall be construed and governed in accordance with the laws of the State of California, United States, without giving effect to any principles of conflicts of law.
+              </p>
+              <p>
+                <strong>Informal Dispute Resolution:</strong> Before initiating formal dispute proceedings, you agree to contact us informally at <a href="mailto:support@beyounge.com" class="inline-link">support@beyounge.com</a> to work in good faith toward an amicable resolution.
+              </p>
+              
+              <!-- Contact Card -->
+              <div class="legal-contact-card">
+                <div class="contact-card-header">
+                  <div class="contact-card-icon"><i data-lucide="mail"></i></div>
+                  <div>
+                    <h3 class="contact-card-title">Official Contact Information</h3>
+                    <p class="contact-card-desc">For questions, feedback, or legal inquiries regarding these Terms of Service:</p>
+                  </div>
+                </div>
+                <div class="contact-card-grid">
+                  <div class="contact-grid-item">
+                    <span class="item-label">Support & Inquiries:</span>
+                    <a href="mailto:support@beyounge.com" class="item-value">support@beyounge.com</a>
+                  </div>
+                  <div class="contact-grid-item">
+                    <span class="item-label">Privacy & Data Officer:</span>
+                    <a href="mailto:privacy@beyounge.app" class="item-value">privacy@beyounge.app</a>
+                  </div>
+                  <div class="contact-grid-item">
+                    <span class="item-label">Web Help Center:</span>
+                    <a href="/faq" class="item-value">beyounge.com/faq</a>
+                  </div>
+                  <div class="contact-grid-item">
+                    <span class="item-label">Entity:</span>
+                    <span class="item-value">Beyounge Technologies Inc.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Back to Top / Document Conclusion -->
+          <div class="document-footer-bar">
+            <span>&copy; <%= new Date().getFullYear() %> Beyounge Technologies Inc. All rights reserved.</span>
+            <button onclick="scrollToTop()" class="btn-back-to-top">
+              <i data-lucide="arrow-up"></i>
+              <span>Back to Top</span>
+            </button>
+          </div>
+
+        </article>
+      </div>
+
     </div>
+  </main>
 
-    <div class="glass-card prose reveal-on-scroll">
-      <p>Welcome to <strong>Beyounge</strong>. These Terms of Service ("Terms") govern your access to and use of the Beyounge mobile application and services. By using Beyounge, you agree to be bound by these Terms.</p>
+  <!-- Modern Legal Styling -->
+  <style>
+    /* Main Layout */
+    .legal-page-main {
+      padding-top: 100px;
+      padding-bottom: 80px;
+      background-color: #F8FAFC;
+      min-height: 100vh;
+      color: #1E293B;
+    }
 
-      <h2>1. Acceptance of Terms</h2>
-      <p>By creating an account or using the app, you agree to these Terms. If you do not agree, do not use the service. We may update these Terms from time to time, and your continued use constitutes acceptance of the changes.</p>
+    .legal-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
 
-      <h2>2. User Eligibility and Accounts</h2>
-      <ul>
-          <li>You must be at least 13 years old to use this service.</li>
-          <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
-          <li>You agree to provide accurate and complete information during registration.</li>
-          <li>Beyounge reserves the right to suspend or terminate accounts that violate these terms.</li>
-      </ul>
+    /* Breadcrumbs */
+    .legal-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748B;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .breadcrumb-link {
+      color: #64748B;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+    .breadcrumb-link:hover {
+      color: var(--primary-emerald);
+    }
+    .breadcrumb-link i {
+      width: 14px;
+      height: 14px;
+    }
+    .breadcrumb-separator {
+      color: #CBD5E1;
+    }
+    .breadcrumb-current {
+      color: #0F172A;
+      font-weight: 600;
+    }
 
-      <h2>3. Health and Fitness Disclaimer</h2>
-      <p><strong>Beyounge is a social and fitness tracking platform, not a medical service.</strong></p>
-      <ul>
-          <li>The content provided through the app, including AI-generated coaching advice, is for informational purposes only.</li>
-          <li>Always consult with a qualified healthcare professional before beginning any new exercise program or diet.</li>
-          <li>Use of the app is at your own risk. Beyounge is not liable for any injuries or health problems resulting from your use of the service.</li>
-      </ul>
+    /* Header */
+    .legal-header {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 24px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+    .legal-badge-wrapper {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .legal-title {
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .legal-subtitle {
+      font-size: 1.1rem;
+      line-height: 1.65;
+      color: #475569;
+      max-width: 860px;
+      margin-bottom: 1.75rem;
+    }
 
-      <h2>4. Integration with Health Data</h2>
-      <p>Beyounge integrates with Google Health Connect to read and sync your fitness data (steps, calories, sleep, etc.). By enabling these permissions, you grant Beyounge permission to process this data to provide personalized insights. Your health data is handled in accordance with our Privacy Policy.</p>
+    /* Meta Bar */
+    .legal-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #F1F5F9;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .meta-item i {
+      width: 22px;
+      height: 22px;
+      color: var(--primary-emerald);
+      flex-shrink: 0;
+    }
+    .meta-label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 700;
+    }
+    .meta-value {
+      display: block;
+      font-size: 0.95rem;
+      color: #0F172A;
+      font-weight: 700;
+    }
+    .meta-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+    .btn-meta-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-meta-action:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+    }
+    .btn-meta-action i {
+      width: 16px;
+      height: 16px;
+    }
 
-      <h2>5. User-Generated Content</h2>
-      <p>You may post content, including photos, videos (Reels), and comments.</p>
-      <ul>
-          <li>You retain ownership of your content, but grant Beyounge a worldwide, royalty-free license to host, display, and distribute it within the app.</li>
-          <li>You agree not to post content that is illegal, offensive, defamatory, or infringes on the intellectual property of others.</li>
-          <li>Beyounge reserves the right to remove any content at our sole discretion.</li>
-      </ul>
+    /* Summary Card */
+    .summary-section {
+      margin-bottom: 2rem;
+    }
+    .summary-card {
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px;
+      padding: 2rem;
+    }
+    .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--primary-emerald);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .summary-icon i {
+      width: 22px;
+      height: 22px;
+    }
+    .summary-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #064E3B;
+      margin: 0;
+    }
+    .summary-subtitle {
+      font-size: 0.9rem;
+      color: #047857;
+      margin: 0.2rem 0 0 0;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .summary-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 1rem 1.25rem;
+      border-radius: 14px;
+      border: 1px solid rgba(16, 185, 129, 0.15);
+    }
+    .summary-bullet-icon {
+      color: var(--primary-emerald);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .summary-bullet-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    .summary-item strong {
+      display: block;
+      font-size: 0.95rem;
+      color: #064E3B;
+      margin-bottom: 0.25rem;
+    }
+    .summary-item p {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #334155;
+      margin: 0;
+    }
 
-      <h2>6. Prohibited Activities</h2>
-      <p>You agree not to:</p>
-      <ul>
-          <li>Harass or bully other users.</li>
-          <li>Use the service for any illegal or unauthorized purpose.</li>
-          <li>Attempt to reverse engineer or hack the application.</li>
-          <li>Upload viruses or malicious code.</li>
-      </ul>
+    /* Mobile Table of Contents */
+    .mobile-toc-wrapper {
+      display: none;
+      margin-bottom: 1.5rem;
+    }
+    .mobile-toc-trigger {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0F172A;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .toc-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .toc-trigger-left i {
+      width: 20px;
+      height: 20px;
+      color: var(--primary-emerald);
+    }
+    .toc-chevron {
+      width: 18px;
+      height: 18px;
+      color: #64748B;
+      transition: transform 0.2s ease;
+    }
+    .mobile-toc-dropdown {
+      display: none;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      padding: 1rem 1.25rem;
+    }
+    .mobile-toc-dropdown.active {
+      display: block;
+    }
+    .toc-chevron.rotate {
+      transform: rotate(180deg);
+    }
+    .toc-mobile-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toc-mobile-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .toc-mobile-link:hover, .toc-mobile-link:active {
+      background: rgba(16, 185, 129, 0.08);
+      color: var(--primary-emerald);
+    }
 
-      <h2>7. Intellectual Property</h2>
-      <p>All app design, branding, and original content (excluding user posts) are the exclusive property of Beyounge and its licensors.</p>
+    /* Two-Column Layout */
+    .legal-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
 
-      <h2>8. Termination</h2>
-      <p>You may delete your account at any time within the app settings. Beyounge may terminate your access for any violation of these Terms or for any reason with or without notice.</p>
+    /* Desktop Sidebar */
+    .legal-sidebar {
+      position: sticky;
+      top: 100px;
+    }
+    .toc-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .toc-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      color: #64748B;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #F1F5F9;
+      margin-bottom: 1rem;
+    }
+    .toc-header i {
+      width: 16px;
+      height: 16px;
+      color: var(--primary-emerald);
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      line-height: 1.35;
+    }
+    .toc-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94A3B8;
+      background: #F1F5F9;
+      padding: 0.15rem 0.35rem;
+      border-radius: 5px;
+      min-width: 24px;
+      text-align: center;
+    }
+    .toc-link:hover {
+      background: rgba(16, 185, 129, 0.08);
+      color: var(--primary-emerald);
+      transform: translateX(3px);
+    }
+    .toc-link.active {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--primary-emerald);
+      font-weight: 700;
+    }
+    .toc-link.active .toc-num {
+      background: var(--primary-emerald);
+      color: white;
+    }
 
-      <h2>9. Limitation of Liability</h2>
-      <p>To the maximum extent permitted by law, Beyounge shall not be liable for any indirect, incidental, or consequential damages arising out of your use of the service.</p>
+    .sidebar-help-box {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #F1F5F9;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .help-box-icon {
+      color: var(--primary-emerald);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .help-box-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    .help-box-content strong {
+      display: block;
+      font-size: 0.85rem;
+      color: #0F172A;
+      margin-bottom: 0.2rem;
+    }
+    .help-box-content p {
+      font-size: 0.775rem;
+      line-height: 1.4;
+      color: #64748B;
+      margin: 0 0 0.5rem 0;
+    }
+    .help-box-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-emerald);
+      text-decoration: none;
+    }
+    .help-box-link i {
+      width: 14px;
+      height: 14px;
+    }
+    .help-box-link:hover {
+      text-decoration: underline;
+    }
 
-      <h2>10. Contact Us</h2>
-      <p>If you have any questions about these Terms, please contact us at support@beyounge.com.</p>
-    </div>
+    /* Legal Content Body */
+    .legal-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .content-intro-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #334155;
+    }
+    .content-intro-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .legal-section {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+      scroll-margin-top: 120px;
+    }
+    .section-title-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .section-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary-emerald);
+    }
+    .section-title-wrapper h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .section-body {
+      font-size: 1.025rem;
+      line-height: 1.75;
+      color: #334155;
+    }
+    .lead-text {
+      font-size: 1.1rem;
+      color: #0F172A;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Lists */
+    .styled-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .styled-list li {
+      position: relative;
+      padding-left: 1.75rem;
+      line-height: 1.65;
+    }
+    .styled-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.6rem;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary-emerald);
+    }
+
+    /* Links */
+    .inline-link {
+      color: var(--primary-emerald);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s;
+    }
+    .inline-link:hover {
+      color: var(--primary-emerald-dark, #059669);
+    }
+
+    /* Callout Boxes */
+    .callout-box {
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .warning-callout {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #92400E;
+    }
+    .warning-callout .callout-icon {
+      color: #D97706;
+    }
+    .info-callout {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: #166534;
+    }
+    .info-callout .callout-icon {
+      color: #16A34A;
+    }
+    .callout-icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .callout-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    .callout-content strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+    .callout-content p {
+      font-size: 0.925rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Prohibited Activities Grid */
+    .prohibited-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .prohibited-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .prohibited-icon {
+      color: #EF4444;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .prohibited-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    .prohibited-item strong {
+      display: block;
+      font-size: 0.95rem;
+      color: #0F172A;
+      margin-bottom: 0.25rem;
+    }
+    .prohibited-item p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #64748B;
+      margin: 0;
+    }
+
+    /* Contact Card */
+    .legal-contact-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 1.75rem;
+      margin-top: 1.5rem;
+    }
+    .contact-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+    .contact-card-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #ECFDF5;
+      color: var(--primary-emerald);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-card-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    .contact-card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0;
+    }
+    .contact-card-desc {
+      font-size: 0.875rem;
+      color: #64748B;
+      margin: 0.2rem 0 0 0;
+    }
+    .contact-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .contact-grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .item-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 700;
+    }
+    .item-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    a.item-value:hover {
+      color: var(--primary-emerald);
+    }
+
+    /* Document Footer Bar */
+    .document-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0.5rem 0 0.5rem;
+      color: #94A3B8;
+      font-size: 0.875rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-back-to-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 100px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .btn-back-to-top:hover {
+      background: #F1F5F9;
+      color: var(--primary-emerald);
+      transform: translateY(-2px);
+    }
+    .btn-back-to-top i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Toast Notification for Link Copy */
+    .link-copy-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .link-copy-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 1024px) {
+      .legal-layout {
+        grid-template-columns: 1fr;
+      }
+      .legal-sidebar {
+        display: none;
+      }
+      .mobile-toc-wrapper {
+        display: block;
+      }
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .legal-header {
+        padding: 1.75rem 1.25rem;
+        border-radius: 20px;
+      }
+      .legal-title {
+        font-size: 1.85rem;
+      }
+      .legal-subtitle {
+        font-size: 0.975rem;
+      }
+      .legal-meta-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .meta-actions {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+      }
+      .legal-section {
+        padding: 1.75rem 1.25rem;
+        border-radius: 20px;
+      }
+      .content-intro-card {
+        padding: 1.5rem 1.25rem;
+      }
+      .prohibited-grid {
+        grid-template-columns: 1fr;
+      }
+      .contact-card-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary-card {
+        padding: 1.5rem 1.25rem;
+      }
+    }
+
+    /* Print Stylesheet Optimization */
+    @media print {
+      .header, .footer, .legal-sidebar, .mobile-toc-wrapper, .meta-actions, .btn-back-to-top {
+        display: none !important;
+      }
+      .legal-page-main {
+        padding: 0 !important;
+        background: #FFFFFF !important;
+      }
+      .legal-section, .legal-header, .content-intro-card, .summary-card {
+        box-shadow: none !important;
+        border: 1px solid #CCCCCC !important;
+        page-break-inside: avoid;
+        margin-bottom: 1.5rem !important;
+      }
+      body {
+        color: #000000 !important;
+        background: #FFFFFF !important;
+      }
+    }
+  </style>
+
+  <div id="copyToast" class="link-copy-toast">
+    <i data-lucide="check-circle" style="color: #10B981; width: 16px; height: 16px;"></i>
+    <span>Link copied to clipboard!</span>
   </div>
-</section>
 
-<%- include('../partials/footer') %>
+  <%- include('../partials/footer') %>
+
+  <!-- Interactive Scripts -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Scroll to Top Smooth Function
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Share / Copy Document Link with Toast
+    function copyDocumentLink() {
+      const url = window.location.href;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast();
+        }).catch(() => {
+          prompt('Copy this link:', url);
+        });
+      } else {
+        prompt('Copy this link:', url);
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('copyToast');
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
+    }
+
+    // Mobile Table of Contents Dropdown Toggle
+    const mobileTocTrigger = document.getElementById('mobileTocTrigger');
+    const mobileTocMenu = document.getElementById('mobileTocMenu');
+    const mobileTocChevron = document.getElementById('mobileTocChevron');
+
+    if (mobileTocTrigger && mobileTocMenu && mobileTocChevron) {
+      mobileTocTrigger.addEventListener('click', () => {
+        const isExpanded = mobileTocTrigger.getAttribute('aria-expanded') === 'true';
+        mobileTocTrigger.setAttribute('aria-expanded', !isExpanded);
+        mobileTocMenu.classList.toggle('active');
+        mobileTocChevron.classList.toggle('rotate');
+      });
+
+      // Auto close on link click
+      const mobileLinks = mobileTocMenu.querySelectorAll('.toc-mobile-link');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileTocTrigger.setAttribute('aria-expanded', 'false');
+          mobileTocMenu.classList.remove('active');
+          mobileTocChevron.classList.remove('rotate');
+        });
+      });
+    }
+
+    // ScrollSpy for Desktop Table of Contents
+    const sections = document.querySelectorAll('.legal-section');
+    const tocLinks = document.querySelectorAll('.toc-link');
+
+    window.addEventListener('scroll', () => {
+      let currentSection = '';
+      const scrollPos = window.scrollY + 160;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === currentSection) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
