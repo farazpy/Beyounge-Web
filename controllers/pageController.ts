@@ -34,6 +34,22 @@ function formatTimeAgo(timestamp: any, defaultTimeAgo?: string): string {
   return `${Math.floor(diffDays / 30)}mo ago`;
 }
 
+function formatJoinedDate(timestamp: any): string {
+  if (!timestamp) return 'Recently';
+  const num = Number(timestamp);
+  if (isNaN(num) || num <= 0) return 'Recently';
+  const date = new Date(num);
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+export const RESERVED_SLUGS = new Set([
+  'admin', 'feed', 'post', 'features', 'benefits', 'ai-coach', 'about', 'contact', 'faq',
+  'blog', 'download', 'changelog', 'careers', 'press-kit', 'sitemap',
+  'privacy-policy', 'terms-and-conditions', 'terms-of-service', 'data-deletion',
+  'cookie-policy', 'refund-policy', 'community-guidelines', 'accessibility-statement',
+  'api', 'robots.txt', 'sitemap.xml', 'favicon.ico', 'images', 'css', 'js', 'assets'
+]);
+
 // Default production datasets for auxiliary sections if tables don't exist in live MySQL DB
 const DEFAULT_FAQS = [
   { q: 'What makes Beyounge different from other fitness apps?', a: 'Beyounge combines an adaptive AI Coach, real-time exercise volume auto-regulation, photo macro tracking, and personal record tracking into a seamless, dark-mode-first Android experience with complete offline support.' },
@@ -489,5 +505,252 @@ export const pageController = {
       canonical: '/sitemap',
       pageName: 'sitemap'
     });
+  },
+
+  getUserProfile: async (req: Request, res: Response, next: any) => {
+    try {
+      const rawParam = (req.params.username || '').trim();
+      const cleanUsername = rawParam.replace(/^@/, '').trim();
+
+      if (!cleanUsername || RESERVED_SLUGS.has(cleanUsername.toLowerCase())) {
+        return next();
+      }
+
+      // Query user by username, handle, or uid
+      const userRows: any = await query(
+        `SELECT uid, username, displayName, email, photoUrl, avatar, dob, gender, height, weight,
+                fitnessGoal, createdAt, is_verified, bio, bioLink, isPrivateAccount, role,
+                followerCount, fitness_score, dailyWaterTarget, dailyCaloriesTarget,
+                dailyStepsTarget, dailyProteinTarget, full_name, handle, isAdmin
+         FROM users
+         WHERE username = ? OR handle = ? OR handle = ? OR uid = ?
+         ORDER BY is_verified DESC, createdAt DESC`,
+        [cleanUsername, `@${cleanUsername}`, cleanUsername, cleanUsername]
+      );
+
+      if (!Array.isArray(userRows) || userRows.length === 0) {
+        return next();
+      }
+
+      const primaryUser = userRows[0];
+      const userIds = Array.from(new Set(userRows.map((u: any) => String(u.uid)).filter(Boolean)));
+      if (primaryUser.uid && !userIds.includes(String(primaryUser.uid))) {
+        userIds.push(String(primaryUser.uid));
+      }
+
+      // Format user details
+      const displayName = primaryUser.displayName || primaryUser.full_name || primaryUser.username || cleanUsername;
+      const username = primaryUser.username || cleanUsername;
+      const avatar = primaryUser.photoUrl || primaryUser.avatar || '';
+      const bio = primaryUser.bio || 'Fitness athlete & Beyounge community member.';
+      const bioLink = primaryUser.bioLink ? primaryUser.bioLink.trim() : '';
+      const fitnessGoal = primaryUser.fitnessGoal || 'Overall Fitness';
+      const isVerified = Boolean(primaryUser.is_verified);
+      const role = primaryUser.role || (primaryUser.isAdmin ? 'Admin' : 'Member');
+      const joinedDate = formatJoinedDate(primaryUser.createdAt);
+
+      // Follower & following counts
+      let followersCount = Number(primaryUser.followerCount || 0);
+      let followingCount = 0;
+      let workoutCount = 0;
+
+      try {
+        const placeholders = userIds.map(() => '?').join(',');
+        const followerRes: any = await query(
+          `SELECT COUNT(*) AS cnt FROM user_follows WHERE followingId IN (${placeholders})`,
+          userIds
+        );
+        if (followerRes && followerRes.length > 0 && followerRes[0].cnt > 0) {
+          followersCount = Number(followerRes[0].cnt);
+        }
+
+        const followingRes: any = await query(
+          `SELECT COUNT(*) AS cnt FROM user_follows WHERE followerId IN (${placeholders})`,
+          userIds
+        );
+        if (followingRes && followingRes.length > 0) {
+          followingCount = Number(followingRes[0].cnt);
+        }
+
+        const activityRes: any = await query(
+          `SELECT COUNT(*) AS cnt FROM activities WHERE userId IN (${placeholders})`,
+          userIds
+        );
+        if (activityRes && activityRes.length > 0) {
+          workoutCount = Number(activityRes[0].cnt);
+        }
+      } catch (err: any) {
+        console.warn('Error fetching follow/activity stats for user profile:', err?.message || err);
+      }
+
+      const isPrivateAccount = Number(primaryUser.isPrivateAccount) === 1 ||
+                               primaryUser.isPrivateAccount === true ||
+                               primaryUser.isPrivateAccount === '1' ||
+                               req.query.private === '1' ||
+                               req.query.preview_private === '1';
+
+      // Fetch user's posts & reels ONLY if account is NOT private
+      let posts: any[] = [];
+      let reels: any[] = [];
+
+      if (!isPrivateAccount) {
+        try {
+          const placeholders = userIds.map(() => '?').join(',');
+          const postRows: any = await query(
+            `SELECT 
+                p.id, p.userId, p.content, p.imageUrl, p.videoUrl, p.coverImageUrl, 
+                p.postType, p.privacy, p.tags, p.timestamp,
+                (SELECT COUNT(*) FROM post_likes WHERE postId = p.id) AS likeCount,
+                (SELECT COUNT(*) FROM post_comments WHERE postId = p.id) AS commentCount,
+                (SELECT COUNT(*) FROM post_shares WHERE postId = p.id) AS shareCount
+             FROM posts p
+             WHERE (p.userId IN (${placeholders}) OR p.userId = ?) AND p.privacy = 'public'
+             ORDER BY p.timestamp DESC`,
+            [...userIds, cleanUsername]
+          );
+
+          if (Array.isArray(postRows)) {
+            for (const r of postRows) {
+              const isReel = r.postType === 'reel' || Boolean(r.videoUrl && !r.imageUrl);
+              const formattedItem = {
+                id: String(r.id),
+                userId: String(r.userId),
+                user: {
+                  name: displayName,
+                  handle: `@${username}`,
+                  avatar: avatar,
+                  isVerified: isVerified
+                },
+                time: formatTimeAgo(r.timestamp),
+                content: r.content || '',
+                image: r.imageUrl || (!isReel ? r.coverImageUrl : null),
+                videoUrl: r.videoUrl || null,
+                coverImageUrl: r.coverImageUrl || r.imageUrl || null,
+                tags: r.tags || '',
+                likes: Number(r.likeCount || 0),
+                comments: Number(r.commentCount || 0),
+                shares: Number(r.shareCount || 0),
+                postType: r.postType
+              };
+
+              if (isReel) {
+                reels.push(formattedItem);
+              } else {
+                posts.push(formattedItem);
+              }
+            }
+          }
+        } catch (err: any) {
+          console.error('Error fetching user posts/reels for profile:', err?.message || err);
+        }
+      }
+
+      // Filter media posts (posts with image attachments)
+      const mediaPosts = posts.filter(p => Boolean(p.image));
+
+      // Fetch suggested athletes from MySQL
+      let suggestedAthletes: any[] = [];
+      try {
+        const placeholders = userIds.map(() => '?').join(',');
+        const sugRows: any = await query(
+          `SELECT uid, username, displayName, photoUrl, avatar, bio, is_verified, fitnessGoal 
+           FROM users 
+           WHERE username != ? AND uid NOT IN (${placeholders}) AND (photoUrl != '' OR is_verified = 1)
+           ORDER BY is_verified DESC, createdAt DESC 
+           LIMIT 4`,
+          [cleanUsername, ...userIds]
+        );
+        if (Array.isArray(sugRows)) {
+          suggestedAthletes = sugRows.map((u: any) => ({
+            uid: String(u.uid),
+            username: u.username || 'athlete',
+            handle: `@${u.username || 'athlete'}`,
+            displayName: u.displayName || u.username || 'Athlete',
+            avatar: u.photoUrl || u.avatar || '',
+            bio: u.bio || '',
+            isVerified: Boolean(u.is_verified),
+            fitnessGoal: u.fitnessGoal || ''
+          }));
+        }
+      } catch (err: any) {
+        console.warn('Error fetching suggested athletes:', err?.message || err);
+      }
+
+      // Fetch trending community reels for sidebar preview
+      let trendingReels: any[] = [];
+      try {
+        const reelRows: any = await query(
+          `SELECT p.id, p.userId, p.content, p.videoUrl, p.coverImageUrl, p.imageUrl,
+                  u.username, u.displayName, u.photoUrl,
+                  (SELECT COUNT(*) FROM post_likes WHERE postId = p.id) AS likeCount
+           FROM posts p
+           JOIN users u ON p.userId = u.uid
+           WHERE p.postType = 'reel' AND p.videoUrl != ''
+           ORDER BY likeCount DESC, p.timestamp DESC
+           LIMIT 3`
+        );
+        if (Array.isArray(reelRows)) {
+          trendingReels = reelRows.map((r: any) => ({
+            id: String(r.id),
+            user: `@${r.username || 'user'}`,
+            displayName: r.displayName || r.username || 'User',
+            avatar: r.photoUrl || '',
+            videoUrl: r.videoUrl || '',
+            cover: r.coverImageUrl || r.imageUrl || '',
+            content: r.content || '',
+            likes: Number(r.likeCount || 0)
+          }));
+        }
+      } catch (err: any) {
+        console.warn('Error fetching trending reels:', err?.message || err);
+      }
+
+      // Sanitize fitness score so uncalculated defaults (-1) don't render as negative
+      const rawScore = Number(primaryUser.fitness_score);
+      const cleanFitnessScore = (!isNaN(rawScore) && rawScore > 0) ? rawScore : null;
+
+      const profileUser = {
+        uid: primaryUser.uid,
+        username,
+        displayName,
+        avatar,
+        bio: isPrivateAccount ? 'This athlete has made their profile and activity private.' : bio,
+        bioLink: isPrivateAccount ? '' : bioLink,
+        fitnessGoal: isPrivateAccount ? '' : fitnessGoal,
+        isVerified,
+        isPrivate: isPrivateAccount,
+        role,
+        joinedDate,
+        height: isPrivateAccount ? null : primaryUser.height,
+        weight: isPrivateAccount ? null : primaryUser.weight,
+        fitnessScore: isPrivateAccount ? null : cleanFitnessScore,
+        dailyCaloriesTarget: isPrivateAccount ? null : primaryUser.dailyCaloriesTarget,
+        dailyWaterTarget: isPrivateAccount ? null : primaryUser.dailyWaterTarget,
+        dailyStepsTarget: isPrivateAccount ? null : primaryUser.dailyStepsTarget,
+        dailyProteinTarget: isPrivateAccount ? null : primaryUser.dailyProteinTarget,
+        followersCount,
+        followingCount,
+        workoutCount: isPrivateAccount ? 0 : workoutCount,
+        postsCount: isPrivateAccount ? 0 : posts.length,
+        reelsCount: isPrivateAccount ? 0 : reels.length,
+        mediaCount: isPrivateAccount ? 0 : mediaPosts.length
+      };
+
+      res.render('pages/user-profile', {
+        title: `${displayName} (@${username}) | Beyounge`,
+        description: bio || `${displayName}'s fitness profile, workout logs, and reels on Beyounge.`,
+        canonical: `/${username}`,
+        pageName: 'profile',
+        profileUser,
+        posts,
+        reels,
+        mediaPosts,
+        suggestedAthletes,
+        trendingReels
+      });
+    } catch (error: any) {
+      console.error('Error in getUserProfile:', error?.message || error);
+      next(error);
+    }
   }
 };

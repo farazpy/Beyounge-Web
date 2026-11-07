@@ -10,7 +10,7 @@
   <link rel="canonical" href="<%= process.env.APP_URL || '' %><%= canonical %>">
 
   <!-- OpenGraph Meta Tags -->
-  <meta property="og:site_name" content="Beyounge">
+  <meta property="og:site_name" content="<%= locals.brandName || 'Beyounge' %>">
   <meta property="og:title" content="<%= title %>">
   <meta property="og:description" content="<%= description %>">
   <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
   <meta name="twitter:image" content="<%= process.env.APP_URL || '' %>/images/og-beyounge.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="<%= locals.faviconUrl || '/images/favicon.svg' %>">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/styles.css">

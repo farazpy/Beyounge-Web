@@ -22,6 +22,70 @@ app.use(express.urlencoded({ extended: true }));
 // Serve Static Assets
 app.use(express.static(path.join(process.cwd(), 'public')));
 
+// Cache for app_config
+let cachedConfig: Record<string, string> = {
+  app_brand_name: 'Beyounge',
+  app_tagline: 'Train Smarter. Live Stronger.',
+  app_logo_url: '',
+  app_favicon_url: '/images/favicon.svg',
+  contact_email: 'support@beyounge.app',
+  contact_phone: '+1 (800) 555-BEYOUNGE',
+  contact_address: '100 Fitness Plaza, Suite 400, San Francisco, CA 94107',
+  contact_hours: 'Mon - Fri: 8:00 AM - 8:00 PM EST',
+  social_twitter: 'https://x.com/beyounge',
+  social_instagram: 'https://instagram.com/beyounge',
+  social_youtube: 'https://youtube.com/@beyounge'
+};
+let lastConfigFetch = 0;
+
+export async function getAppConfig(forceRefresh = false): Promise<Record<string, string>> {
+  const now = Date.now();
+  if (!forceRefresh && now - lastConfigFetch < 30000 && Object.keys(cachedConfig).length > 5) {
+    return cachedConfig;
+  }
+  try {
+    const rows: any = await query('SELECT config_key, config_value FROM app_config');
+    if (Array.isArray(rows) && rows.length > 0) {
+      for (const r of rows) {
+        if (r.config_key) {
+          cachedConfig[r.config_key] = r.config_value ?? '';
+        }
+      }
+      lastConfigFetch = now;
+    }
+  } catch (err: any) {
+    console.warn('[app_config load warning]', err?.message || err);
+  }
+  return cachedConfig;
+}
+
+// Global middleware to inject dynamic site settings into all EJS templates
+app.use(async (req: Request, res: Response, next) => {
+  try {
+    const config = await getAppConfig();
+    res.locals.appConfig = config;
+    res.locals.brandName = config.app_brand_name || 'Beyounge';
+    res.locals.tagline = config.app_tagline || 'Train Smarter. Live Stronger.';
+    res.locals.logoUrl = config.app_logo_url || '';
+    res.locals.faviconUrl = config.app_favicon_url || '/images/favicon.svg';
+    res.locals.contactEmail = config.contact_email || 'support@beyounge.app';
+    res.locals.contactPhone = config.contact_phone || '+1 (800) 555-BEYOUNGE';
+    res.locals.contactAddress = config.contact_address || '100 Fitness Plaza, Suite 400, San Francisco, CA 94107';
+    res.locals.contactHours = config.contact_hours || 'Mon - Fri: 8:00 AM - 8:00 PM EST';
+    res.locals.socialTwitter = config.social_twitter || 'https://x.com/beyounge';
+    res.locals.socialInstagram = config.social_instagram || 'https://instagram.com/beyounge';
+    res.locals.socialYoutube = config.social_youtube || 'https://youtube.com/@beyounge';
+  } catch {
+    res.locals.appConfig = cachedConfig;
+    res.locals.brandName = 'Beyounge';
+    res.locals.tagline = 'Train Smarter. Live Stronger.';
+    res.locals.logoUrl = '';
+    res.locals.faviconUrl = '/images/favicon.svg';
+    res.locals.contactEmail = 'support@beyounge.app';
+  }
+  next();
+});
+
 // Serve Robots.txt & Sitemap.xml
 app.get('/robots.txt', (req: Request, res: Response) => {
   res.sendFile(path.join(process.cwd(), 'robots.txt'));

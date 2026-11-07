@@ -1,0 +1,1997 @@
+<%- include('../partials/head') %>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="profile-page-main">
+    
+    <!-- Outer Responsive Container -->
+    <div class="profile-page-container">
+
+      <!-- Responsive 2-Column Grid -->
+      <div class="profile-layout-grid">
+
+        <!-- PRIMARY COLUMN: Timeline, Bio & Tabs -->
+        <div class="profile-primary-column">
+
+          <!-- Top Back Navigation Bar -->
+          <div class="profile-top-bar">
+            <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='/feed'" class="profile-back-btn" title="Back">
+              <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="profile-top-titles">
+              <h2 class="profile-top-name">
+                <span><%= profileUser.displayName %></span>
+                <% if (profileUser.isPrivate) { %>
+                  <i data-lucide="lock" style="width: 15px; height: 15px; color: var(--text-muted); margin-left: 0.15rem;" title="Private Account"></i>
+                <% } %>
+                <% if (profileUser.isVerified) { %>
+                  <i data-lucide="check-circle-2" class="verified-icon-inline" title="Verified Athlete"></i>
+                <% } %>
+              </h2>
+              <span class="profile-top-sub"><%= profileUser.isPrivate ? 'Private Profile' : (profileUser.postsCount + profileUser.reelsCount + ' posts & reels') %></span>
+            </div>
+          </div>
+
+          <!-- Profile Header Card (Twitter/X Style) -->
+          <div class="profile-card">
+            
+            <!-- Header Banner -->
+            <div class="profile-banner">
+              <div class="profile-banner-mesh"></div>
+              <div class="profile-banner-fade"></div>
+            </div>
+
+            <!-- Profile Info Body -->
+            <div class="profile-info-body">
+              
+              <!-- Avatar & Actions Row -->
+              <div class="profile-avatar-actions-row">
+                
+                <!-- Avatar -->
+                <div class="profile-avatar-wrapper">
+                  <% if (profileUser.avatar) { %>
+                    <img src="<%= profileUser.avatar %>" alt="<%= profileUser.displayName %>" class="profile-avatar-img" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(profileUser.displayName || 'User') %>&background=0F1419&color=fff&size=200';">
+                  <% } else { %>
+                    <div class="profile-avatar-fallback">
+                      <%= (profileUser.displayName || profileUser.username || 'U').charAt(0).toUpperCase() %>
+                    </div>
+                  <% } %>
+                  <% if (profileUser.isVerified) { %>
+                    <div class="profile-avatar-badge" title="Verified Athlete">
+                      <i data-lucide="check" style="width: 14px; height: 14px; color: white;"></i>
+                    </div>
+                  <% } %>
+                </div>
+
+                <!-- Profile Action Buttons -->
+                <div class="profile-actions-bar">
+                  <button id="shareProfileBtn" class="btn btn-outline btn-profile-action" title="Share Profile">
+                    <i data-lucide="share-2" style="width: 15px; height: 15px;"></i>
+                    <span>Share</span>
+                  </button>
+                  <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary btn-playstore btn-profile-action">
+                    <i data-lucide="play" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                    <span>Open in App</span>
+                  </a>
+                </div>
+
+              </div>
+
+              <!-- User Names & Badges -->
+              <div class="profile-names-block">
+                <div class="profile-names-header">
+                  <h1 class="profile-display-name"><%= profileUser.displayName %></h1>
+                  <% if (profileUser.isPrivate) { %>
+                    <i data-lucide="lock" style="width: 18px; height: 18px; color: var(--text-muted); margin-left: 0.15rem;" title="Private Account"></i>
+                  <% } %>
+                  <% if (profileUser.isVerified) { %>
+                    <span title="Verified Athlete" class="verified-icon-wrapper">
+                      <i data-lucide="check-circle-2" class="verified-icon-inline"></i>
+                    </span>
+                  <% } %>
+                  <% if (profileUser.isPrivate) { %>
+                    <span class="profile-private-tag">
+                      <i data-lucide="lock" style="width: 11px; height: 11px;"></i>
+                      Private Account
+                    </span>
+                  <% } %>
+                  <% if (profileUser.role) { %>
+                    <span class="profile-role-tag">
+                      <%= profileUser.role %>
+                    </span>
+                  <% } %>
+                  <% if (profileUser.fitnessScore) { %>
+                    <span class="profile-score-tag" title="Athletic Activity Score">
+                      ⚡ Score <%= profileUser.fitnessScore %>
+                    </span>
+                  <% } %>
+                </div>
+                <div class="profile-handle">
+                  @<%= profileUser.username %>
+                </div>
+              </div>
+
+              <!-- Bio Text -->
+              <% if (profileUser.bio) { %>
+                <p class="profile-bio-text">
+                  <%= profileUser.bio %>
+                </p>
+              <% } %>
+
+              <!-- Metadata Row (Goal, Link, Joined Date) -->
+              <div class="profile-metadata-row">
+                <% if (profileUser.fitnessGoal) { %>
+                  <div class="meta-item">
+                    <i data-lucide="target" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
+                    <span>Goal: <strong><%= profileUser.fitnessGoal %></strong></span>
+                  </div>
+                <% } %>
+                <% if (profileUser.bioLink) { %>
+                  <div class="meta-item">
+                    <i data-lucide="link" style="width: 15px; height: 15px; color: #1D9BF0;"></i>
+                    <a href="<%= profileUser.bioLink.startsWith('http') ? profileUser.bioLink : 'https://' + profileUser.bioLink %>" target="_blank" rel="noopener nofollow" class="meta-link">
+                      <%= profileUser.bioLink.replace(/^https?:\/\//, '').replace(/\/$/, '') %>
+                    </a>
+                  </div>
+                <% } %>
+                <div class="meta-item">
+                  <i data-lucide="calendar" style="width: 15px; height: 15px;"></i>
+                  <span>Joined <%= profileUser.joinedDate %></span>
+                </div>
+              </div>
+
+              <!-- Stats Counters Bar (Following, Followers, Posts, Reels, Workouts) -->
+              <div class="profile-counters-row">
+                <div class="counter-item">
+                  <strong><%= profileUser.followingCount %></strong>
+                  <span>Following</span>
+                </div>
+                <div class="counter-item">
+                  <strong><%= profileUser.followersCount %></strong>
+                  <span>Followers</span>
+                </div>
+                <div class="counter-item">
+                  <strong><%= profileUser.postsCount %></strong>
+                  <span>Posts</span>
+                </div>
+                <div class="counter-item">
+                  <strong><%= profileUser.reelsCount %></strong>
+                  <span>Reels</span>
+                </div>
+                <% if (profileUser.workoutCount > 0) { %>
+                  <div class="counter-item highlight">
+                    <strong style="color: var(--primary-emerald);"><%= profileUser.workoutCount %></strong>
+                    <span>Workouts</span>
+                  </div>
+                <% } %>
+              </div>
+
+            </div>
+          </div>
+
+          <% if (profileUser.isPrivate) { %>
+            <!-- Dedicated Private Account Barrier -->
+            <div class="private-account-barrier">
+              <div class="private-lock-orb">
+                <i data-lucide="lock" style="width: 38px; height: 38px; color: var(--primary-emerald);"></i>
+              </div>
+              <h3 class="private-lock-title">This Profile is Private</h3>
+              <p class="private-lock-desc">
+                Only approved followers can see @<%= profileUser.username %>'s workout posts, fitness reels, photos, and health targets.
+              </p>
+              <div class="private-lock-cta">
+                <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary btn-playstore" style="padding: 0.75rem 1.75rem; border-radius: 9999px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem;">
+                  <i data-lucide="play" style="width: 16px; height: 16px; fill: currentColor;"></i>
+                  <span>Follow on Beyounge Android</span>
+                </a>
+              </div>
+            </div>
+          <% } else { %>
+
+          <!-- Segmented Tab Navigation Bar -->
+          <div class="profile-tabs-header">
+            <button class="profile-tab-btn active" data-tab="tab-posts">
+              <i data-lucide="message-square" style="width: 17px; height: 17px;"></i>
+              <span>Posts</span>
+              <span class="tab-count-badge"><%= posts.length %></span>
+            </button>
+            <button class="profile-tab-btn" data-tab="tab-reels">
+              <i data-lucide="play-circle" style="width: 17px; height: 17px;"></i>
+              <span>Reels</span>
+              <span class="tab-count-badge"><%= reels.length %></span>
+            </button>
+            <button class="profile-tab-btn" data-tab="tab-media">
+              <i data-lucide="image" style="width: 17px; height: 17px;"></i>
+              <span>Media</span>
+              <span class="tab-count-badge"><%= (locals.mediaPosts || []).length %></span>
+            </button>
+            <button class="profile-tab-btn" data-tab="tab-stats">
+              <i data-lucide="activity" style="width: 17px; height: 17px;"></i>
+              <span>Stats & Goals</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: POSTS -->
+          <div id="tab-posts" class="profile-tab-pane active">
+            <% if (posts && posts.length > 0) { %>
+              <div class="feed-posts-stream">
+                <% posts.forEach(post => { %>
+                  <div class="tweet-card">
+                    
+                    <!-- Post Header -->
+                    <div class="tweet-header">
+                      <div class="tweet-author-info">
+                        <div class="tweet-avatar-thumb">
+                          <% if (post.user.avatar) { %>
+                            <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(post.user.name || 'User') %>&background=0F1419&color=fff&size=128';">
+                          <% } else { %>
+                            <div class="tweet-avatar-placeholder">
+                              <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
+                            </div>
+                          <% } %>
+                        </div>
+                        <div class="tweet-author-meta">
+                          <span class="tweet-author-name"><%= post.user.name %></span>
+                          <% if (post.user.isVerified) { %>
+                            <i data-lucide="check-circle-2" class="verified-icon-inline" title="Verified Athlete"></i>
+                          <% } %>
+                          <span class="tweet-author-handle"><%= post.user.handle %></span>
+                          <span class="tweet-dot">·</span>
+                          <span class="tweet-time"><%= post.time %></span>
+                        </div>
+                      </div>
+                      
+                      <a href="/post/<%= post.id %>" class="tweet-thread-link" title="View thread">
+                        <i data-lucide="external-link" style="width: 15px; height: 15px;"></i>
+                      </a>
+                    </div>
+
+                    <!-- Post Body -->
+                    <div class="tweet-body">
+                      <% if (post.content) { %>
+                        <p class="tweet-text"><%= post.content %></p>
+                      <% } %>
+                      <% if (post.image) { %>
+                        <div class="tweet-media-container">
+                          <img src="<%= post.image %>" alt="Post attachment" class="tweet-img" onerror="this.parentElement.style.display='none';">
+                        </div>
+                      <% } %>
+                    </div>
+
+                    <!-- Action Row -->
+                    <div class="tweet-actions-row">
+                      <button class="tweet-action-btn" title="Comments" onclick="window.location.href='/post/<%= post.id %>'">
+                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                        <span><%= post.comments %></span>
+                      </button>
+                      <button class="tweet-action-btn action-retweet" title="Share" onclick="navigator.clipboard?.writeText(window.location.origin + '/post/<%= post.id %>'); showGlobalToast('Link copied to clipboard!');">
+                        <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
+                        <span><%= post.shares %></span>
+                      </button>
+                      <button class="tweet-action-btn action-like" title="Like" onclick="this.classList.toggle('liked'); const span = this.querySelector('span'); span.textContent = parseInt(span.textContent || 0) + (this.classList.contains('liked') ? 1 : -1);">
+                        <i data-lucide="heart" style="width: 16px; height: 16px;"></i>
+                        <span><%= post.likes %></span>
+                      </button>
+                      <button class="tweet-action-btn" title="Copy Link" onclick="navigator.clipboard?.writeText(window.location.origin + '/post/<%= post.id %>'); showGlobalToast('Post link copied!');">
+                        <i data-lucide="share" style="width: 15px; height: 15px;"></i>
+                      </button>
+                    </div>
+
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="profile-empty-card">
+                <i data-lucide="feather" class="empty-icon"></i>
+                <h4>No Posts Yet</h4>
+                <p>@<%= profileUser.username %> hasn't shared any community timeline posts yet.</p>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- TAB 2: REELS (Responsive Grid) -->
+          <div id="tab-reels" class="profile-tab-pane" style="display: none;">
+            <% if (reels && reels.length > 0) { %>
+              <div class="reels-responsive-grid">
+                <% reels.forEach(reel => { %>
+                  <div class="reel-grid-card" data-video="<%= reel.videoUrl || '' %>">
+                    
+                    <!-- Reel Thumbnail / Cover -->
+                    <% if (reel.coverImageUrl || reel.image) { %>
+                      <img src="<%= reel.coverImageUrl || reel.image %>" alt="Reel by <%= profileUser.displayName %>" class="reel-grid-img" onerror="this.style.display='none';">
+                    <% } else { %>
+                      <div class="reel-grid-placeholder">
+                        <i data-lucide="video" style="width: 36px; height: 36px; color: var(--primary-emerald); opacity: 0.85;"></i>
+                      </div>
+                    <% } %>
+
+                    <!-- Gradient Shade -->
+                    <div class="reel-grid-overlay"></div>
+
+                    <!-- Play Hover Button -->
+                    <div class="reel-grid-play-hover">
+                      <div class="play-circle-badge">
+                        <i data-lucide="play" style="width: 22px; height: 22px; fill: white; color: white; margin-left: 3px;"></i>
+                      </div>
+                    </div>
+
+                    <!-- Reel Bottom Metadata -->
+                    <div class="reel-grid-bottom-meta">
+                      <% if (reel.content) { %>
+                        <p class="reel-caption"><%= reel.content %></p>
+                      <% } %>
+                      <div class="reel-stats-counters">
+                        <span><i data-lucide="heart" style="width: 12px; height: 12px; fill: currentColor;"></i> <%= reel.likes %></span>
+                        <span><i data-lucide="message-circle" style="width: 12px; height: 12px;"></i> <%= reel.comments %></span>
+                      </div>
+                    </div>
+
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="profile-empty-card">
+                <i data-lucide="film" class="empty-icon"></i>
+                <h4>No Reels Yet</h4>
+                <p>@<%= profileUser.username %> hasn't published any fitness video reels yet.</p>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- TAB 3: MEDIA (Photos Grid) -->
+          <div id="tab-media" class="profile-tab-pane" style="display: none;">
+            <% const userMedia = (locals.mediaPosts || []); %>
+            <% if (userMedia.length > 0) { %>
+              <div class="media-responsive-grid">
+                <% userMedia.forEach(p => { %>
+                  <a href="/post/<%= p.id %>" class="media-grid-item" title="View Post">
+                    <img src="<%= p.image %>" alt="Media photo" class="media-grid-img" onerror="this.parentElement.style.display='none';">
+                    <div class="media-grid-hover">
+                      <span><i data-lucide="heart" style="width: 14px; height: 14px; fill: currentColor;"></i> <%= p.likes %></span>
+                      <span><i data-lucide="message-circle" style="width: 14px; height: 14px;"></i> <%= p.comments %></span>
+                    </div>
+                  </a>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="profile-empty-card">
+                <i data-lucide="image" class="empty-icon"></i>
+                <h4>No Media Photos Yet</h4>
+                <p>Photos and meal logs shared by @<%= profileUser.username %> will appear here.</p>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- TAB 4: FITNESS & STATS -->
+          <div id="tab-stats" class="profile-tab-pane" style="display: none;">
+            <div class="stats-pane-container">
+              
+              <!-- Daily Targets Grid -->
+              <div class="stats-box-card">
+                <h3 class="stats-box-title">
+                  <i data-lucide="target" style="color: var(--primary-emerald); width: 20px; height: 20px;"></i>
+                  <span>Daily Health & Fitness Targets</span>
+                </h3>
+
+                <div class="stats-targets-grid">
+                  <div class="target-card target-cal">
+                    <div class="target-title">Daily Calories</div>
+                    <div class="target-value"><%= profileUser.dailyCaloriesTarget ? Number(profileUser.dailyCaloriesTarget).toLocaleString() : '2,000' %></div>
+                    <div class="target-unit">kcal / day</div>
+                  </div>
+
+                  <div class="target-card target-water">
+                    <div class="target-title">Water Intake</div>
+                    <div class="target-value"><%= profileUser.dailyWaterTarget ? Number(profileUser.dailyWaterTarget).toLocaleString() : '2,500' %></div>
+                    <div class="target-unit">ml / day</div>
+                  </div>
+
+                  <div class="target-card target-steps">
+                    <div class="target-title">Daily Steps</div>
+                    <div class="target-value"><%= profileUser.dailyStepsTarget ? Number(profileUser.dailyStepsTarget).toLocaleString() : '10,000' %></div>
+                    <div class="target-unit">steps / day</div>
+                  </div>
+
+                  <div class="target-card target-protein">
+                    <div class="target-title">Daily Protein</div>
+                    <div class="target-value"><%= profileUser.dailyProteinTarget ? profileUser.dailyProteinTarget : '150' %></div>
+                    <div class="target-unit">grams / day</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Biometrics Card -->
+              <div class="stats-box-card">
+                <h3 class="stats-box-title">
+                  <i data-lucide="user" style="color: var(--primary-emerald); width: 20px; height: 20px;"></i>
+                  <span>Athlete Biometrics</span>
+                </h3>
+
+                <div class="biometrics-grid">
+                  <div class="bio-stat-item">
+                    <i data-lucide="ruler" class="bio-stat-icon"></i>
+                    <div>
+                      <div class="bio-stat-label">Height</div>
+                      <div class="bio-stat-val"><%= profileUser.height ? profileUser.height + ' cm' : 'Not specified' %></div>
+                    </div>
+                  </div>
+
+                  <div class="bio-stat-item">
+                    <i data-lucide="scale" class="bio-stat-icon"></i>
+                    <div>
+                      <div class="bio-stat-label">Weight</div>
+                      <div class="bio-stat-val"><%= profileUser.weight ? profileUser.weight + ' kg' : 'Not specified' %></div>
+                    </div>
+                  </div>
+
+                  <div class="bio-stat-item">
+                    <i data-lucide="dumbbell" class="bio-stat-icon"></i>
+                    <div>
+                      <div class="bio-stat-label">Primary Goal</div>
+                      <div class="bio-stat-val"><%= profileUser.fitnessGoal %></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- App Download CTA -->
+              <div class="stats-app-cta-card">
+                <h4>Connect with <%= profileUser.displayName %> on Android</h4>
+                <p>
+                  Download the official Beyounge app to follow this athlete, log your own workouts, auto-regulate volume, and track macros.
+                </p>
+                <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary btn-playstore">
+                  <i data-lucide="play" style="width: 16px; height: 16px; fill: currentColor;"></i>
+                  <span>Download Beyounge Android</span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+          <% } %>
+
+        </div>
+
+        <!-- SECONDARY COLUMN: Sticky Right Sidebar (Desktop / Tablet) -->
+        <aside class="profile-sidebar-column">
+
+          <!-- Sidebar Card 1: Athlete Performance Target Summary -->
+          <% if (profileUser.isPrivate) { %>
+            <div class="sidebar-widget-card sidebar-private-locked">
+              <div class="widget-header">
+                <i data-lucide="lock" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+                <h3>Performance Targets</h3>
+              </div>
+              <div class="private-sidebar-locked-body">
+                <div class="lock-mini-icon">
+                  <i data-lucide="shield-check" style="width: 28px; height: 28px; color: var(--primary-emerald);"></i>
+                </div>
+                <p>Daily calorie targets, hydration, steps, and biometrics are protected for private accounts.</p>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="sidebar-widget-card">
+              <div class="widget-header">
+                <i data-lucide="activity" style="width: 18px; height: 18px; color: var(--primary-emerald);"></i>
+                <h3>Daily Performance Targets</h3>
+              </div>
+            
+            <div class="sidebar-targets-list">
+              <div class="sidebar-target-row">
+                <div class="st-info">
+                  <span class="st-name">Daily Calories</span>
+                  <span class="st-goal"><%= profileUser.dailyCaloriesTarget ? Number(profileUser.dailyCaloriesTarget).toLocaleString() : '2,000' %> kcal</span>
+                </div>
+                <div class="st-bar-track">
+                  <div class="st-bar-fill cal-fill" style="width: 78%;"></div>
+                </div>
+              </div>
+
+              <div class="sidebar-target-row">
+                <div class="st-info">
+                  <span class="st-name">Hydration</span>
+                  <span class="st-goal"><%= profileUser.dailyWaterTarget ? Number(profileUser.dailyWaterTarget).toLocaleString() : '2,500' %> ml</span>
+                </div>
+                <div class="st-bar-track">
+                  <div class="st-bar-fill water-fill" style="width: 65%;"></div>
+                </div>
+              </div>
+
+              <div class="sidebar-target-row">
+                <div class="st-info">
+                  <span class="st-name">Daily Steps</span>
+                  <span class="st-goal"><%= profileUser.dailyStepsTarget ? Number(profileUser.dailyStepsTarget).toLocaleString() : '10,000' %> steps</span>
+                </div>
+                <div class="st-bar-track">
+                  <div class="st-bar-fill steps-fill" style="width: 82%;"></div>
+                </div>
+              </div>
+
+              <div class="sidebar-target-row">
+                <div class="st-info">
+                  <span class="st-name">Protein Goal</span>
+                  <span class="st-goal"><%= profileUser.dailyProteinTarget ? profileUser.dailyProteinTarget : '150' %> g</span>
+                </div>
+                <div class="st-bar-track">
+                  <div class="st-bar-fill protein-fill" style="width: 90%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <% if (profileUser.fitnessGoal) { %>
+              <div class="sidebar-goal-badge">
+                <i data-lucide="award" style="width: 16px; height: 16px; color: var(--primary-emerald);"></i>
+                <span>Focus: <strong><%= profileUser.fitnessGoal %></strong></span>
+              </div>
+            <% } %>
+          </div>
+          <% } %>
+
+          <!-- Sidebar Card 2: Who to Follow (Community Athletes) -->
+          <% if (locals.suggestedAthletes && locals.suggestedAthletes.length > 0) { %>
+            <div class="sidebar-widget-card">
+              <div class="widget-header">
+                <i data-lucide="users" style="width: 18px; height: 18px; color: #1D9BF0;"></i>
+                <h3>Community Athletes</h3>
+              </div>
+
+              <div class="suggested-athletes-list">
+                <% locals.suggestedAthletes.forEach(athlete => { %>
+                  <div class="athlete-mini-row">
+                    <a href="/<%= athlete.username %>" class="athlete-mini-link">
+                      <% if (athlete.avatar) { %>
+                        <img src="<%= athlete.avatar %>" alt="<%= athlete.displayName %>" class="athlete-mini-avatar" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(athlete.displayName) %>&background=0F1419&color=fff&size=96';">
+                      <% } else { %>
+                        <div class="athlete-mini-placeholder">
+                          <%= (athlete.displayName || athlete.username).charAt(0).toUpperCase() %>
+                        </div>
+                      <% } %>
+                      <div class="athlete-mini-meta">
+                        <div class="athlete-mini-name">
+                          <span><%= athlete.displayName %></span>
+                          <% if (athlete.isVerified) { %>
+                            <i data-lucide="check-circle-2" class="verified-icon-inline" style="width: 13px; height: 13px;"></i>
+                          <% } %>
+                        </div>
+                        <div class="athlete-mini-handle"><%= athlete.handle %></div>
+                      </div>
+                    </a>
+                    <a href="/<%= athlete.username %>" class="athlete-view-btn">View</a>
+                  </div>
+                <% }); %>
+              </div>
+
+              <div class="widget-footer-link">
+                <a href="/feed">Discover more on Timeline →</a>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Sidebar Card 3: Trending Reels Preview -->
+          <% if (locals.trendingReels && locals.trendingReels.length > 0) { %>
+            <div class="sidebar-widget-card">
+              <div class="widget-header">
+                <i data-lucide="sparkles" style="width: 18px; height: 18px; color: #F59E0B;"></i>
+                <h3>Trending Reels</h3>
+              </div>
+
+              <div class="trending-reels-list">
+                <% locals.trendingReels.forEach(tr => { %>
+                  <div class="trending-reel-mini-card" data-video="<%= tr.videoUrl %>">
+                    <div class="tr-cover-box">
+                      <% if (tr.cover) { %>
+                        <img src="<%= tr.cover %>" alt="Trending reel" class="tr-cover-img" onerror="this.style.display='none';">
+                      <% } else { %>
+                        <div class="tr-cover-placeholder"><i data-lucide="play" style="width: 16px; height: 16px; color: white;"></i></div>
+                      <% } %>
+                      <div class="tr-play-overlay">
+                        <i data-lucide="play" style="width: 16px; height: 16px; fill: white; color: white;"></i>
+                      </div>
+                    </div>
+                    <div class="tr-details">
+                      <div class="tr-user"><%= tr.displayName %></div>
+                      <div class="tr-content-preview"><%= tr.content || 'Workout reel' %></div>
+                      <div class="tr-likes"><i data-lucide="heart" style="width: 11px; height: 11px; fill: currentColor;"></i> <%= tr.likes %> likes</div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Sidebar Card 4: Official App CTA -->
+          <div class="sidebar-widget-card sidebar-app-download">
+            <div class="app-icon-wrap">
+              <i data-lucide="smartphone" style="width: 24px; height: 24px; color: var(--primary-emerald);"></i>
+            </div>
+            <h4>Train Smarter on Android</h4>
+            <p>Get AI form detection, auto-regulated sets, offline logging, and nutrition tracking.</p>
+            <a href="https://play.google.com/store/apps/details?id=com.beyounge.app" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-playstore" style="width: 100%; justify-content: center; border-radius: 9999px;">
+              <i data-lucide="play" style="width: 14px; height: 14px; fill: currentColor;"></i>
+              <span>Get Android App</span>
+            </a>
+          </div>
+
+          <!-- Sidebar Footer Links -->
+          <div class="sidebar-footer-links">
+            <a href="/privacy-policy">Privacy</a> ·
+            <a href="/terms-and-conditions">Terms</a> ·
+            <a href="/community-guidelines">Community</a> ·
+            <a href="/faq">FAQ</a> ·
+            <span>© 2026 Beyounge</span>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Video Playback Modal for Reels -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+      <button class="video-modal-close" id="closeVideoModal" aria-label="Close reel player">
+        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+      </button>
+      <video id="reelVideo" controls autoplay playsinline class="video-player"></video>
+    </div>
+  </div>
+
+  <!-- Global Toast -->
+  <div id="globalToast" class="global-toast">
+    <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--primary-emerald);"></i>
+    <span id="toastMsg">Action completed!</span>
+  </div>
+
+  <style>
+    /* Profile Layout & Architecture */
+    .profile-page-main {
+      padding-top: 86px;
+      padding-bottom: 80px;
+      background-color: var(--bg-surface);
+      min-height: 100vh;
+    }
+    .profile-page-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    .profile-layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    /* Top Bar */
+    .profile-top-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0.25rem 0.9rem 0.25rem;
+    }
+    .profile-back-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: var(--text-primary);
+      transition: background 0.2s;
+    }
+    .profile-back-btn:hover {
+      background: rgba(15, 23, 42, 0.06);
+    }
+    .profile-top-titles {
+      line-height: 1.2;
+    }
+    .profile-top-name {
+      font-size: 1.2rem;
+      margin: 0;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-primary);
+    }
+    .profile-top-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Profile Card */
+    .profile-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--bg-card);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      margin-bottom: 1.25rem;
+    }
+    .profile-banner {
+      height: 200px;
+      background: linear-gradient(135deg, #09131F 0%, #0F231D 50%, #022C22 100%);
+      position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .profile-banner-mesh {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(16, 185, 129, 0.2) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: 0.5;
+    }
+    .profile-banner-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    }
+
+    .profile-info-body {
+      padding: 0 1.75rem 1.75rem 1.75rem;
+      position: relative;
+    }
+    .profile-avatar-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: -65px;
+      margin-bottom: 1.15rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .profile-avatar-wrapper {
+      position: relative;
+    }
+    .profile-avatar-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #FFFFFF;
+      object-fit: cover;
+      background: #0F172A;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      display: block;
+    }
+    .profile-avatar-fallback {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #FFFFFF;
+      background: #0F172A;
+      color: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.75rem;
+      font-weight: 800;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+    .profile-avatar-badge {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: #1D9BF0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #FFFFFF;
+    }
+    .profile-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+    .btn-profile-action {
+      padding: 0.55rem 1.15rem;
+      font-size: 0.85rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .profile-names-block {
+      margin-bottom: 0.85rem;
+    }
+    .profile-names-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .profile-display-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .verified-icon-inline {
+      width: 18px;
+      height: 18px;
+      fill: #1D9BF0;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+    .profile-role-tag {
+      font-size: 0.725rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--primary-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+    }
+    .profile-score-tag {
+      font-size: 0.725rem;
+      font-weight: 700;
+      background: rgba(245, 158, 11, 0.12);
+      color: #D97706;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+    }
+    .profile-handle {
+      font-size: 0.925rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+    .profile-bio-text {
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 1.15rem;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+
+    .profile-metadata-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 1.15rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .meta-link {
+      color: #1D9BF0;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .meta-link:hover {
+      text-decoration: underline;
+    }
+
+    .profile-counters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.925rem;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.95rem;
+    }
+    .counter-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+    .counter-item strong {
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .counter-item span {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Tabs Header */
+    .profile-tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 1.25rem;
+      background: var(--bg-card);
+      border-radius: 14px 14px 0 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .profile-tabs-header::-webkit-scrollbar {
+      display: none;
+    }
+    .profile-tab-btn {
+      flex: 1;
+      min-width: 110px;
+      padding: 0.9rem 0.5rem;
+      text-align: center;
+      background: transparent;
+      border: none;
+      font-size: 0.925rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .profile-tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(15, 23, 42, 0.02);
+    }
+    .profile-tab-btn.active {
+      color: var(--text-primary);
+      font-weight: 700;
+      border-bottom-color: var(--primary-emerald);
+    }
+    .tab-count-badge {
+      font-size: 0.725rem;
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--text-muted);
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+    }
+    .profile-tab-btn.active .tab-count-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-emerald);
+    }
+
+    /* Tweet Card Styling */
+    .feed-posts-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .tweet-card {
+      padding: 1.15rem 1.25rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tweet-card:hover {
+      border-color: rgba(16, 185, 129, 0.35);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+    .tweet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.6rem;
+    }
+    .tweet-author-info {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .tweet-avatar-thumb img, .tweet-avatar-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .tweet-avatar-placeholder {
+      background: #0F1419;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .tweet-author-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      line-height: 1.25;
+    }
+    .tweet-author-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .tweet-author-handle, .tweet-dot, .tweet-time {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+    .tweet-thread-link {
+      color: var(--text-muted);
+      padding: 0.3rem;
+      border-radius: 50%;
+      transition: color 0.2s;
+    }
+    .tweet-thread-link:hover {
+      color: var(--primary-emerald);
+    }
+    .tweet-body {
+      margin-bottom: 0.75rem;
+    }
+    .tweet-text {
+      margin-bottom: 0.65rem;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: var(--text-primary);
+      word-break: break-word;
+      white-space: pre-line;
+    }
+    .tweet-media-container {
+      border-radius: 14px;
+      overflow: hidden;
+      max-height: 420px;
+      border: 1px solid var(--border-subtle);
+      background: #000000;
+      margin-top: 0.65rem;
+    }
+    .tweet-img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: contain;
+      display: block;
+    }
+    .tweet-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 420px;
+      padding-top: 0.4rem;
+      color: var(--text-muted);
+    }
+    .tweet-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.4rem;
+      border-radius: 9999px;
+      transition: all 0.2s;
+    }
+    .tweet-action-btn:hover {
+      color: var(--primary-emerald);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .tweet-action-btn.liked {
+      color: #EF4444 !important;
+    }
+    .tweet-action-btn.liked i {
+      fill: #EF4444 !important;
+    }
+
+    /* Reels Responsive Grid */
+    .reels-responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .reel-grid-card {
+      position: relative;
+      aspect-ratio: 9/16;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      cursor: pointer;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .reel-grid-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .reel-grid-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .reel-grid-card:hover .reel-grid-img {
+      transform: scale(1.06);
+    }
+    .reel-grid-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #09131F 0%, #064E3B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reel-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+    .reel-grid-play-hover {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      background: rgba(0,0,0,0.25);
+    }
+    .reel-grid-card:hover .reel-grid-play-hover {
+      opacity: 1;
+    }
+    .play-circle-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .reel-grid-bottom-meta {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      color: #FFFFFF;
+      pointer-events: none;
+    }
+    .reel-caption {
+      font-size: 0.78rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .reel-stats-counters {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.92);
+      font-weight: 600;
+    }
+    .reel-stats-counters span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Media Responsive Grid */
+    .media-responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .media-grid-item {
+      position: relative;
+      aspect-ratio: 1/1;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      display: block;
+      border: 1px solid var(--border-subtle);
+    }
+    .media-grid-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .media-grid-item:hover .media-grid-img {
+      transform: scale(1.06);
+    }
+    .media-grid-hover {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .media-grid-item:hover .media-grid-hover {
+      opacity: 1;
+    }
+    .media-grid-hover span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Stats Pane */
+    .stats-pane-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .stats-box-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+    }
+    .stats-box-title {
+      font-size: 1.1rem;
+      margin-bottom: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+    .stats-targets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+    .target-card {
+      border-radius: 14px;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid transparent;
+    }
+    .target-cal {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+    .target-water {
+      background: rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+    .target-steps {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+    .target-protein {
+      background: rgba(168, 85, 247, 0.08);
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+    .target-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .target-cal .target-title { color: var(--primary-emerald); }
+    .target-water .target-title { color: #3B82F6; }
+    .target-steps .target-title { color: #F59E0B; }
+    .target-protein .target-title { color: #A855F7; }
+
+    .target-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .target-unit {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .biometrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .bio-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(15, 23, 42, 0.02);
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+    .bio-stat-icon {
+      color: var(--primary-emerald);
+      width: 22px;
+      height: 22px;
+    }
+    .bio-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .bio-stat-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stats-app-cta-card {
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.12) 100%);
+    }
+    .stats-app-cta-card h4 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .stats-app-cta-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      max-width: 440px;
+      margin: 0 auto 1.25rem auto;
+    }
+
+    /* Empty Card */
+    .profile-empty-card {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      background: var(--bg-card);
+    }
+    .empty-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .profile-empty-card h4 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+    .profile-empty-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* SIDEBAR STYLES */
+    .profile-sidebar-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: sticky;
+      top: 96px;
+    }
+    .sidebar-widget-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 1.25rem;
+      background: var(--bg-card);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    .widget-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .widget-header h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .sidebar-targets-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .sidebar-target-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .st-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.825rem;
+    }
+    .st-name {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .st-goal {
+      color: var(--text-primary);
+      font-weight: 700;
+      font-family: monospace;
+    }
+    .st-bar-track {
+      height: 6px;
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+    .st-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+    }
+    .cal-fill { background: var(--primary-emerald); }
+    .water-fill { background: #3B82F6; }
+    .steps-fill { background: #F59E0B; }
+    .protein-fill { background: #A855F7; }
+
+    .sidebar-goal-badge {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+    }
+
+    .suggested-athletes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .athlete-mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .athlete-mini-link {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      min-width: 0;
+      flex: 1;
+    }
+    .athlete-mini-avatar, .athlete-mini-placeholder {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .athlete-mini-placeholder {
+      background: #0F1419;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .athlete-mini-meta {
+      min-width: 0;
+    }
+    .athlete-mini-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .athlete-mini-handle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .athlete-view-btn {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .athlete-view-btn:hover {
+      background: var(--primary-emerald);
+      color: white;
+      border-color: var(--primary-emerald);
+    }
+    .widget-footer-link {
+      margin-top: 0.85rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .widget-footer-link a {
+      font-size: 0.8rem;
+      color: var(--primary-emerald);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .widget-footer-link a:hover {
+      text-decoration: underline;
+    }
+
+    .trending-reels-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .trending-reel-mini-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.35rem;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .trending-reel-mini-card:hover {
+      background: rgba(15, 23, 42, 0.04);
+    }
+    .tr-cover-box {
+      width: 52px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+      flex-shrink: 0;
+    }
+    .tr-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .tr-cover-placeholder {
+      width: 100%;
+      height: 100%;
+      background: #0F172A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tr-play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tr-details {
+      min-width: 0;
+      flex: 1;
+    }
+    .tr-user {
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tr-content-preview {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0.15rem 0;
+    }
+    .tr-likes {
+      font-size: 0.725rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .sidebar-app-download {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.07) 0%, rgba(6, 78, 59, 0.12) 100%);
+      text-align: center;
+    }
+    .app-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    .sidebar-app-download h4 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+    .sidebar-app-download p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .sidebar-footer-links {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      padding: 0 0.5rem;
+    }
+    .sidebar-footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .sidebar-footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Video Modal */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .video-modal.active {
+      display: flex;
+    }
+    .video-modal-content {
+      max-width: 420px;
+      width: 90%;
+      background: #000;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    }
+    .video-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .video-modal-close:hover {
+      background: rgba(0,0,0,0.9);
+    }
+    .video-player {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      display: block;
+    }
+
+    /* Global Toast */
+    .global-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 0.65rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 10000;
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+      pointer-events: none;
+    }
+    .global-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .profile-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .profile-sidebar-column {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+      }
+      .sidebar-footer-links {
+        grid-column: 1 / -1;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-page-main {
+        padding-top: 72px;
+        padding-bottom: 60px;
+      }
+      .profile-page-container {
+        padding: 0 0.75rem;
+      }
+      .profile-banner {
+        height: 150px;
+      }
+      .profile-info-body {
+        padding: 0 1rem 1.25rem 1rem;
+      }
+      .profile-avatar-img, .profile-avatar-fallback {
+        width: 88px;
+        height: 88px;
+      }
+      .profile-avatar-fallback {
+        font-size: 2rem;
+      }
+      .profile-avatar-actions-row {
+        margin-top: -45px;
+      }
+      .profile-display-name {
+        font-size: 1.25rem;
+      }
+      .reels-responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+      }
+      .media-responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .profile-sidebar-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Private Account Barrier & Lock Styles */
+    .private-account-barrier {
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 4.5rem 2rem;
+      background: var(--bg-card);
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .private-lock-orb {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .private-lock-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .private-lock-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 440px;
+      line-height: 1.6;
+      margin: 0 auto 1.5rem auto;
+    }
+    .profile-private-tag {
+      font-size: 0.725rem;
+      font-weight: 700;
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .sidebar-private-locked {
+      background: rgba(15, 23, 42, 0.02);
+    }
+    .private-sidebar-locked-body {
+      padding: 1.25rem 0.5rem 0.5rem 0.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lock-mini-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.25rem;
+    }
+    .private-sidebar-locked-body p {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+  </style>
+
+  <%- include('../partials/footer') %>
+
+  <!-- Lucide & Scripts -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Global Toast Notification Helper
+    function showGlobalToast(msg) {
+      const toast = document.getElementById('globalToast');
+      const toastMsg = document.getElementById('toastMsg');
+      if (toast && toastMsg) {
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
+    }
+
+    // Tab Switching Logic
+    const tabButtons = document.querySelectorAll('.profile-tab-btn');
+    const tabPanes = document.querySelectorAll('.profile-tab-pane');
+
+    function switchTab(tabId) {
+      tabButtons.forEach(btn => {
+        const isActive = btn.getAttribute('data-tab') === tabId;
+        btn.classList.toggle('active', isActive);
+      });
+
+      tabPanes.forEach(pane => {
+        if (pane.id === tabId) {
+          pane.style.display = 'block';
+        } else {
+          pane.style.display = 'none';
+        }
+      });
+
+      if (history.replaceState) {
+        history.replaceState(null, '', '#' + tabId.replace('tab-', ''));
+      }
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        switchTab(tabId);
+      });
+    });
+
+    if (window.location.hash) {
+      const hashTab = 'tab-' + window.location.hash.replace('#', '');
+      if (document.getElementById(hashTab)) {
+        switchTab(hashTab);
+      }
+    }
+
+    // Share Profile Button
+    const shareBtn = document.getElementById('shareProfileBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const shareUrl = window.location.href;
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: '<%= profileUser.displayName %> (@<%= profileUser.username %>) on Beyounge',
+              text: 'Check out <%= profileUser.displayName %> on Beyounge!',
+              url: shareUrl
+            });
+            return;
+          } catch (e) {}
+        }
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl);
+          showGlobalToast('Profile link copied to clipboard!');
+        }
+      });
+    }
+
+    // Reel Video Modal Player (works for profile reels & sidebar trending reels)
+    const videoModal = document.getElementById('videoModal');
+    const reelVideo = document.getElementById('reelVideo');
+    const closeVideoModal = document.getElementById('closeVideoModal');
+    const clickableReels = document.querySelectorAll('[data-video]');
+
+    clickableReels.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a') && !e.target.closest('[data-video]')) return;
+        const videoUrl = card.getAttribute('data-video');
+        if (videoUrl && reelVideo && videoModal) {
+          reelVideo.src = videoUrl;
+          videoModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          reelVideo.play().catch(() => {});
+        }
+      });
+    });
+
+    function stopReel() {
+      if (!videoModal || !reelVideo) return;
+      videoModal.classList.remove('active');
+      reelVideo.pause();
+      reelVideo.src = '';
+      document.body.style.overflow = '';
+    }
+
+    if (closeVideoModal) {
+      closeVideoModal.addEventListener('click', stopReel);
+    }
+    if (videoModal) {
+      videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) stopReel();
+      });
+    }
+  </script>
+</body>
+</html>

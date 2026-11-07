@@ -22,5 +22,10 @@ router.get('/careers', pageController.getCareers);
 router.get('/press-kit', pageController.getPressKit);
 router.get('/sitemap', pageController.getSitemapPage);
 
+// Dynamic User Profile routes (supports /username, /@username, /u/username)
+router.get('/u/:username', pageController.getUserProfile);
+router.get('/user/:username', pageController.getUserProfile);
+router.get('/:username', pageController.getUserProfile);
+
 export default router;
 

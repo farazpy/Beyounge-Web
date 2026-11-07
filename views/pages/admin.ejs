@@ -112,11 +112,16 @@
       color: #64748b;
       font-size: 12px;
       background-color: transparent;
+      border: none;
+      outline: none;
       border-radius: 6px;
       transition: all 0.15s ease;
       text-align: left;
       cursor: pointer;
       text-decoration: none;
+    }
+    .wp-submenu-item:focus {
+      outline: none;
     }
     .wp-submenu-item:hover {
       color: #0f172a;
@@ -443,6 +448,12 @@
 
     html.amoled-dark .wp-submenu-item {
       color: #ffffff !important;
+      outline: none !important;
+      border: none !important;
+    }
+    html.amoled-dark .wp-submenu-item:focus {
+      outline: none !important;
+      box-shadow: none !important;
     }
     html.amoled-dark .wp-submenu-item:hover {
       background-color: #18181b !important;
@@ -633,9 +644,21 @@
       color: #ffffff !important;
     }
     html.amoled-dark .post-filter-btn.bg-slate-200\/60,
-    html.amoled-dark .user-filter-btn.bg-slate-200\/60 {
+    html.amoled-dark .user-filter-btn.bg-slate-200\/60,
+    html.amoled-dark .post-filter-btn.active-filter,
+    html.amoled-dark .user-filter-btn.active-filter {
       background-color: #27272a !important;
       color: #ffffff !important;
+    }
+    html.amoled-dark .post-filter-broken {
+      border-color: rgba(244, 63, 94, 0.45) !important;
+      color: #fda4af !important;
+      background-color: rgba(244, 63, 94, 0.12) !important;
+    }
+    html.amoled-dark .post-filter-broken.active-filter {
+      background-color: rgba(244, 63, 94, 0.28) !important;
+      color: #ffffff !important;
+      border-color: #f43f5e !important;
     }
 
     html.amoled-dark .pin-digit-btn {
@@ -645,6 +668,32 @@
     }
     html.amoled-dark .pin-digit-btn:hover {
       background-color: #18181b !important;
+    }
+
+    /* Media Health & 404 Audit in AMOLED Dark Mode */
+    html.amoled-dark .media-audit-item {
+      background-color: #050505 !important;
+      border: 1px solid #27272a !important;
+      color: #ffffff !important;
+    }
+    html.amoled-dark .media-audit-item:hover {
+      border-color: #3f3f46 !important;
+    }
+    html.amoled-dark .media-fix-preview {
+      background-color: #0a0a0a !important;
+      border: 1px solid #27272a !important;
+    }
+    html.amoled-dark .media-preset-btn {
+      background-color: #18181b !important;
+      border: 1px solid #27272a !important;
+      color: #ffffff !important;
+    }
+    html.amoled-dark .media-preset-btn:hover {
+      background-color: #27272a !important;
+      color: #34d399 !important;
+    }
+    html.amoled-dark .media-status-pill {
+      border-width: 1px !important;
     }
   </style>
 </head>
@@ -665,7 +714,7 @@
             <p class="text-xs text-slate-500">54-Table Shared Database Console</p>
           </div>
         </div>
-        <span class="font-mono-num text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold border border-emerald-200">v1.2.9</span>
+        <span class="font-mono-num text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold border border-emerald-200">v1.3.8</span>
       </div>
 
       <p class="text-xs text-slate-600 mb-4 leading-relaxed">
@@ -833,9 +882,6 @@
             <span id="navBadgeUsers" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">0</span>
           </a>
           <div class="pl-2 space-y-0.5 my-1">
-            <a href="/admin/users" onclick="switchTab('users', event)" class="wp-submenu-item">
-              <span>All Users (46 cols)</span>
-            </a>
             <button type="button" onclick="openRecordEditor('users', null)" class="wp-submenu-item">
               <span>+ Add New User</span>
             </button>
@@ -852,9 +898,6 @@
             <span id="navBadgePosts" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">0</span>
           </a>
           <div class="pl-2 space-y-0.5 my-1">
-            <a href="/admin/posts" onclick="switchTab('posts', event)" class="wp-submenu-item">
-              <span>All Posts & Reels (22 cols)</span>
-            </a>
             <button type="button" onclick="openRecordEditor('posts', { postType: 'post', visibility: 'public' })" class="wp-submenu-item">
               <span>+ Add New Post</span>
             </button>
@@ -880,9 +923,6 @@
             <span id="navBadgeWorkouts" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">0</span>
           </a>
           <div class="pl-2 space-y-0.5 my-1">
-            <a href="/admin/workouts" onclick="switchTab('workouts', event)" class="wp-submenu-item">
-              <span>Workouts & Sets</span>
-            </a>
             <button type="button" onclick="openRecordEditor('workouts', null)" class="wp-submenu-item">
               <span>+ Add Workout</span>
             </button>
@@ -902,9 +942,6 @@
             <span id="navBadgeNutrition" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">0</span>
           </a>
           <div class="pl-2 space-y-0.5 my-1">
-            <a href="/admin/nutrition" onclick="switchTab('nutrition', event)" class="wp-submenu-item">
-              <span>Nutrition & Biometrics</span>
-            </a>
             <button type="button" onclick="openRecordEditor('foods', null)" class="wp-submenu-item">
               <span>+ Add Food Item</span>
             </button>
@@ -928,6 +965,22 @@
             </span>
             <span id="navBadgeSystem" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">CMS</span>
           </a>
+
+          <a href="/admin/media" data-tab="media" class="wp-menu-item" onclick="switchTab('media', event)">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="image-off" class="w-4 h-4 text-rose-600"></i>
+              <span>Media & 404 Audit</span>
+            </span>
+            <span id="navBadgeMedia" class="font-mono-num text-[11px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full font-semibold border border-rose-200">Audit</span>
+          </a>
+          <div class="pl-2 space-y-0.5 my-1">
+            <button type="button" onclick="switchTab('media'); setTimeout(() => runMediaScan('users', 100), 50);" class="wp-submenu-item">
+              <span>Scan User Avatars</span>
+            </button>
+            <button type="button" onclick="switchTab('media'); setTimeout(() => runMediaScan('posts', 100), 50);" class="wp-submenu-item">
+              <span>Scan Reels & Posts</span>
+            </button>
+          </div>
 
           <div class="px-3 pt-4 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-t border-slate-100 mt-3">
             Universal Database CRUD
@@ -958,7 +1011,7 @@
         <div class="p-3 border-t border-slate-100 text-[11px] text-slate-500 bg-slate-50/50 rounded-xl mt-2">
           <div class="flex items-center justify-between">
             <span class="font-semibold text-slate-700">Android + Web DB</span>
-            <span class="font-mono-num font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">v1.2.9</span>
+            <span class="font-mono-num font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">v1.3.8</span>
           </div>
           <div id="sidebarSyncTime" class="font-mono-num text-[10px] mt-1 text-slate-400 truncate">Ready</div>
         </div>
@@ -1300,6 +1353,9 @@
               <button type="button" onclick="openRecordEditor('posts', { postType: 'text', visibility: 'public' })" class="wp-btn wp-btn-secondary">Add Text Post</button>
               <button type="button" onclick="openRecordEditor('posts', { postType: 'image', visibility: 'public' })" class="wp-btn wp-btn-secondary">Add Image Post</button>
               <button type="button" onclick="openRecordEditor('posts', { postType: 'reel', visibility: 'public' })" class="wp-btn wp-btn-primary">Add Reel Post</button>
+              <button type="button" onclick="auditPostsImagesNow()" id="auditPostsImagesBtn" class="wp-btn bg-amber-500/15 text-amber-300 border border-amber-500/35 hover:bg-amber-500/25 font-semibold text-xs flex items-center gap-1.5" title="Audit post images across network for 404 dead responses">
+                <i data-lucide="scan" class="w-3.5 h-3.5 text-amber-300"></i> Audit 404 Images
+              </button>
             </div>
             <div class="text-xs text-slate-500">
               Shared <code class="font-mono-num bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md">posts</code> table (22 columns).
@@ -1315,11 +1371,17 @@
               <button type="button" data-pfilter="image" class="post-filter-btn text-slate-600 hover:text-slate-900 font-medium px-2 py-1">🖼 Image Posts</button>
               <span>·</span>
               <button type="button" data-pfilter="text" class="post-filter-btn text-slate-600 hover:text-slate-900 font-medium px-2 py-1">📝 Text Posts</button>
+              <span>·</span>
+              <button type="button" data-pfilter="broken_image" class="post-filter-btn post-filter-broken text-rose-400 hover:text-rose-300 font-medium px-2.5 py-1 rounded-md border border-rose-500/30 bg-rose-500/10 transition-colors flex items-center gap-1.5" title="Show only posts with 404 dead image URLs">
+                <span>⚠️ 404 Broken Images</span>
+                <span id="brokenPostsFilterCount" class="font-mono-num font-bold bg-rose-500/20 px-1.5 py-0.2 rounded-full text-[10px] text-rose-300 border border-rose-500/30">0</span>
+              </button>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
               <select id="postsBulkActionSelect" class="wp-select text-xs">
                 <option value="">Bulk actions</option>
+                <option value="clear_image">Clear Broken Image URL (Set imageUrl = NULL)</option>
                 <option value="set_reel">Set Selected as Reel Post (postType='reel')</option>
                 <option value="set_image">Set Selected as Image Post (postType='image')</option>
                 <option value="set_text">Set Selected as Text Post (postType='text')</option>
@@ -1716,6 +1778,110 @@
               <button type="button" onclick="openRecordEditor('blog_posts', null)" class="wp-btn wp-btn-secondary">+ Add Blog Post</button>
               <button type="button" onclick="openRecordEditor('faqs', null)" class="wp-btn wp-btn-secondary">+ Add FAQ</button>
             </div>
+          <!-- ============================================================= -->
+          <!-- BRAND, LOGOS, FAVICON & CONTACT DETAILS EXECUTIVE CONFIGURATOR -->
+          <!-- ============================================================= -->
+          <div class="wp-postbox p-5 bg-white border border-slate-200 rounded-xl shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
+              <div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="palette" class="w-4 h-4 text-emerald-600"></i>
+                  <span>Brand Identity, Logos, Favicon & Contact Information</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Update public brand identity and company contact information across web headers, footers, meta tags, and contact forms.
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="loadBrandConfigForm()" class="wp-btn wp-btn-secondary !text-xs">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reload
+                </button>
+                <button type="button" onclick="saveBrandConfigForm()" class="wp-btn wp-btn-primary !text-xs">
+                  <i data-lucide="save" class="w-3.5 h-3.5 text-emerald-300"></i> Save Brand & Contact Info
+                </button>
+              </div>
+            </div>
+
+            <form id="brandConfigForm" onsubmit="event.preventDefault(); saveBrandConfigForm();" class="space-y-4">
+              <!-- Brand & Visual Assets Section -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Brand Name</label>
+                  <input type="text" id="cfg_app_brand_name" name="app_brand_name" class="wp-input w-full font-semibold text-xs" placeholder="e.g. Beyounge" />
+                  <span class="text-[10px] text-slate-400 mt-1 block">Displayed on header, page titles, and OG meta.</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Brand Tagline</label>
+                  <input type="text" id="cfg_app_tagline" name="app_tagline" class="wp-input w-full text-xs" placeholder="e.g. Train Smarter. Live Stronger." />
+                  <span class="text-[10px] text-slate-400 mt-1 block">Primary footer and SEO mission statement.</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Favicon URL</label>
+                  <div class="flex items-center gap-2">
+                    <input type="text" id="cfg_app_favicon_url" name="app_favicon_url" class="wp-input w-full font-mono-num text-xs" placeholder="/images/favicon.svg or https://..." oninput="updateFaviconPreview(this.value)" />
+                    <div id="faviconPreviewBox" class="w-8 h-8 rounded border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden">
+                      <img id="faviconPreviewImg" src="/images/favicon.svg" alt="Favicon" class="w-5 h-5 object-contain" onerror="this.src='/images/favicon.svg';" />
+                    </div>
+                  </div>
+                  <span class="text-[10px] text-slate-400 mt-1 block">Tab icon URL (SVG, PNG, ICO).</span>
+                </div>
+              </div>
+
+              <!-- Logo Configuration Row -->
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-3.5 bg-slate-50/70 border border-slate-100 rounded-lg">
+                <div class="md:col-span-8">
+                  <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Custom Brand Logo URL (Header & Footer)</label>
+                  <input type="url" id="cfg_app_logo_url" name="app_logo_url" class="wp-input w-full font-mono-num text-xs" placeholder="https://... (Leave blank to use stylized lettermark icon)" oninput="updateLogoPreview(this.value)" />
+                  <span class="text-[10px] text-slate-400 mt-1 block">Paste working HTTPS logo image URL. When left empty, a clean geometric lettermark logo is rendered automatically.</span>
+                </div>
+                <div class="md:col-span-4 flex flex-col items-center justify-center text-center p-2 bg-white rounded border border-slate-200 min-h-[64px]">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 mb-1">Logo Preview</span>
+                  <div id="logoPreviewContainer" class="flex items-center justify-center">
+                    <img id="logoPreviewImg" src="" alt="Logo" class="max-h-7 max-w-full object-contain hidden" onerror="this.classList.add('hidden'); document.getElementById('logoFallbackPreview').classList.remove('hidden');" />
+                    <div id="logoFallbackPreview" class="flex items-center gap-1.5 font-bold text-sm text-slate-900">
+                      <div class="w-6 h-6 rounded bg-emerald-600 text-white flex items-center justify-center text-xs">B</div>
+                      <span id="logoFallbackText">Beyounge</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contact Information Section -->
+              <div class="border-t border-slate-100 pt-3">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                  <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-500"></i>
+                  <span>Official Contact & Support Channels</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Support Email</label>
+                    <input type="email" id="cfg_contact_email" name="contact_email" class="wp-input w-full text-xs font-mono-num" placeholder="support@beyounge.app" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Phone Number</label>
+                    <input type="text" id="cfg_contact_phone" name="contact_phone" class="wp-input w-full text-xs font-mono-num" placeholder="+1 (800) 555-BEYOUNGE" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Operating Hours</label>
+                    <input type="text" id="cfg_contact_hours" name="contact_hours" class="wp-input w-full text-xs" placeholder="Mon - Fri: 8:00 AM - 8:00 PM EST" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">X / Twitter Profile URL</label>
+                    <input type="url" id="cfg_social_twitter" name="social_twitter" class="wp-input w-full text-xs font-mono-num" placeholder="https://x.com/beyounge" />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+                  <div class="md:col-span-2">
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Headquarters Physical Address</label>
+                    <input type="text" id="cfg_contact_address" name="contact_address" class="wp-input w-full text-xs" placeholder="100 Fitness Plaza, Suite 400, San Francisco, CA 94107" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Instagram URL</label>
+                    <input type="url" id="cfg_social_instagram" name="social_instagram" class="wp-input w-full text-xs font-mono-num" placeholder="https://instagram.com/beyounge" />
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -1833,7 +1999,119 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- TAB 8: UNIVERSAL 54-TABLE CRUD EXPLORER                           -->
+        <!-- TAB 8: MEDIA HEALTH & 404 DETECTOR (MANUAL FIX ENGINE)           -->
+        <!-- ================================================================= -->
+        <section id="tab-media" class="admin-tab-panel hidden space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Media Health & 404 Detector</h1>
+                <span class="font-mono-num text-xs bg-rose-50 text-rose-700 px-2.5 py-0.5 rounded-full font-bold border border-rose-200">
+                  Dead Link Auditor
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                Automated detection of 404 broken images, inaccessible video reels, or dead user avatars across MySQL with 1-click manual replacement tools.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="mediaScanScopeSelect" class="wp-select text-xs">
+                <option value="all">Scan All Media (Avatars, Posts, Reels)</option>
+                <option value="users">User Profile Pictures Only</option>
+                <option value="posts">Feed Post Images Only</option>
+                <option value="reels">Reel Videos & Covers Only</option>
+              </select>
+              <button type="button" onclick="runMediaScan(document.getElementById('mediaScanScopeSelect').value, 100)" class="wp-btn wp-btn-primary">
+                <i data-lucide="scan" class="w-3.5 h-3.5 text-emerald-400"></i> Run Fast Scan (100 Items)
+              </button>
+              <button type="button" onclick="runMediaScan(document.getElementById('mediaScanScopeSelect').value, 500)" class="wp-btn wp-btn-secondary" title="Deep scan up to 500 records">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-500"></i> Deep Scan (500)
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Cards for Media Health -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="wp-postbox !mb-0 p-4">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Scanned</div>
+              <div class="font-mono-num text-2xl font-bold text-slate-900 mt-1" id="mediaKpiTotalScanned">0</div>
+              <div class="text-xs text-slate-400 mt-1">MySQL media candidates</div>
+            </div>
+            <div class="wp-postbox !mb-0 p-4">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Healthy & Accessible</div>
+              <div class="font-mono-num text-2xl font-bold text-emerald-700 mt-1" id="mediaKpiHealthy">0</div>
+              <div class="text-xs text-emerald-600/80 mt-1">HTTP 200..399 OK</div>
+            </div>
+            <div class="wp-postbox !mb-0 p-4">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-rose-600">Broken / 404 Flagged</div>
+              <div class="font-mono-num text-2xl font-bold text-rose-600 mt-1" id="mediaKpiBroken">0</div>
+              <div class="text-xs text-rose-500 mt-1">Requires manual URL fix</div>
+            </div>
+            <div class="wp-postbox !mb-0 p-4">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Audit Status</div>
+              <div class="text-xs font-semibold text-slate-900 mt-2" id="mediaKpiStatus">Idle — Ready to scan</div>
+              <div class="text-[11px] text-slate-400 font-mono-num mt-1" id="mediaKpiTime">—</div>
+            </div>
+          </div>
+
+          <!-- Scanner Progress Bar -->
+          <div id="mediaScanProgressBarContainer" class="hidden wp-postbox p-4">
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="font-semibold text-slate-800 flex items-center gap-2">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i>
+                <span id="mediaScanStatusText">Scanning media URLs for HTTP 404 responses...</span>
+              </span>
+              <span class="font-mono-num font-bold text-emerald-700" id="mediaScanPercentText">Processing...</span>
+            </div>
+            <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div id="mediaScanProgressBar" class="h-full bg-emerald-500 rounded-full transition-all duration-300 w-1/3 animate-pulse"></div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar for Broken Items -->
+          <div class="wp-postbox">
+            <div class="wp-postbox-header flex-wrap gap-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <span>Flagged Broken Media Items</span>
+                <span id="mediaBrokenCountBadge" class="font-mono-num text-xs font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                  0 Issues Found
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input
+                  type="search"
+                  id="mediaBrokenSearchInput"
+                  placeholder="Filter broken list (ID, user, URL)..."
+                  class="wp-input text-xs w-56"
+                  oninput="filterBrokenMediaList(this.value)"
+                />
+                <button type="button" onclick="exportBrokenMediaCsv()" class="wp-btn wp-btn-secondary !min-h-[28px] !px-2.5 text-xs">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div class="p-4" id="mediaBrokenListContainer">
+              <!-- Dynamically populated or empty state -->
+              <div id="mediaEmptyState" class="p-10 text-center text-slate-500 text-xs">
+                <i data-lucide="shield-check" class="w-10 h-10 text-emerald-500 mx-auto mb-3"></i>
+                <h4 class="font-bold text-slate-800 text-sm">No 404 or Broken Media Detected Yet</h4>
+                <p class="mt-1 max-w-md mx-auto text-slate-500">
+                  Click <strong>"Run Fast Scan"</strong> above to audit Cloudinary, S3, Unsplash, and remote URLs across your posts, video reels, and user profiles.
+                </p>
+                <div class="mt-4 flex items-center justify-center gap-2">
+                  <button type="button" onclick="runMediaScan('all', 100)" class="wp-btn wp-btn-primary">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Start Media Audit Now
+                  </button>
+                </div>
+              </div>
+              <div id="mediaBrokenItemsList" class="space-y-3 hidden"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 9: UNIVERSAL 54-TABLE CRUD EXPLORER                           -->
         <!-- ================================================================= -->
         <section id="tab-explorer" class="admin-tab-panel hidden space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
@@ -2047,6 +2325,141 @@
       primaryKeys: []
     };
 
+    // Broken Post Image Registry (Maps postId string -> { url, statusCode, errorReason })
+    const brokenPostImageMap = new Map();
+
+    function hasPostImage(p) {
+      if (!p) return false;
+      const url = p.imageUrl || p.thumbnailUrl;
+      if (!url) return false;
+      const s = String(url).trim();
+      return s.length > 0 && s !== 'null' && s !== 'undefined';
+    }
+
+    function hasPostVideo(p) {
+      if (!p) return false;
+      if (p.postType === 'reel') return true;
+      const v = p.videoUrl;
+      if (!v) return false;
+      const s = String(v).trim();
+      return s.length > 0 && s !== 'null' && s !== 'undefined';
+    }
+
+    function handlePostImage404(postId, imageUrl, imgEl) {
+      const pid = String(postId);
+      brokenPostImageMap.set(pid, {
+        url: imageUrl,
+        statusCode: 404,
+        errorReason: 'HTTP 404 / Asset failed to load'
+      });
+      if (imgEl) {
+        imgEl.style.display = 'none';
+        const errorBox = imgEl.parentElement?.querySelector('.post-thumb-404');
+        if (errorBox) errorBox.classList.remove('hidden');
+      }
+      const badgeEl = document.getElementById(`postBadge_${pid}`);
+      if (badgeEl) {
+        badgeEl.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-2xs" title="Image URL returned HTTP 404 or failed to load">⚠️ 404 Inaccessible Image</span>`;
+      }
+      const trEl = document.getElementById(`postRow_${pid}`);
+      if (trEl) {
+        trEl.classList.add('bg-rose-950/20');
+      }
+      const actionEl = document.getElementById(`postFixAction_${pid}`);
+      if (actionEl) {
+        actionEl.classList.remove('hidden');
+      }
+      updateBrokenPostCounter();
+    }
+
+    function handlePostImageSuccess(postId) {
+      const pid = String(postId);
+      if (brokenPostImageMap.has(pid)) {
+        brokenPostImageMap.delete(pid);
+        updateBrokenPostCounter();
+      }
+    }
+
+    function updateBrokenPostCounter() {
+      const el = document.getElementById('brokenPostsFilterCount');
+      if (el) {
+        el.textContent = String(brokenPostImageMap.size);
+      }
+    }
+
+    async function auditPostsImagesNow() {
+      const btn = document.getElementById('auditPostsImagesBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-amber-300"></i> Auditing 404s...';
+        lucide.createIcons();
+      }
+      showNotice('Auditing post image URLs across network for 404 responses...');
+      try {
+        const res = await apiRequest('/api/admin/media-audit/scan', {
+          method: 'POST',
+          body: JSON.stringify({ scope: 'posts', limit: 250 })
+        });
+        const brokenItems = res.brokenItems || [];
+        let post404Count = 0;
+        brokenItems.forEach(item => {
+          if (item.table === 'posts' && (item.field === 'imageUrl' || item.itemType === 'post_image')) {
+            brokenPostImageMap.set(String(item.recordId), {
+              url: item.currentUrl,
+              statusCode: item.statusCode || 404,
+              errorReason: item.errorReason || 'HTTP 404 / Inaccessible'
+            });
+            post404Count++;
+          }
+        });
+        updateBrokenPostCounter();
+        renderPostsTab();
+        showNotice(`Post image audit complete: ${res.summary?.totalScanned || 0} scanned, ${post404Count} posts with 404 dead images detected.`, post404Count > 0);
+      } catch (err) {
+        showNotice(`Post image audit failed: ${err.message}`, true);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="scan" class="w-3.5 h-3.5 text-amber-300"></i> Audit 404 Images';
+          lucide.createIcons();
+        }
+      }
+    }
+
+    // Media 404 & Dead Asset Audit State
+    let mediaAuditState = {
+      isScanning: false,
+      summary: null,
+      brokenItems: [],
+      filteredItems: [],
+      searchTerm: '',
+      activeScope: 'all',
+      activeLimit: 100
+    };
+
+    const MEDIA_FIX_PRESETS = {
+      user_photo: [
+        { label: 'Male Avatar', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80' },
+        { label: 'Female Avatar', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80' },
+        { label: 'UI Avatar (Clean)', url: 'https://ui-avatars.com/api/?name=User&background=0D9488&color=fff&size=256' },
+        { label: 'Fitness Profile', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80' }
+      ],
+      post_image: [
+        { label: 'Fitness Photo', url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1080&auto=format&fit=crop&q=80' },
+        { label: 'Workout Gym', url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1080&auto=format&fit=crop&q=80' },
+        { label: 'Healthy Meal', url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1080&auto=format&fit=crop&q=80' },
+        { label: 'Running & Cardio', url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1080&auto=format&fit=crop&q=80' }
+      ],
+      reel_video: [
+        { label: 'Sample Reel Video', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
+        { label: 'Workout Clip MP4', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4' }
+      ],
+      reel_cover: [
+        { label: 'Reel Cover Fitness', url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1080&auto=format&fit=crop&q=80' },
+        { label: 'Reel Cover Athlete', url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1080&auto=format&fit=crop&q=80' }
+      ]
+    };
+
     // Grouping definitions for specialized rich editors
     const USER_COLUMN_GROUPS = [
       {
@@ -2256,20 +2669,26 @@
 
     function getPostCategory(p) {
       if (!p) return 'text';
-      if (p.postType === 'reel' || (p.videoUrl && String(p.videoUrl).trim().length > 0)) return 'reel';
-      if (p.postType === 'image' || (p.imageUrl && String(p.imageUrl).trim().length > 0)) return 'image';
+      if (hasPostVideo(p)) return 'reel';
+      if (hasPostImage(p)) return 'image';
+      // If imageUrl is empty, post does not have an image
       return 'text';
     }
 
     function renderPostCategoryBadge(p) {
+      const pid = String(p.id);
+      const isBroken = hasPostImage(p) && brokenPostImageMap.has(pid);
+      if (isBroken) {
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-2xs" title="Image URL returned HTTP 404 or failed to load">⚠️ 404 Inaccessible Image</span>`;
+      }
       const cat = getPostCategory(p);
       if (cat === 'reel') {
-        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200/80 shadow-2xs">▶ Reel Post</span>`;
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-2xs">▶ Reel Post</span>`;
       }
       if (cat === 'image') {
-        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-200/80 shadow-2xs">🖼 Image Post</span>`;
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 shadow-2xs">🖼 Image Post</span>`;
       }
-      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200/80 shadow-2xs">📝 Text Post</span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-2xs">📝 Text Post</span>`;
     }
 
     // =====================================================================
@@ -2389,6 +2808,7 @@
       else if (activeTab === 'nutrition') renderNutritionTab();
       else if (activeTab === 'ai') renderAiTab();
       else if (activeTab === 'system') renderSystemTab();
+      else if (activeTab === 'media') renderMediaTab();
       else if (activeTab === 'explorer') loadExplorerTable(explorerState.tableName, explorerState.offset);
       lucide.createIcons();
     }
@@ -2551,7 +2971,13 @@
         { label: 'Post Likes', val: fmtNum(tc.post_likes), sub: `${fmtNum(tc.post_shares)} shares`, tab: 'posts' },
         { label: 'Workouts', val: fmtNum(tc.workouts), sub: `${fmtNum(tc.workout_log_sets)} logged sets`, tab: 'workouts' },
         { label: 'Nutrition Logs', val: fmtNum(tc.nutrition_logs), sub: `${fmtNum(tc.foods)} food items`, tab: 'nutrition' },
-        { label: 'Gemini Tokens', val: fmtNum(s.geminiStats?.totalTokens), sub: `${fmtNum(tc.gemini_token_logs)} API calls`, tab: 'ai' }
+        { label: 'Gemini Tokens', val: fmtNum(s.geminiStats?.totalTokens), sub: `${fmtNum(tc.gemini_token_logs)} API calls`, tab: 'ai' },
+        {
+          label: 'Media 404 Health',
+          val: mediaAuditState.summary ? `${fmtNum(mediaAuditState.summary.brokenCount)} Issues` : 'Dead Link Audit',
+          sub: mediaAuditState.summary ? `${fmtNum(mediaAuditState.summary.healthyCount)} healthy · ${fmtNum(mediaAuditState.summary.totalScanned)} total` : 'Audit Avatars, Reels & Posts',
+          tab: 'media'
+        }
       ];
 
       document.getElementById('overviewKpiGrid').innerHTML = kpis.map(k => `
@@ -2751,7 +3177,10 @@
             </td>
             <td>
               <div class="flex items-start gap-2.5">
-                <img src="${esc(u.photoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.displayName || u.username || 'U'))}" alt="" class="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0 mt-0.5 shadow-2xs" onerror="this.src='https://ui-avatars.com/api/?name=U'" />
+                <div class="relative shrink-0">
+                  <img src="${esc(u.photoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.displayName || u.username || 'U'))}" alt="" class="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0 mt-0.5 shadow-2xs" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=U'; this.classList.add('border-rose-400'); this.nextElementSibling?.classList.remove('hidden');" />
+                  <span class="hidden absolute -top-1 -right-1 w-3 h-3 bg-rose-500 rounded-full border border-white" title="Inaccessible or 404 avatar"></span>
+                </div>
                 <div>
                   <button type="button" onclick="openRecordEditorDecoded('users', '${rowEnc}')" class="font-bold text-slate-900 hover:text-emerald-700 hover:underline text-left">
                     ${esc(u.displayName || u.username || 'Unnamed User')}
@@ -2759,6 +3188,7 @@
                   <div class="font-mono-num text-xs text-slate-500">@${esc(u.username || '—')} · <span class="text-[11px] text-slate-400">${esc(String(u.uid || '').slice(0, 10))}…</span></div>
                   <div class="wp-row-actions always-visible">
                     <button type="button" onclick="openRecordEditorDecoded('users', '${rowEnc}')">Edit (46 Cols)</button> |
+                    <button type="button" class="text-rose-600 hover:underline" onclick="quickFixMediaPrompt('users', '${esc(u.uid)}', '${u.photoUrl ? 'photoUrl' : 'avatar'}', '${esc(u.photoUrl || u.avatar || '')}')">Fix Avatar</button> |
                     <button type="button" onclick="quickAction('toggle_user_verified', { uid: '${esc(u.uid)}', value: ${u.is_verified ? 0 : 1} })">${u.is_verified ? 'Unverify' : 'Verify'}</button> |
                     <button type="button" onclick="quickAction('toggle_user_admin', { uid: '${esc(u.uid)}', value: ${u.isAdmin ? 0 : 1} })">${u.isAdmin ? 'Revoke Admin' : 'Make Admin'}</button> |
                     <button type="button" class="submitdelete" onclick="confirmDeleteRow('users', '${rowEnc}')">Delete</button>
@@ -2875,6 +3305,11 @@
 
       const filtered = allPosts.filter(p => {
         const cat = getPostCategory(p);
+        const pid = String(p.id);
+        const hasImg = hasPostImage(p);
+        const isBroken = hasImg && brokenPostImageMap.has(pid);
+
+        if (activePostFilter === 'broken_image' && !isBroken) return false;
         if (activePostFilter === 'reel' && cat !== 'reel') return false;
         if (activePostFilter === 'image' && cat !== 'image') return false;
         if (activePostFilter === 'text' && cat !== 'text') return false;
@@ -2888,50 +3323,100 @@
         );
       });
 
+      if (filtered.length === 0) {
+        document.getElementById('postsTableBody').innerHTML = `
+          <tr>
+            <td colspan="8" class="p-8 text-center text-xs text-slate-400">
+              ${activePostFilter === 'broken_image'
+                ? `No posts with 404 broken images detected. Click <button type="button" onclick="auditPostsImagesNow()" class="text-amber-400 underline font-semibold">Audit 404 Images</button> to scan all remote media.`
+                : 'No posts matching the selected filter.'
+              }
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       document.getElementById('postsTableBody').innerHTML = filtered.map(p => {
         const rowEnc = encodeRowData(p);
         const cat = getPostCategory(p);
-        const thumb = p.thumbnailUrl || p.imageUrl || '';
+        const pid = String(p.id);
+        const hasImg = hasPostImage(p);
+        const thumb = hasImg ? (p.imageUrl || p.thumbnailUrl) : '';
+        const isBroken = hasImg && brokenPostImageMap.has(pid);
+
+        let previewHtml = '';
+        if (hasImg) {
+          previewHtml = `
+            <div class="relative w-14 h-14 shrink-0">
+              <img
+                src="${esc(thumb)}"
+                alt=""
+                class="w-14 h-14 object-cover border border-slate-700/60 rounded-lg bg-slate-900 shadow-2xs ${isBroken ? 'hidden' : ''}"
+                onload="handlePostImageSuccess('${esc(p.id)}')"
+                onerror="handlePostImage404('${esc(p.id)}', '${esc(thumb)}', this)"
+              />
+              <div class="post-thumb-404 ${isBroken ? '' : 'hidden'} w-14 h-14 border border-rose-500 rounded-lg flex flex-col items-center justify-center text-[9px] font-mono-num font-bold bg-rose-950 text-rose-300 text-center px-1" title="Inaccessible or 404 image: ${esc(thumb)}">
+                <span class="text-xs">⚠️</span>
+                <span>404 DEAD</span>
+              </div>
+            </div>
+          `;
+        } else if (cat === 'reel') {
+          previewHtml = `<div class="w-14 h-14 border border-emerald-500/30 rounded-lg flex flex-col items-center justify-center text-[10px] font-mono-num font-bold bg-emerald-950/60 text-emerald-300">▶ REEL</div>`;
+        } else {
+          previewHtml = `<div class="w-14 h-14 border border-slate-800 rounded-lg flex flex-col items-center justify-center text-[10px] font-mono-num font-bold bg-slate-900 text-slate-400 text-center leading-tight"><span>📝</span><span class="text-[9px] text-slate-500 mt-0.5">TEXT</span></div>`;
+        }
+
         return `
-          <tr>
+          <tr id="postRow_${esc(p.id)}" class="${isBroken ? 'bg-rose-950/20' : ''}">
             <td>
               <input type="checkbox" class="post-row-cb" data-id="${esc(p.id)}" data-row="${rowEnc}" />
             </td>
             <td>
-              ${thumb
-                ? `<img src="${esc(thumb)}" alt="" class="w-14 h-14 object-cover border border-slate-200 rounded-lg bg-slate-900 shadow-2xs" onerror="this.style.display='none'" />`
-                : `<div class="w-14 h-14 border border-slate-200 rounded-lg flex flex-col items-center justify-center text-[10px] font-mono-num font-bold ${cat === 'reel' ? 'bg-emerald-50 text-emerald-700' : cat === 'image' ? 'bg-sky-50 text-sky-700' : 'bg-amber-50 text-amber-700'}">${cat.toUpperCase()}</div>`
-              }
+              ${previewHtml}
             </td>
             <td class="max-w-md">
-              <button type="button" onclick="openRecordEditorDecoded('posts', '${rowEnc}')" class="font-bold text-slate-900 hover:text-emerald-700 hover:underline text-left line-clamp-2">
+              <button type="button" onclick="openRecordEditorDecoded('posts', '${rowEnc}')" class="font-bold text-slate-100 hover:text-emerald-400 hover:underline text-left line-clamp-2">
                 ${esc(p.content || '(No caption text)')}
               </button>
-              <div class="text-[11px] text-slate-500 mt-0.5 truncate">${esc(p.hashtags || '')}</div>
-              <div class="font-mono-num text-[10px] text-slate-400 mt-0.5">ID: ${esc(p.id)}</div>
-              <div class="wp-row-actions always-visible">
+              <div class="text-[11px] text-slate-400 mt-0.5 truncate">${esc(p.hashtags || '')}</div>
+              <div class="font-mono-num text-[10px] text-slate-500 mt-0.5">ID: ${esc(p.id)}</div>
+              <div class="wp-row-actions always-visible mt-1 text-xs">
                 <button type="button" onclick="openRecordEditorDecoded('posts', '${rowEnc}')">Edit (22 Cols)</button> |
-                <a href="/post/${encodeURIComponent(p.id)}" target="_blank">Open Public URL</a> |
-                <button type="button" class="submitdelete" onclick="confirmDeleteRow('posts', '${rowEnc}')">Delete</button>
+                ${hasImg ? `
+                  <button type="button" class="text-rose-400 font-semibold hover:underline" onclick="quickFixMediaPrompt('posts', '${esc(p.id)}', 'imageUrl', '${esc(thumb)}')">
+                    ${isBroken ? '⚠️ Fix 404 Image' : 'Fix Media'}
+                  </button> |
+                ` : p.videoUrl ? `
+                  <button type="button" class="text-rose-400 font-semibold hover:underline" onclick="quickFixMediaPrompt('posts', '${esc(p.id)}', 'videoUrl', '${esc(p.videoUrl)}')">
+                    Fix Video
+                  </button> |
+                ` : ''}
+                <a href="/post/${encodeURIComponent(p.id)}" target="_blank" class="text-emerald-400 hover:underline">Open Public URL</a> |
+                <button type="button" class="submitdelete text-rose-500 hover:underline" onclick="confirmDeleteRow('posts', '${rowEnc}')">Delete</button>
               </div>
             </td>
             <td>
-              <div class="text-xs font-semibold text-slate-900">${esc(p.authorDisplayName || p.authorUsername || 'User')}</div>
-              <div class="font-mono-num text-[11px] text-slate-500">@${esc(p.authorUsername || '—')}</div>
+              <div class="text-xs font-semibold text-slate-100">${esc(p.authorDisplayName || p.authorUsername || 'User')}</div>
+              <div class="font-mono-num text-[11px] text-slate-400">@${esc(p.authorUsername || '—')}</div>
             </td>
             <td>
-              ${renderPostCategoryBadge(p)}
-              ${p.videoUrl ? `<div class="text-[10px] font-mono-num text-emerald-600 font-semibold truncate max-w-36 mt-1">Video URL Attached</div>` : ''}
-              ${(!p.videoUrl && p.imageUrl) ? `<div class="text-[10px] font-mono-num text-sky-600 font-semibold truncate max-w-36 mt-1">Image URL Attached</div>` : ''}
+              <div id="postBadge_${esc(p.id)}">
+                ${renderPostCategoryBadge(p)}
+              </div>
+              ${p.videoUrl ? `<div class="text-[10px] font-mono-num text-emerald-400 font-semibold truncate max-w-36 mt-1">Video Attached</div>` : ''}
+              ${(!p.videoUrl && hasImg) ? `<div class="text-[10px] font-mono-num ${isBroken ? 'text-rose-400 font-bold' : 'text-sky-400 font-semibold'} truncate max-w-36 mt-1" title="${esc(thumb)}">${isBroken ? '⚠️ 404 Dead URL' : 'Image URL Attached'}</div>` : ''}
+              ${(!p.videoUrl && !hasImg) ? `<div class="text-[10px] font-mono-num text-slate-500 mt-1">No image attached</div>` : ''}
             </td>
-            <td class="text-right font-mono-num text-xs text-slate-700">
+            <td class="text-right font-mono-num text-xs text-slate-300">
               <div>${fmtNum(p.liveLikes ?? p.likes)} likes</div>
               <div class="text-[11px] text-slate-500">${fmtNum(p.liveComments ?? p.commentsCount)} cmt · ${fmtNum(p.liveShares ?? p.sharesCount)} shr</div>
             </td>
             <td class="font-mono-num text-xs">
-              <a href="/post/${encodeURIComponent(p.id)}" target="_blank" class="text-emerald-700 hover:underline">/post/${esc(String(p.id).slice(0, 8))}…</a>
+              <a href="/post/${encodeURIComponent(p.id)}" target="_blank" class="text-emerald-400 hover:underline">/post/${esc(String(p.id).slice(0, 8))}…</a>
             </td>
-            <td class="font-mono-num text-xs text-slate-500">
+            <td class="font-mono-num text-xs text-slate-400">
               ${fmtTime(p.timestamp)}
             </td>
           </tr>
@@ -3016,6 +3501,7 @@
         else if (action === 'set_reel') updateData = { postType: 'reel' };
         else if (action === 'set_image') updateData = { postType: 'image' };
         else if (action === 'set_text') updateData = { postType: 'text' };
+        else if (action === 'clear_image') updateData = { imageUrl: null };
 
         if (Object.keys(updateData).length === 0) return;
 
@@ -3025,6 +3511,12 @@
             method: 'POST',
             body: JSON.stringify({ action: 'update', whereKeys, updateData })
           });
+          if (tableName === 'posts' && action === 'clear_image') {
+            rows.forEach(r => {
+              if (r && r.id) brokenPostImageMap.delete(String(r.id));
+            });
+            updateBrokenPostCounter();
+          }
           showNotice(res.message);
           await loadDashboardData(true);
         } catch (err) {
@@ -3278,7 +3770,105 @@
     // =====================================================================
     // TAB 7: SYSTEM CONFIG, CMS, BLOG, FAQ
     // =====================================================================
+    function updateLogoPreview(url) {
+      const img = document.getElementById('logoPreviewImg');
+      const fallback = document.getElementById('logoFallbackPreview');
+      const cleanUrl = (url || '').trim();
+      if (cleanUrl) {
+        img.src = cleanUrl;
+        img.classList.remove('hidden');
+        fallback.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fallback.classList.remove('hidden');
+      }
+    }
+
+    function updateFaviconPreview(url) {
+      const img = document.getElementById('faviconPreviewImg');
+      const clean = (url || '').trim();
+      img.src = clean || '/images/favicon.svg';
+    }
+
+    function loadBrandConfigForm() {
+      const ds = dashboardState.datasets || {};
+      const cfgList = ds.appConfig || [];
+      const map = {};
+      cfgList.forEach(c => { map[c.config_key] = c.config_value; });
+
+      const fields = [
+        'app_brand_name', 'app_tagline', 'app_logo_url', 'app_favicon_url',
+        'contact_email', 'contact_phone', 'contact_address', 'contact_hours',
+        'social_twitter', 'social_instagram', 'social_youtube'
+      ];
+
+      fields.forEach(f => {
+        const el = document.getElementById(`cfg_${f}`);
+        if (el) {
+          el.value = map[f] !== undefined ? map[f] : '';
+        }
+      });
+
+      const brandName = map['app_brand_name'] || 'Beyounge';
+      const fallbackText = document.getElementById('logoFallbackText');
+      if (fallbackText) fallbackText.textContent = brandName;
+      const fallbackInitial = fallbackText?.previousElementSibling;
+      if (fallbackInitial) fallbackInitial.textContent = brandName.charAt(0).toUpperCase();
+
+      updateLogoPreview(map['app_logo_url'] || '');
+      updateFaviconPreview(map['app_favicon_url'] || '/images/favicon.svg');
+    }
+
+    async function saveBrandConfigForm() {
+      const fields = [
+        'app_brand_name', 'app_tagline', 'app_logo_url', 'app_favicon_url',
+        'contact_email', 'contact_phone', 'contact_address', 'contact_hours',
+        'social_twitter', 'social_instagram', 'social_youtube'
+      ];
+
+      showNotice('Saving brand and contact configuration to MySQL...');
+
+      try {
+        for (const f of fields) {
+          const el = document.getElementById(`cfg_${f}`);
+          if (!el) continue;
+          const val = el.value.trim();
+
+          // Save/Update each key into MySQL `app_config` table
+          await apiRequest('/api/admin/table/app_config/row', {
+            method: 'POST',
+            body: JSON.stringify({
+              data: {
+                config_key: f,
+                config_value: val,
+                description: `App setting: ${f}`,
+                updated_at: Date.now()
+              }
+            })
+          }).catch(async () => {
+            // If primary key collision, update existing row
+            await apiRequest('/api/admin/table/app_config/row', {
+              method: 'PUT',
+              body: JSON.stringify({
+                whereKey: { config_key: f },
+                data: {
+                  config_value: val,
+                  updated_at: Date.now()
+                }
+              })
+            });
+          });
+        }
+
+        showNotice('✓ Brand identity, logos, favicon & contact information successfully saved.');
+        await loadDashboardData(true);
+      } catch (err) {
+        showNotice(`Failed to save configuration: ${err.message}`, true);
+      }
+    }
+
     function renderSystemTab() {
+      loadBrandConfigForm();
       const ds = dashboardState.datasets || {};
       const cfg = ds.appConfig || [];
       document.getElementById('appConfigTableBody').innerHTML = cfg.map(c => {
@@ -3350,7 +3940,546 @@
     }
 
     // =====================================================================
-    // TAB 8: UNIVERSAL 54-TABLE CRUD EXPLORER
+    // TAB 8: MEDIA HEALTH & 404 DETECTOR (MANUAL FIX ENGINE)
+    // =====================================================================
+    function renderMediaTab() {
+      const summary = mediaAuditState.summary;
+      const broken = mediaAuditState.brokenItems || [];
+
+      // Update KPI widgets
+      const kpiTotal = document.getElementById('mediaKpiTotalScanned');
+      const kpiHealthy = document.getElementById('mediaKpiHealthy');
+      const kpiBroken = document.getElementById('mediaKpiBroken');
+      const kpiStatus = document.getElementById('mediaKpiStatus');
+      const kpiTime = document.getElementById('mediaKpiTime');
+
+      if (kpiTotal) kpiTotal.textContent = summary ? fmtNum(summary.totalScanned) : '0';
+      if (kpiHealthy) kpiHealthy.textContent = summary ? fmtNum(summary.healthyCount) : '0';
+      if (kpiBroken) kpiBroken.textContent = summary ? fmtNum(summary.brokenCount) : '0';
+
+      if (kpiStatus) {
+        if (!summary) {
+          kpiStatus.innerHTML = '<span class="text-slate-500 font-semibold">Idle — Ready to scan</span>';
+        } else if (summary.brokenCount === 0) {
+          kpiStatus.innerHTML = '<span class="text-emerald-600 font-bold">✓ 100% Healthy — All OK</span>';
+        } else {
+          kpiStatus.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${fmtNum(summary.brokenCount)} Broken URLs</span>`;
+        }
+      }
+
+      if (kpiTime) {
+        kpiTime.textContent = summary ? `${(summary.durationMs / 1000).toFixed(1)}s scan (${summary.scope})` : '—';
+      }
+
+      // Update badges
+      const countBadge = document.getElementById('mediaBrokenCountBadge');
+      if (countBadge) {
+        countBadge.textContent = `${broken.length} Issues Found`;
+        countBadge.className = `font-mono-num text-xs font-bold px-2 py-0.5 rounded-full ${broken.length > 0 ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`;
+      }
+
+      const navBadge = document.getElementById('navBadgeMedia');
+      if (navBadge) {
+        navBadge.textContent = broken.length > 0 ? broken.length : 'OK';
+        navBadge.className = `font-mono-num text-[11px] ${broken.length > 0 ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-600'} px-2 py-0.5 rounded-full font-semibold`;
+      }
+
+      renderBrokenMediaList();
+    }
+
+    async function runMediaScan(scope = 'all', limit = 100) {
+      if (mediaAuditState.isScanning) return;
+      mediaAuditState.isScanning = true;
+      mediaAuditState.activeScope = scope;
+      mediaAuditState.activeLimit = limit;
+
+      const progressBox = document.getElementById('mediaScanProgressBarContainer');
+      const statusText = document.getElementById('mediaScanStatusText');
+      const percentText = document.getElementById('mediaScanPercentText');
+
+      if (progressBox) progressBox.classList.remove('hidden');
+      if (statusText) statusText.textContent = `Scanning ${scope.toUpperCase()} media URLs for HTTP 404 responses...`;
+      if (percentText) percentText.textContent = `Connecting to endpoints...`;
+
+      showNotice(`Starting media health scan (scope: ${scope}, limit: ${limit}). Checking URL accessibility...`);
+
+      try {
+        const res = await apiRequest('/api/admin/media-audit/scan', {
+          method: 'POST',
+          body: JSON.stringify({ scope, limit })
+        });
+
+        mediaAuditState.summary = res.summary;
+        mediaAuditState.brokenItems = res.brokenItems || [];
+        mediaAuditState.filteredItems = [...mediaAuditState.brokenItems];
+        mediaAuditState.searchTerm = '';
+        const searchInput = document.getElementById('mediaBrokenSearchInput');
+        if (searchInput) searchInput.value = '';
+
+        if (progressBox) progressBox.classList.add('hidden');
+        renderMediaTab();
+
+        showNotice(
+          `Media scan completed: ${res.summary.totalScanned} scanned, ${res.summary.healthyCount} healthy, ${res.summary.brokenCount} broken/404 detected in ${(res.summary.durationMs / 1000).toFixed(1)}s.`,
+          res.summary.brokenCount > 0
+        );
+      } catch (err) {
+        if (progressBox) progressBox.classList.add('hidden');
+        showNotice(`Media scan failed: ${err.message}`, true);
+      } finally {
+        mediaAuditState.isScanning = false;
+      }
+    }
+
+    function filterBrokenMediaList(query) {
+      mediaAuditState.searchTerm = (query || '').toLowerCase().trim();
+      const q = mediaAuditState.searchTerm;
+      if (!q) {
+        mediaAuditState.filteredItems = [...mediaAuditState.brokenItems];
+      } else {
+        mediaAuditState.filteredItems = mediaAuditState.brokenItems.filter(item => {
+          return (
+            String(item.recordId || '').toLowerCase().includes(q) ||
+            String(item.recordTitle || '').toLowerCase().includes(q) ||
+            String(item.authorHandle || '').toLowerCase().includes(q) ||
+            String(item.field || '').toLowerCase().includes(q) ||
+            String(item.table || '').toLowerCase().includes(q) ||
+            String(item.currentUrl || '').toLowerCase().includes(q) ||
+            String(item.errorReason || '').toLowerCase().includes(q) ||
+            String(item.statusCode || '').includes(q)
+          );
+        });
+      }
+      renderBrokenMediaList();
+    }
+
+    function renderBrokenMediaList() {
+      const emptyState = document.getElementById('mediaEmptyState');
+      const listContainer = document.getElementById('mediaBrokenItemsList');
+      if (!emptyState || !listContainer) return;
+
+      const items = mediaAuditState.filteredItems || [];
+
+      if (items.length === 0) {
+        emptyState.classList.remove('hidden');
+        listContainer.classList.add('hidden');
+
+        if (mediaAuditState.summary && mediaAuditState.summary.totalScanned > 0) {
+          emptyState.innerHTML = `
+            <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-500 mx-auto mb-3"></i>
+            <h4 class="font-bold text-slate-800 text-sm">All Scanned Media Is 100% Healthy!</h4>
+            <p class="mt-1 max-w-md mx-auto text-slate-500">
+              Verified ${fmtNum(mediaAuditState.summary.totalScanned)} URLs across ${esc(mediaAuditState.summary.scope)}. Zero 404 or inaccessible links detected.
+            </p>
+            <div class="mt-4 flex items-center justify-center gap-2">
+              <button type="button" onclick="runMediaScan('${esc(mediaAuditState.activeScope)}', 250)" class="wp-btn wp-btn-secondary text-xs">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Run Deeper Audit (250)
+              </button>
+            </div>
+          `;
+        } else {
+          emptyState.innerHTML = `
+            <i data-lucide="shield-check" class="w-12 h-12 text-slate-400 mx-auto mb-3"></i>
+            <h4 class="font-bold text-slate-800 text-sm">No 404 or Broken Media Detected Yet</h4>
+            <p class="mt-1 max-w-md mx-auto text-slate-500">
+              Click <strong>"Run Fast Scan"</strong> above to audit Cloudinary, S3, Unsplash, and remote URLs across your posts, video reels, and user profiles.
+            </p>
+            <div class="mt-4 flex items-center justify-center gap-2">
+              <button type="button" onclick="runMediaScan('all', 100)" class="wp-btn wp-btn-primary">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Start Media Audit Now
+              </button>
+            </div>
+          `;
+        }
+        lucide.createIcons();
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      listContainer.classList.remove('hidden');
+
+      listContainer.innerHTML = items.map((item, idx) => {
+        const presets = MEDIA_FIX_PRESETS[item.itemType] || MEDIA_FIX_PRESETS.post_image;
+        const statusBadgeColor = item.statusCode === 404
+          ? 'bg-rose-100 text-rose-800 border-rose-300'
+          : item.statusCode === 403
+            ? 'bg-amber-100 text-amber-800 border-amber-300'
+            : 'bg-rose-50 text-rose-700 border-rose-200';
+
+        const itemTypeLabel = item.itemType === 'user_photo' ? '👤 User Profile Picture'
+          : item.itemType === 'reel_video' ? '▶ Reel Video File'
+          : item.itemType === 'reel_cover' ? '🎬 Reel Cover Photo'
+          : '🖼 Feed Post Image';
+
+        return `
+          <div class="media-audit-item p-4 bg-white border border-slate-200 rounded-xl shadow-xs transition-all space-y-3" id="mediaAuditCard_${idx}">
+            <!-- Top Header Row -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-200">
+                  ${itemTypeLabel}
+                </span>
+                <span class="media-status-pill font-mono-num text-xs font-bold px-2 py-0.5 rounded-md border ${statusBadgeColor}">
+                  ${item.statusCode ? 'HTTP ' + item.statusCode : 'Failed'} · ${esc(item.errorReason || 'Inaccessible')}
+                </span>
+                <span class="font-mono-num text-xs text-slate-500 font-semibold">
+                  Table: <strong class="text-slate-900">${esc(item.table)}</strong> · Column: <code class="text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">${esc(item.field)}</code> · Record #${esc(item.recordId)}
+                </span>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-500">Author: <strong class="text-slate-800 font-mono-num">${esc(item.authorHandle)}</strong></span>
+                <button type="button" onclick="openTableInExplorer('${esc(item.table)}');" class="text-slate-500 hover:text-slate-800 hover:underline">
+                  View in DB
+                </button>
+              </div>
+            </div>
+
+            <!-- Content & Fix Form -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-start">
+              <!-- Left: Visual Preview Container -->
+              <div class="md:col-span-3">
+                <div class="media-fix-preview w-full h-32 rounded-lg bg-slate-900 flex flex-col items-center justify-center p-2 text-center overflow-hidden relative border border-slate-200 group">
+                  ${item.itemType === 'reel_video'
+                    ? `<div class="text-rose-400 text-xs flex flex-col items-center gap-1.5 p-2">
+                        <i data-lucide="video-off" class="w-8 h-8 text-rose-500"></i>
+                        <span class="font-bold text-[11px] text-white">Broken Video URL</span>
+                        <span class="text-[10px] text-slate-400 font-mono-num">Inaccessible stream</span>
+                       </div>`
+                    : `<img
+                        id="mediaImgPreview_${idx}"
+                        src="${esc(item.currentUrl)}"
+                        alt=""
+                        class="w-full h-full object-cover rounded"
+                        onerror="this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');"
+                       />
+                       <div class="text-rose-400 text-xs flex flex-col items-center gap-1.5 p-2">
+                        <i data-lucide="image-off" class="w-8 h-8 text-rose-500"></i>
+                        <span class="font-bold text-[11px] text-white">Image 404 / Broken</span>
+                        <span class="text-[10px] text-slate-400 font-mono-num">Dead URL response</span>
+                       </div>`
+                  }
+                </div>
+                <div class="text-[11px] text-slate-600 font-bold mt-1.5 truncate" title="${esc(item.recordTitle)}">
+                  ${esc(item.recordTitle)}
+                </div>
+              </div>
+
+              <!-- Right: URL Fix Controls, Presets & Action Buttons -->
+              <div class="md:col-span-9 space-y-2.5">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                    Current Dead / Inaccessible Media URL:
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readonly
+                      value="${esc(item.currentUrl)}"
+                      class="wp-input font-mono-num text-xs bg-slate-50 text-rose-600 border-rose-200 flex-1 select-all cursor-text"
+                    />
+                    <a
+                      href="${esc(item.currentUrl)}"
+                      target="_blank"
+                      rel="noopener"
+                      class="wp-btn wp-btn-secondary !min-h-[30px] !px-2.5 text-xs text-rose-600 shrink-0"
+                      title="Inspect current dead URL directly in new tab"
+                    >
+                      <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Test In Tab
+                    </a>
+                  </div>
+                </div>
+
+                <!-- 1-Click Replacement Presets -->
+                <div>
+                  <div class="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                    1-Click Verified Replacement Presets:
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${presets.map(p => `
+                      <button
+                        type="button"
+                        onclick="applyPreset(${idx}, '${p.url}')"
+                        class="media-preset-btn text-[11px] font-semibold px-2.5 py-1 rounded-md bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200 transition-colors"
+                      >
+                        + ${esc(p.label)}
+                      </button>
+                    `).join('')}
+                    ${item.itemType === 'user_photo' ? `
+                      <button
+                        type="button"
+                        onclick="applyPreset(${idx}, 'https://ui-avatars.com/api/?name=' + encodeURIComponent('${esc(item.recordTitle).replace(/'/g, "\\'")}') + '&background=0D9488&color=fff&size=256')"
+                        class="media-preset-btn text-[11px] font-semibold px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 transition-colors"
+                      >
+                        + Initial Avatar (${esc(item.recordTitle).slice(0, 10)})
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+
+                <!-- Manual Replacement Input Row -->
+                <div>
+                  <label for="mediaFixInput_${idx}" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Enter New Replacement Media URL:
+                  </label>
+                  <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                    <input
+                      type="url"
+                      id="mediaFixInput_${idx}"
+                      placeholder="https://... (Paste working HTTPS image or video URL)"
+                      class="wp-input text-xs font-mono-num flex-1"
+                      oninput="document.getElementById('mediaTestResult_${idx}').classList.add('hidden')"
+                    />
+                    <button
+                      type="button"
+                      onclick="testMediaInput(${idx})"
+                      class="wp-btn wp-btn-secondary !min-h-[32px] !px-3 text-xs shrink-0"
+                    >
+                      <i data-lucide="check" class="w-3.5 h-3.5 text-slate-600"></i> Test Link
+                    </button>
+                    <button
+                      type="button"
+                      onclick="saveMediaFix(${idx})"
+                      class="wp-btn wp-btn-primary !min-h-[32px] !px-3 text-xs shrink-0"
+                    >
+                      <i data-lucide="save" class="w-3.5 h-3.5 text-emerald-300"></i> Update MySQL
+                    </button>
+                    <button
+                      type="button"
+                      onclick="clearMediaUrl(${idx})"
+                      class="wp-btn wp-btn-secondary !min-h-[32px] !px-2.5 text-xs text-rose-600 hover:bg-rose-50 shrink-0"
+                      title="Set column to NULL"
+                    >
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i> Set NULL
+                    </button>
+                  </div>
+                  <!-- Status/Result Feedback -->
+                  <div id="mediaTestResult_${idx}" class="hidden text-xs mt-1 font-mono-num"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    async function testMediaInput(idx) {
+      const input = document.getElementById(`mediaFixInput_${idx}`);
+      const resultBox = document.getElementById(`mediaTestResult_${idx}`);
+      if (!input || !resultBox) return;
+
+      const url = input.value.trim();
+      if (!url) {
+        resultBox.className = 'text-xs mt-1 text-rose-600 font-semibold';
+        resultBox.textContent = '⚠️ Please enter or select a URL to test first.';
+        resultBox.classList.remove('hidden');
+        return;
+      }
+
+      resultBox.className = 'text-xs mt-1 text-slate-500 font-semibold flex items-center gap-1.5';
+      resultBox.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-emerald-600"></i> Testing URL accessibility across network...';
+      resultBox.classList.remove('hidden');
+      lucide.createIcons();
+
+      try {
+        const res = await apiRequest('/api/admin/media-audit/test-url', {
+          method: 'POST',
+          body: JSON.stringify({ url })
+        });
+
+        if (res.accessible) {
+          resultBox.className = 'text-xs mt-1 text-emerald-600 font-bold flex items-center gap-1';
+          resultBox.innerHTML = `✓ Accessible (HTTP ${res.statusCode} OK · ${esc(res.contentType || 'media')}). Ready to save!`;
+          // Also update preview if it's an image
+          const imgPreview = document.getElementById(`mediaImgPreview_${idx}`);
+          if (imgPreview && !url.endsWith('.mp4')) {
+            imgPreview.src = url;
+            imgPreview.style.display = 'block';
+          }
+        } else {
+          resultBox.className = 'text-xs mt-1 text-rose-600 font-bold flex items-center gap-1';
+          resultBox.innerHTML = `✕ Inaccessible (${esc(res.errorReason || 'HTTP ' + res.statusCode)}). Link failed test.`;
+        }
+      } catch (err) {
+        resultBox.className = 'text-xs mt-1 text-rose-600 font-bold';
+        resultBox.textContent = `✕ Test Error: ${err.message}`;
+      }
+    }
+
+    async function applyPreset(idx, url) {
+      const input = document.getElementById(`mediaFixInput_${idx}`);
+      if (input) {
+        input.value = url;
+        await testMediaInput(idx);
+      }
+    }
+
+    async function saveMediaFix(idx) {
+      const item = mediaAuditState.filteredItems[idx];
+      const input = document.getElementById(`mediaFixInput_${idx}`);
+      if (!item || !input) return;
+
+      const newUrl = input.value.trim();
+      if (!newUrl) {
+        showNotice('Please enter a new replacement URL or click "Set NULL" to remove.', true);
+        return;
+      }
+
+      const card = document.getElementById(`mediaAuditCard_${idx}`);
+      if (card) card.style.opacity = '0.6';
+
+      try {
+        const res = await apiRequest('/api/admin/media-audit/fix', {
+          method: 'POST',
+          body: JSON.stringify({
+            table: item.table,
+            id: item.recordId,
+            field: item.field,
+            newUrl
+          })
+        });
+
+        showNotice(`✓ ${res.message || 'Media URL successfully updated in MySQL.'}`);
+
+        // Update local dataset cache so Users/Posts tabs reflect fix immediately
+        if (dashboardState && dashboardState.datasets) {
+          if (item.table === 'users' && dashboardState.datasets.users) {
+            const u = dashboardState.datasets.users.find(x => String(x.uid) === String(item.recordId));
+            if (u) u[item.field] = newUrl;
+          } else if (item.table === 'posts' && dashboardState.datasets.posts) {
+            const p = dashboardState.datasets.posts.find(x => String(x.id) === String(item.recordId));
+            if (p) p[item.field] = newUrl;
+          }
+        }
+
+        // Remove from broken lists
+        mediaAuditState.brokenItems = mediaAuditState.brokenItems.filter(x => !(x.table === item.table && x.recordId === item.recordId && x.field === item.field));
+        mediaAuditState.filteredItems = mediaAuditState.filteredItems.filter((_, i) => i !== idx);
+
+        if (item.table === 'posts') {
+          brokenPostImageMap.delete(String(item.recordId));
+          updateBrokenPostCounter();
+        }
+
+        if (mediaAuditState.summary) {
+          mediaAuditState.summary.brokenCount = Math.max(0, mediaAuditState.summary.brokenCount - 1);
+          mediaAuditState.summary.healthyCount += 1;
+        }
+
+        renderMediaTab();
+      } catch (err) {
+        if (card) card.style.opacity = '1';
+        showNotice(`Failed to update media URL: ${err.message}`, true);
+      }
+    }
+
+    async function clearMediaUrl(idx) {
+      const item = mediaAuditState.filteredItems[idx];
+      if (!item) return;
+
+      if (!confirm(`Are you sure you want to remove the media URL from ${item.table}.${item.field} (Record #${item.recordId})? The field will be set to NULL.`)) {
+        return;
+      }
+
+      try {
+        const res = await apiRequest('/api/admin/media-audit/fix', {
+          method: 'POST',
+          body: JSON.stringify({
+            table: item.table,
+            id: item.recordId,
+            field: item.field,
+            newUrl: ''
+          })
+        });
+
+        showNotice(`✓ Removed media URL from ${item.table}.${item.field} for record #${item.recordId}.`);
+
+        // Update local dataset cache
+        if (dashboardState && dashboardState.datasets) {
+          if (item.table === 'users' && dashboardState.datasets.users) {
+            const u = dashboardState.datasets.users.find(x => String(x.uid) === String(item.recordId));
+            if (u) u[item.field] = null;
+          } else if (item.table === 'posts' && dashboardState.datasets.posts) {
+            const p = dashboardState.datasets.posts.find(x => String(x.id) === String(item.recordId));
+            if (p) p[item.field] = null;
+          }
+        }
+
+        mediaAuditState.brokenItems = mediaAuditState.brokenItems.filter(x => !(x.table === item.table && x.recordId === item.recordId && x.field === item.field));
+        mediaAuditState.filteredItems = mediaAuditState.filteredItems.filter((_, i) => i !== idx);
+
+        if (item.table === 'posts') {
+          brokenPostImageMap.delete(String(item.recordId));
+          updateBrokenPostCounter();
+        }
+
+        if (mediaAuditState.summary) {
+          mediaAuditState.summary.brokenCount = Math.max(0, mediaAuditState.summary.brokenCount - 1);
+        }
+
+        renderMediaTab();
+      } catch (err) {
+        showNotice(`Failed to clear media URL: ${err.message}`, true);
+      }
+    }
+
+    function quickFixMediaPrompt(table, id, field, currentUrl) {
+      switchTab('media');
+      // If not already in brokenItems, inject as target candidate
+      const exists = mediaAuditState.brokenItems.some(x => x.table === table && x.recordId === String(id) && x.field === field);
+      if (!exists) {
+        const itemType = table === 'users' ? 'user_photo' : (field === 'videoUrl' ? 'reel_video' : field === 'coverImageUrl' ? 'reel_cover' : 'post_image');
+        mediaAuditState.brokenItems.unshift({
+          itemType,
+          table,
+          recordId: String(id),
+          recordTitle: `${table === 'users' ? 'User' : 'Post'} #${id}`,
+          authorHandle: `#${id}`,
+          field,
+          currentUrl: currentUrl || '',
+          statusCode: 404,
+          errorReason: 'Flagged for manual inspection',
+          checkedAt: new Date().toISOString()
+        });
+        mediaAuditState.filteredItems = [...mediaAuditState.brokenItems];
+        renderMediaTab();
+      }
+    }
+
+    function exportBrokenMediaCsv() {
+      const items = mediaAuditState.brokenItems || [];
+      if (items.length === 0) {
+        showNotice('No broken media items to export. Run a scan first.', true);
+        return;
+      }
+
+      const headers = ['Table', 'RecordID', 'Field', 'ItemType', 'AuthorHandle', 'RecordTitle', 'HTTPStatus', 'ErrorReason', 'CurrentURL'];
+      const rows = items.map(i => [
+        `"${i.table}"`,
+        `"${i.recordId}"`,
+        `"${i.field}"`,
+        `"${i.itemType}"`,
+        `"${(i.authorHandle || '').replace(/"/g, '""')}"`,
+        `"${(i.recordTitle || '').replace(/"/g, '""')}"`,
+        `"${i.statusCode || ''}"`,
+        `"${(i.errorReason || '').replace(/"/g, '""')}"`,
+        `"${(i.currentUrl || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `beyounge_broken_media_audit_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showNotice(`Exported ${items.length} broken media records to CSV.`);
+    }
+
+    // =====================================================================
+    // TAB 9: UNIVERSAL 54-TABLE CRUD EXPLORER
     // =====================================================================
     async function openTableInExplorer(tableName, event) {
       if (event) {
@@ -4043,9 +5172,16 @@
         btn.addEventListener('click', () => {
           activePostFilter = btn.dataset.pfilter;
           document.querySelectorAll('.post-filter-btn').forEach(b => {
-            b.className = b === btn
-              ? 'post-filter-btn font-bold text-slate-900 bg-slate-200/60 px-2.5 py-1 rounded-md'
-              : 'post-filter-btn text-slate-600 hover:text-slate-900 font-medium px-2 py-1';
+            const isTarget = (b === btn);
+            if (b.dataset.pfilter === 'broken_image') {
+              b.className = isTarget
+                ? 'post-filter-btn post-filter-broken active-filter font-bold bg-rose-500/25 text-rose-200 border border-rose-500 px-2.5 py-1 rounded-md flex items-center gap-1.5'
+                : 'post-filter-btn post-filter-broken font-medium text-rose-400 hover:text-rose-300 border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 rounded-md flex items-center gap-1.5 transition-colors';
+            } else {
+              b.className = isTarget
+                ? 'post-filter-btn active-filter font-bold text-slate-900 bg-slate-200/60 px-2.5 py-1 rounded-md'
+                : 'post-filter-btn text-slate-600 hover:text-slate-900 font-medium px-2 py-1';
+            }
           });
           renderPostsTab();
         });

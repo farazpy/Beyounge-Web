@@ -2,9 +2,13 @@
 <header class="header">
   <div class="container nav-container">
     <a href="/" class="logo">
-      <div class="logo-icon">B</div>
-      <span>Beyounge</span>
-      <span class="version-tag" style="font-size: 0.7rem; font-weight: 700; color: var(--primary-emerald); background: rgba(16, 185, 129, 0.1); padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle;">v1.2.9</span>
+      <% if (locals.logoUrl && locals.logoUrl.trim().length > 0) { %>
+        <img src="<%= locals.logoUrl %>" alt="<%= locals.brandName || 'Beyounge' %>" class="logo-custom-img" style="height: 32px; width: auto; max-width: 120px; object-fit: contain;">
+      <% } else { %>
+        <div class="logo-icon"><%= (locals.brandName || 'B').charAt(0).toUpperCase() %></div>
+      <% } %>
+      <span class="brand-text-name"><%= locals.brandName || 'Beyounge' %></span>
+      <span class="version-tag" style="font-size: 0.7rem; font-weight: 700; color: var(--primary-emerald); background: rgba(16, 185, 129, 0.1); padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle;">v1.3.8</span>
     </a>
 
     <nav>
@@ -40,9 +44,13 @@
   <div>
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <a href="/" class="logo">
-        <div class="logo-icon">B</div>
-        <span>Beyounge</span>
-        <span class="version-tag" style="font-size: 0.7rem; font-weight: 700; color: var(--primary-emerald); background: rgba(16, 185, 129, 0.1); padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle;">v1.2.9</span>
+        <% if (locals.logoUrl && locals.logoUrl.trim().length > 0) { %>
+          <img src="<%= locals.logoUrl %>" alt="<%= locals.brandName || 'Beyounge' %>" class="logo-custom-img" style="height: 30px; width: auto; max-width: 110px; object-fit: contain;">
+        <% } else { %>
+          <div class="logo-icon"><%= (locals.brandName || 'B').charAt(0).toUpperCase() %></div>
+        <% } %>
+        <span class="brand-text-name"><%= locals.brandName || 'Beyounge' %></span>
+        <span class="version-tag" style="font-size: 0.7rem; font-weight: 700; color: var(--primary-emerald); background: rgba(16, 185, 129, 0.1); padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle;">v1.3.8</span>
       </a>
       <button class="mobile-toggle" id="mobileMenuClose" aria-label="Close Menu">
         <i data-lucide="x"></i>

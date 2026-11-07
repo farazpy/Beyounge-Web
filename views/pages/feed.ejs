@@ -77,68 +77,96 @@
           <i data-lucide="message-square" style="color: var(--primary-emerald);"></i> Latest Posts
         </h3>
 
-        <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <!-- Twitter-Style Filter & Stream View -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--twitter-border); padding-bottom: 0.75rem;">
+          <h3 style="font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 0.5rem; font-weight: 800;">
+            <span>Community Timeline</span>
+            <span style="font-size: 0.75rem; background: var(--twitter-bg-gray); color: var(--twitter-text-sub); border: 1px solid var(--twitter-border); padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 700;"><%= posts ? posts.length : 0 %> posts</span>
+          </h3>
+          <div class="tab-pills-bar">
+            <button class="tab-pill active">For You</button>
+            <button class="tab-pill">Following</button>
+          </div>
+        </div>
+
+        <div class="feed-stream-container" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <% if (posts && posts.length > 0) { %>
             <% posts.forEach(post => { %>
-              <div class="glass-card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+              <div class="tweet-card" style="padding: 1rem 1.15rem; border-radius: 12px; border: 1px solid var(--twitter-border); background: #FFFFFF;">
                 
-                <!-- Post Header -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                  <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <% if (post.user.avatar) { %>
-                      <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
-                    <% } else { %>
-                      <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-emerald); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem;">
-                        <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
-                      </div>
-                    <% } %>
+                <!-- Tweet Post Header -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                  <div style="display: flex; align-items: center; gap: 0.65rem;">
+                    <a href="/<%= post.user.handle.replace('@', '') %>" style="text-decoration: none;">
+                      <% if (post.user.avatar) { %>
+                        <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0;" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(post.user.name || 'User') %>&background=0F1419&color=fff&size=128';">
+                      <% } else { %>
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background: #0F1419; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; flex-shrink: 0;">
+                          <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
+                        </div>
+                      <% } %>
+                    </a>
                     <div>
-                      <a href="/post/<%= post.id %>" style="text-decoration: none;">
-                        <h4 style="font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 0.35rem;">
+                      <div style="display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; line-height: 1.25;">
+                        <a href="/<%= post.user.handle.replace('@', '') %>" style="text-decoration: none; color: var(--twitter-text-main); font-weight: 700; font-size: 0.925rem;">
                           <%= post.user.name %>
-                          <% if (post.user.isVerified) { %>
-                            <i data-lucide="check-circle-2" style="width: 15px; height: 15px; color: var(--primary-emerald);"></i>
-                          <% } %>
-                        </h4>
-                      </a>
-                      <span style="font-size: 0.85rem; color: var(--text-muted);"><%= post.user.handle %> • <%= post.time %></span>
+                        </a>
+                        <% if (post.user.isVerified) { %>
+                          <span class="verified-badge" title="Verified Athlete">
+                            <i data-lucide="check-circle-2" style="width: 14px; height: 14px; fill: var(--twitter-blue); color: #FFFFFF;"></i>
+                          </span>
+                        <% } %>
+                        <a href="/<%= post.user.handle.replace('@', '') %>" style="text-decoration: none; font-size: 0.825rem; color: var(--twitter-text-sub);">
+                          <%= post.user.handle %>
+                        </a>
+                        <span style="font-size: 0.75rem; color: var(--twitter-text-sub);">·</span>
+                        <span style="font-size: 0.8rem; color: var(--twitter-text-sub);"><%= post.time %></span>
+                      </div>
                     </div>
                   </div>
-                  <button style="background: none; border: none; color: var(--text-muted); cursor: pointer;"><i data-lucide="more-horizontal"></i></button>
+                  <a href="/post/<%= post.id %>" style="color: var(--twitter-text-sub); padding: 0.25rem; border-radius: 9999px;" title="View thread"><i data-lucide="external-link" style="width: 15px; height: 15px;"></i></a>
                 </div>
 
-                <!-- Post Content -->
-                <div style="margin-bottom: 1rem;">
+                <!-- Tweet Body Text & Media -->
+                <div style="padding-left: 0; margin-bottom: 0.5rem;">
                   <% if (post.content) { %>
-                    <a href="/post/<%= post.id %>" style="text-decoration: none; color: inherit;"><p style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.05rem;"><%= post.content %></p></a>
+                    <a href="/post/<%= post.id %>" style="text-decoration: none; color: var(--twitter-text-main); display: block;">
+                      <p style="margin-bottom: 0.65rem; font-size: 0.95rem; line-height: 1.5; word-break: break-word;"><%= post.content %></p>
+                    </a>
                   <% } %>
                   <% if (post.image) { %>
-                    <a href="/post/<%= post.id %>">
-                      <div style="border-radius: var(--radius-md); overflow: hidden; max-height: 400px;">
-                        <img src="<%= post.image %>" alt="Post Image" style="width: 100%; height: auto; object-fit: cover; display: block;">
+                    <a href="/post/<%= post.id %>" style="display: block; margin-top: 0.5rem;">
+                      <div style="border-radius: 12px; overflow: hidden; max-height: 380px; border: 1px solid var(--twitter-border); background: #000000;">
+                        <img src="<%= post.image %>" alt="Post Image" style="width: 100%; height: auto; object-fit: contain; display: block; max-height: 380px;" onerror="this.parentElement.style.display='none';">
                       </div>
                     </a>
                   <% } %>
                 </div>
 
-                <!-- Post Actions -->
-                <div style="display: flex; align-items: center; gap: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem; color: var(--text-muted);">
-                  <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s;">
-                    <i data-lucide="heart" style="width: 20px; height: 20px;"></i> <span><%= post.likes %></span>
+                <!-- Twitter Action Row (Reply, Retweet, Like, Share) -->
+                <div class="tweet-actions-row">
+                  <button class="tweet-action-btn" title="Replies" onclick="window.location.href='/post/<%= post.id %>'">
+                    <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                    <span><%= post.comments %></span>
                   </button>
-                  <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s;">
-                    <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i> <span><%= post.comments %></span>
+                  <button class="tweet-action-btn action-retweet" title="Repost / Share" onclick="navigator.clipboard?.writeText(window.location.origin + '/post/<%= post.id %>'); alert('Post link copied to clipboard!');">
+                    <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
+                    <span><%= post.shares || 0 %></span>
                   </button>
-                  <button class="post-action-btn" style="display: flex; align-items: center; gap: 0.5rem; background: none; border: none; color: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: color 0.2s; margin-left: auto;">
-                    <i data-lucide="share-2" style="width: 20px; height: 20px;"></i> <span><%= post.shares || 0 %></span>
+                  <button class="tweet-action-btn action-like" title="Like" onclick="this.classList.toggle('text-rose-500')">
+                    <i data-lucide="heart" style="width: 16px; height: 16px;"></i>
+                    <span><%= post.likes %></span>
+                  </button>
+                  <button class="tweet-action-btn" title="Share" onclick="if(navigator.share){navigator.share({title: '<%= post.user.name %> on Beyounge', url: '/post/<%= post.id %>'});}else{navigator.clipboard?.writeText(window.location.origin + '/post/<%= post.id %>'); alert('Copied link!');}">
+                    <i data-lucide="share" style="width: 15px; height: 15px;"></i>
                   </button>
                 </div>
               </div>
             <% }); %>
           <% } else { %>
-            <div class="glass-card" style="padding: 2.5rem; text-align: center; border-radius: var(--radius-lg); color: var(--text-muted);">
-              <i data-lucide="message-square" style="width: 32px; height: 32px; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
-              <p style="margin: 0; font-size: 1rem;">No posts found.</p>
+            <div class="tweet-card" style="padding: 2.5rem; text-align: center; border-radius: 14px; color: var(--twitter-text-sub);">
+              <i data-lucide="feather" style="width: 28px; height: 28px; color: var(--twitter-text-sub); margin-bottom: 0.5rem;"></i>
+              <p style="margin: 0; font-size: 0.95rem; font-weight: 500;">No posts in community timeline yet.</p>
             </div>
           <% } %>
           

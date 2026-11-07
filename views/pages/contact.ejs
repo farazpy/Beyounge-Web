@@ -32,7 +32,7 @@
         </div>
         <div>
           <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Direct Email</div>
-          <a href="mailto:support@beyounge.app" class="gradient-text" style="font-weight: 700; font-size: 0.95rem;">support@beyounge.app</a>
+          <a href="mailto:<%= locals.contactEmail || 'support@beyounge.app' %>" class="gradient-text" style="font-weight: 700; font-size: 0.95rem;"><%= locals.contactEmail || 'support@beyounge.app' %></a>
         </div>
       </div>
 

@@ -17,21 +17,29 @@
         <!-- Post Header -->
         <div class="post-detail-header">
           <div style="display: flex; align-items: center; gap: 1rem;">
-            <% if (post.user.avatar) { %>
-              <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" class="post-detail-avatar">
-            <% } else { %>
-              <div class="post-detail-avatar-placeholder">
-                <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
-              </div>
-            <% } %>
+            <a href="/<%= post.user.handle.replace('@', '') %>" style="text-decoration: none;">
+              <% if (post.user.avatar) { %>
+                <img src="<%= post.user.avatar %>" alt="<%= post.user.name %>" class="post-detail-avatar">
+              <% } else { %>
+                <div class="post-detail-avatar-placeholder">
+                  <%= (post.user.name || 'U').charAt(0).toUpperCase() %>
+                </div>
+              <% } %>
+            </a>
             <div>
               <h1 class="post-detail-name">
-                <%= post.user.name %>
+                <a href="/<%= post.user.handle.replace('@', '') %>" style="color: inherit; text-decoration: none;">
+                  <%= post.user.name %>
+                </a>
                 <% if (post.user.isVerified) { %>
                   <i data-lucide="check-circle-2" class="verified-icon"></i>
                 <% } %>
               </h1>
-              <p class="post-detail-meta"><%= post.user.handle %> • <%= post.time %></p>
+              <p class="post-detail-meta">
+                <a href="/<%= post.user.handle.replace('@', '') %>" style="color: inherit; text-decoration: none;">
+                  <%= post.user.handle %>
+                </a> • <%= post.time %>
+              </p>
             </div>
           </div>
           <button class="post-options-btn"><i data-lucide="more-horizontal"></i></button>

@@ -19,5 +19,8 @@ router.put('/admin/table/:tableName/row', adminController.updateTableRow);
 router.delete('/admin/table/:tableName/row', adminController.deleteTableRow);
 router.post('/admin/table/:tableName/bulk', adminController.bulkTableAction);
 router.post('/admin/quick-action', adminController.handleQuickAction);
+router.post('/admin/media-audit/scan', adminController.scanMediaHealth);
+router.post('/admin/media-audit/fix', adminController.fixMediaUrl);
+router.post('/admin/media-audit/test-url', adminController.testMediaUrl);
 
 export default router;

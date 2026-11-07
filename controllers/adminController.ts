@@ -1000,5 +1000,302 @@ export const adminController = {
       console.error('[Admin Quick Action Error]:', err);
       return res.status(500).json({ error: err?.sqlMessage || err?.message || 'Quick action failed.' });
     }
+  },
+
+  // =========================================================================
+  // MEDIA HEALTH & 404 DETECTOR (POSTS, REELS & USER PROFILE PICTURES)
+  // =========================================================================
+  scanMediaHealth: async (req: Request, res: Response) => {
+    if (!isAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized: Valid PIN 9292 required.' });
+    }
+
+    try {
+      const scope = String(req.body?.scope || 'all');
+      const limitCount = Math.min(Number(req.body?.limit) || 120, 500);
+
+      const candidates: Array<{
+        itemType: 'user_photo' | 'post_image' | 'reel_video' | 'reel_cover';
+        table: 'users' | 'posts';
+        recordId: string;
+        recordTitle: string;
+        authorHandle: string;
+        field: 'photoUrl' | 'avatar' | 'imageUrl' | 'image' | 'videoUrl' | 'coverImageUrl';
+        currentUrl: string;
+        publicUrl?: string;
+      }> = [];
+
+      // 1. Gather User Avatars
+      if (scope === 'all' || scope === 'users') {
+        const [users]: any = await dbPool.query(
+          `SELECT uid, username, displayName, photoUrl, avatar FROM users
+           WHERE (photoUrl IS NOT NULL AND TRIM(photoUrl) != '')
+              OR (avatar IS NOT NULL AND TRIM(avatar) != '')
+           ORDER BY uid DESC LIMIT ?`,
+          [limitCount]
+        );
+
+        for (const u of users) {
+          const url = (u.photoUrl || u.avatar || '').trim();
+          if (url) {
+            candidates.push({
+              itemType: 'user_photo',
+              table: 'users',
+              recordId: String(u.uid),
+              recordTitle: u.displayName || u.username || `User #${u.uid}`,
+              authorHandle: u.username ? `@${u.username}` : `UID:${u.uid}`,
+              field: u.photoUrl ? 'photoUrl' : 'avatar',
+              currentUrl: url,
+              publicUrl: `/admin/users`
+            });
+          }
+        }
+      }
+
+      // 2. Gather Posts & Reels Media
+      if (scope === 'all' || scope === 'posts' || scope === 'reels') {
+        const [posts]: any = await dbPool.query(
+          `SELECT p.id, p.userId, p.content, p.postType, p.imageUrl, p.videoUrl, p.coverImageUrl, u.username, u.displayName
+           FROM posts p
+           LEFT JOIN users u ON p.userId = u.uid
+           WHERE (p.imageUrl IS NOT NULL AND TRIM(p.imageUrl) != '')
+              OR (p.videoUrl IS NOT NULL AND TRIM(p.videoUrl) != '')
+              OR (p.coverImageUrl IS NOT NULL AND TRIM(p.coverImageUrl) != '')
+           ORDER BY p.id DESC LIMIT ?`,
+          [limitCount]
+        );
+
+        for (const p of posts) {
+          const caption = p.content ? (p.content.length > 55 ? p.content.slice(0, 55) + '…' : p.content) : `Post #${p.id}`;
+          const author = p.username ? `@${p.username}` : `UID:${p.userId}`;
+
+          if (p.videoUrl && (scope === 'all' || scope === 'reels')) {
+            candidates.push({
+              itemType: 'reel_video',
+              table: 'posts',
+              recordId: String(p.id),
+              recordTitle: caption,
+              authorHandle: author,
+              field: 'videoUrl',
+              currentUrl: p.videoUrl.trim(),
+              publicUrl: `/post/${p.id}`
+            });
+          }
+
+          if (p.coverImageUrl && (scope === 'all' || scope === 'reels')) {
+            candidates.push({
+              itemType: 'reel_cover',
+              table: 'posts',
+              recordId: String(p.id),
+              recordTitle: `${caption} (Cover)`,
+              authorHandle: author,
+              field: 'coverImageUrl',
+              currentUrl: p.coverImageUrl.trim(),
+              publicUrl: `/post/${p.id}`
+            });
+          }
+
+          if (p.imageUrl && (scope === 'all' || scope === 'posts')) {
+            candidates.push({
+              itemType: 'post_image',
+              table: 'posts',
+              recordId: String(p.id),
+              recordTitle: caption,
+              authorHandle: author,
+              field: 'imageUrl',
+              currentUrl: p.imageUrl.trim(),
+              publicUrl: `/post/${p.id}`
+            });
+          }
+        }
+      }
+
+      // 3. Batch Check Accessibility with Concurrency Limit
+      const brokenItems: any[] = [];
+      let healthyCount = 0;
+      const startTime = Date.now();
+      const BATCH_SIZE = 8;
+
+      for (let i = 0; i < candidates.length; i += BATCH_SIZE) {
+        const batch = candidates.slice(i, i + BATCH_SIZE);
+        await Promise.all(
+          batch.map(async (candidate) => {
+            const check = await checkMediaUrlAccessibility(candidate.currentUrl);
+            if (!check.accessible) {
+              brokenItems.push({
+                ...candidate,
+                statusCode: check.statusCode,
+                errorReason: check.errorReason,
+                checkedAt: new Date().toISOString()
+              });
+            } else {
+              healthyCount++;
+            }
+          })
+        );
+      }
+
+      return res.json({
+        success: true,
+        summary: {
+          totalScanned: candidates.length,
+          healthyCount,
+          brokenCount: brokenItems.length,
+          scope,
+          durationMs: Date.now() - startTime
+        },
+        brokenItems
+      });
+    } catch (err: any) {
+      console.error('[Media Audit Scan Error]:', err);
+      return res.status(500).json({ error: err?.message || 'Media audit scan failed.' });
+    }
+  },
+
+  // 1-Click / Inline Fix for Broken Media URL
+  fixMediaUrl: async (req: Request, res: Response) => {
+    if (!isAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized: Valid PIN 9292 required.' });
+    }
+
+    try {
+      const { table, id, field, newUrl } = req.body || {};
+      if (!table || !id || !field) {
+        return res.status(400).json({ error: 'Missing required parameters: table, id, or field.' });
+      }
+
+      const allowedFields: Record<string, string[]> = {
+        users: ['photoUrl', 'avatar'],
+        posts: ['imageUrl', 'image', 'videoUrl', 'coverImageUrl']
+      };
+
+      if (!allowedFields[table] || !allowedFields[table].includes(field)) {
+        return res.status(400).json({ error: `Invalid field '${field}' for table '${table}'.` });
+      }
+
+      const cleanUrl = typeof newUrl === 'string' ? newUrl.trim() : '';
+
+      // Validate new replacement URL if provided
+      if (cleanUrl) {
+        const check = await checkMediaUrlAccessibility(cleanUrl);
+        if (!check.accessible) {
+          return res.status(400).json({
+            error: `Replacement URL is inaccessible (${check.errorReason || 'HTTP ' + check.statusCode}). Please verify the link.`,
+            accessible: false,
+            statusCode: check.statusCode
+          });
+        }
+      }
+
+      if (table === 'users') {
+        await dbPool.query(`UPDATE \`users\` SET \`${field}\` = ? WHERE \`uid\` = ? LIMIT 1`, [cleanUrl || null, String(id)]);
+      } else if (table === 'posts') {
+        await dbPool.query(`UPDATE \`posts\` SET \`${field}\` = ? WHERE \`id\` = ? LIMIT 1`, [cleanUrl || null, String(id)]);
+      }
+
+      return res.json({
+        success: true,
+        message: `Successfully updated ${table}.${field} for record #${id}.`,
+        table,
+        id,
+        field,
+        newUrl: cleanUrl
+      });
+    } catch (err: any) {
+      console.error('[Fix Media URL Error]:', err);
+      return res.status(500).json({ error: err?.message || 'Failed to update media URL.' });
+    }
+  },
+
+  // Test single URL accessibility
+  testMediaUrl: async (req: Request, res: Response) => {
+    if (!isAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized: Valid PIN 9292 required.' });
+    }
+    const { url } = req.body || {};
+    if (!url) {
+      return res.status(400).json({ error: 'Missing URL to test.' });
+    }
+    const check = await checkMediaUrlAccessibility(String(url));
+    return res.json({
+      success: true,
+      url: String(url),
+      ...check
+    });
   }
 };
+
+// =========================================================================
+// HELPER: ROBUST MEDIA ACCESSIBILITY & 404 CHECKER
+// =========================================================================
+async function checkMediaUrlAccessibility(rawUrl: string): Promise<{ accessible: boolean; statusCode: number; contentType?: string; errorReason?: string }> {
+  if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
+    return { accessible: false, statusCode: 0, errorReason: 'Empty or blank URL' };
+  }
+  const trimmed = rawUrl.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return { accessible: false, statusCode: 0, errorReason: 'Invalid Protocol (must start with http:// or https://)' };
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+    let fetchRes: any;
+    try {
+      fetchRes = await fetch(trimmed, {
+        method: 'HEAD',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': '*/*'
+        },
+        signal: controller.signal
+      });
+    } catch (headErr: any) {
+      // Some media CDNs reject HEAD; fallback to GET with tiny byte range
+      fetchRes = await fetch(trimmed, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Range': 'bytes=0-1024',
+          'Accept': '*/*'
+        },
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
+    const statusCode = Number(fetchRes?.status) || 0;
+    const contentType = fetchRes?.headers?.get ? fetchRes.headers.get('content-type') : '';
+
+    if (statusCode === 404) {
+      return { accessible: false, statusCode: 404, errorReason: '404 Not Found' };
+    }
+    if (statusCode === 403) {
+      return { accessible: false, statusCode: 403, errorReason: '403 Forbidden / Expired Access' };
+    }
+    if (statusCode === 410) {
+      return { accessible: false, statusCode: 410, errorReason: '410 Gone / Permanently Removed' };
+    }
+    if (statusCode >= 500) {
+      return { accessible: false, statusCode, errorReason: `HTTP ${statusCode} Server Error` };
+    }
+    if (statusCode >= 400) {
+      return { accessible: false, statusCode, errorReason: `HTTP ${statusCode} Client Error` };
+    }
+
+    return { accessible: true, statusCode, contentType: contentType || 'media' };
+  } catch (err: any) {
+    if (err?.name === 'AbortError' || err?.message?.includes('timeout') || err?.message?.includes('aborted')) {
+      return { accessible: false, statusCode: 0, errorReason: 'Connection Timed Out (4s)' };
+    }
+    if (err?.code === 'ENOTFOUND' || err?.message?.includes('ENOTFOUND')) {
+      return { accessible: false, statusCode: 0, errorReason: 'DNS Lookup Failed (Invalid Domain)' };
+    }
+    if (err?.code === 'ECONNREFUSED' || err?.message?.includes('ECONNREFUSED')) {
+      return { accessible: false, statusCode: 0, errorReason: 'Connection Refused by Remote Host' };
+    }
+    return { accessible: false, statusCode: 0, errorReason: err?.message || 'Inaccessible / Network Fetch Failed' };
+  }
+}
