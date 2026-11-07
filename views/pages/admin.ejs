@@ -34,6 +34,32 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
+    /* Deletion Logic */
+    .row-deleting {
+      animation: row-slide-out 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      pointer-events: none;
+      background-color: rgba(254, 226, 226, 0.4) !important;
+    }
+    @keyframes row-slide-out {
+      0% { opacity: 1; transform: translateX(0); }
+      30% { opacity: 0.7; transform: translateX(-10px); }
+      100% { opacity: 0; transform: translateX(50px); }
+    }
+    .deleting-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(225, 29, 72, 0.3);
+      border-radius: 50%;
+      border-top-color: #e11d48;
+      animation: admin-spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+    @keyframes admin-spin {
+      to { transform: rotate(360deg); }
+    }
+
     a, button, select, label, input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"], [onclick], [role="button"], .wp-btn, .wp-menu-item, .wp-submenu-item, .user-filter-btn, .post-filter-btn, .pin-digit-btn {
       cursor: pointer !important;
     }
@@ -710,11 +736,11 @@
             B
           </div>
           <div>
-            <h1 class="text-base font-bold text-slate-900 leading-tight">Beyounge Admin</h1>
+            <h1 class="text-base font-bold text-slate-900 leading-tight">Beyounge Admin Console</h1>
             <p class="text-xs text-slate-500">54-Table Shared Database Console</p>
           </div>
         </div>
-        <span class="font-mono-num text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold border border-emerald-200">v1.3.9</span>
+        <span class="font-mono-num text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold border border-emerald-200">v1.5.0</span>
       </div>
 
       <p class="text-xs text-slate-600 mb-4 leading-relaxed">
@@ -777,7 +803,7 @@
 
         <a href="/" class="flex items-center gap-2 px-2.5 py-1 text-xs font-bold text-slate-900 hover:bg-slate-100 rounded-lg whitespace-nowrap transition-colors" title="Visit Public Website">
           <span class="w-6 h-6 bg-slate-900 text-white inline-flex items-center justify-center font-bold text-xs rounded-md shadow-2xs">B</span>
-          <span>Beyounge</span>
+          <span>Beyounge Admin Console</span>
           <span class="text-slate-400 font-normal hidden sm:inline">· Visit Site</span>
         </a>
 
@@ -952,8 +978,8 @@
 
           <a href="/admin/ai" data-tab="ai" class="wp-menu-item" onclick="switchTab('ai', event)">
             <span class="flex items-center gap-2.5">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>AI & Activity Logs</span>
+              <i data-lucide="cpu" class="w-4 h-4 text-emerald-600"></i>
+              <span>AI Agent & Logs</span>
             </span>
             <span id="navBadgeAi" class="font-mono-num text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">0</span>
           </a>
@@ -1011,7 +1037,7 @@
         <div class="p-3 border-t border-slate-100 text-[11px] text-slate-500 bg-slate-50/50 rounded-xl mt-2">
           <div class="flex items-center justify-between">
             <span class="font-semibold text-slate-700">Android + Web DB</span>
-            <span class="font-mono-num font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">v1.3.9</span>
+            <span class="font-mono-num font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">v1.5.0</span>
           </div>
           <div id="sidebarSyncTime" class="font-mono-num text-[10px] mt-1 text-slate-400 truncate">Ready</div>
         </div>
@@ -1246,7 +1272,6 @@
                 <option value="make_admin">Grant Admin Role</option>
                 <option value="revoke_admin">Set Standard User Role</option>
                 <option value="export_csv">Export Selected to CSV</option>
-                <option value="delete">Delete Selected Users</option>
               </select>
               <button type="button" onclick="applyUsersBulkAction()" class="wp-btn wp-btn-secondary">Apply</button>
             </div>
@@ -1386,7 +1411,6 @@
                 <option value="set_image">Set Selected as Image Post (postType='image')</option>
                 <option value="set_text">Set Selected as Text Post (postType='text')</option>
                 <option value="export_csv">Export Selected to CSV</option>
-                <option value="delete">Delete Selected Posts/Reels</option>
               </select>
               <button type="button" onclick="applyPostsBulkAction()" class="wp-btn wp-btn-secondary">Apply</button>
             </div>
@@ -1457,7 +1481,7 @@
                   <option value="">Bulk actions</option>
                   <option value="status_approved">Approve Selected</option>
                   <option value="status_rejected">Reject Selected</option>
-                  <option value="delete">Delete Selected</option>
+                  
                 </select>
                 <button type="button" onclick="applyBulkAction('coach_applications', 'coach-row-cb', 'coachAppsBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                 <button type="button" onclick="openRecordEditor('coach_applications', { status: 'pending' })" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1488,7 +1512,7 @@
               <div class="flex items-center gap-2">
                 <select id="workoutsBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                   <option value="">Bulk actions</option>
-                  <option value="delete">Delete Selected</option>
+                  
                 </select>
                 <button type="button" onclick="applyBulkAction('workouts', 'workout-row-cb', 'workoutsBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                 <button type="button" onclick="openRecordEditor('workouts', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1578,7 +1602,7 @@
               <div class="flex items-center gap-2">
                 <select id="healthBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                   <option value="">Bulk actions</option>
-                  <option value="delete">Delete Selected</option>
+                  
                 </select>
                 <button type="button" onclick="applyBulkAction('health_connect_daily_summaries', 'health-row-cb', 'healthBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                 <button type="button" onclick="openRecordEditor('health_connect_daily_summaries', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1611,7 +1635,7 @@
                 <div class="flex items-center gap-2">
                   <select id="nutritionBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('nutrition_logs', 'nutrition-row-cb', 'nutritionBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('nutrition_logs', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1640,7 +1664,7 @@
                 <div class="flex items-center gap-2">
                   <select id="foodsBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('foods', 'food-row-cb', 'foodsBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('foods', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1671,9 +1695,69 @@
         <section id="tab-ai" class="admin-tab-panel hidden space-y-5">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2">
-              <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Gemini AI Telemetry, Activities & Achievements</h1>
+              <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Gemini 3.1 Flash Lite AI Agent</h1>
+              <span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-100">Live Model</span>
+            </div>
+            <div class="flex items-center gap-2">
               <button type="button" onclick="openRecordEditor('gemini_token_logs', null)" class="wp-btn wp-btn-secondary">+ Add Token Log</button>
               <button type="button" onclick="openRecordEditor('user_achievements', null)" class="wp-btn wp-btn-secondary">+ Grant Achievement</button>
+            </div>
+          </div>
+
+          <!-- AI Agent Operations Console -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="wp-postbox">
+              <div class="wp-postbox-header">
+                <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>Publish AI Generated Post</span>
+              </div>
+              <div class="p-4 space-y-4">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Post Topic / Theme</label>
+                  <input id="aiPostTopic" type="text" placeholder="e.g. Benefits of early morning cardio" class="wp-input w-full" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Target User ID (Assign to)</label>
+                  <input id="aiPostUserId" type="text" placeholder="Paste UID from Users tab" class="wp-input w-full" />
+                </div>
+                <button type="button" id="aiGenPostBtn" onclick="runAiAgentAction('generate-post')" class="wp-btn wp-btn-primary w-full justify-center">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>Generate & Publish Now</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="wp-postbox">
+              <div class="wp-postbox-header">
+                <i data-lucide="message-square" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>AI Engagement Agent (Likes & Comments)</span>
+              </div>
+              <div class="p-4 space-y-4">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Target Post ID</label>
+                  <input id="aiEngagePostId" type="text" placeholder="Paste Post ID" class="wp-input w-full" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Likes Count</label>
+                    <input id="aiLikesCount" type="number" value="5" min="1" max="50" class="wp-input w-full" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Comments Count</label>
+                    <input id="aiCommentsCount" type="number" value="3" min="1" max="10" class="wp-input w-full" />
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button type="button" id="aiGenLikesBtn" onclick="runAiAgentAction('generate-likes')" class="wp-btn wp-btn-secondary flex-1 justify-center">
+                    <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i>
+                    <span>Gen Likes</span>
+                  </button>
+                  <button type="button" id="aiGenCommentsBtn" onclick="runAiAgentAction('generate-comments')" class="wp-btn wp-btn-secondary flex-1 justify-center">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5 text-indigo-500"></i>
+                    <span>Gen Comments</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1683,7 +1767,7 @@
               <div class="flex items-center gap-2">
                 <select id="geminiBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                   <option value="">Bulk actions</option>
-                  <option value="delete">Delete Selected</option>
+                  
                 </select>
                 <button type="button" onclick="applyBulkAction('gemini_token_logs', 'gemini-row-cb', 'geminiBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                 <a href="/admin/explorer?table=gemini_token_logs" onclick="openTableInExplorer('gemini_token_logs', event)" class="text-xs text-slate-500 hover:underline">Open in Explorer</a>
@@ -1714,7 +1798,7 @@
                 <div class="flex items-center gap-2">
                   <select id="activitiesBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('activities', 'activity-row-cb', 'activitiesBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('activities', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1742,7 +1826,7 @@
                 <div class="flex items-center gap-2">
                   <select id="achievementsBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('user_achievements', 'achievement-row-cb', 'achievementsBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('user_achievements', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1891,7 +1975,7 @@
                 <div class="flex items-center gap-2">
                   <select id="appConfigBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('app_config', 'config-row-cb', 'appConfigBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('app_config', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1918,7 +2002,7 @@
                 <div class="flex items-center gap-2">
                   <select id="emailBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected Logs</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('email_logs', 'email-row-cb', 'emailBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <a href="/admin/explorer?table=smtp_config" onclick="openTableInExplorer('smtp_config', event)" class="text-xs text-slate-500 hover:underline">Manage SMTP</a>
@@ -1948,7 +2032,7 @@
                 <div class="flex items-center gap-2">
                   <select id="blogBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('blog_posts', 'blog-row-cb', 'blogBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('blog_posts', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -1975,7 +2059,7 @@
                 <div class="flex items-center gap-2">
                   <select id="faqBulkActionSelect" class="wp-select text-[11px] !min-h-[26px]">
                     <option value="">Bulk actions</option>
-                    <option value="delete">Delete Selected</option>
+                    
                   </select>
                   <button type="button" onclick="applyBulkAction('faqs', 'faq-row-cb', 'faqBulkActionSelect')" class="wp-btn wp-btn-secondary !min-h-[26px] !text-[11px]">Apply</button>
                   <button type="button" onclick="openRecordEditor('faqs', null)" class="text-xs text-slate-600 hover:text-slate-900 font-semibold">+ Add</button>
@@ -2151,8 +2235,7 @@
               <div class="flex flex-wrap items-center gap-2">
                 <select id="explorerBulkActionSelect" class="wp-select text-xs">
                   <option value="">Bulk actions</option>
-                  <option value="delete">Delete Selected Rows</option>
-                  <option value="export">Export Selected Rows (CSV)</option>
+                  <option value="export_csv">Export Selected to CSV</option>
                 </select>
                 <button type="button" onclick="applyExplorerBulkAction()" class="wp-btn wp-btn-secondary">Apply</button>
               </div>
@@ -2999,7 +3082,7 @@
               <div class="font-mono-num text-xs text-slate-500">@${esc(u.username || '—')}</div>
               <div class="wp-row-actions always-visible">
                 <button type="button" onclick="openRecordEditorDecoded('users', '${rowEnc}')">Edit (46 Cols)</button> |
-                <button type="button" class="submitdelete" onclick="confirmDeleteRow('users', '${rowEnc}')">Delete</button>
+                <button type="button" class="submitdelete" onclick="confirmDeleteRow('users', '${rowEnc}', this)">Delete</button>
               </div>
             </td>
             <td>
@@ -3039,7 +3122,7 @@
               <div class="wp-row-actions always-visible">
                 <button type="button" onclick="openRecordEditorDecoded('posts', '${rowEnc}')">Edit (22 Cols)</button> |
                 <a href="/post/${encodeURIComponent(p.id)}" target="_blank">View Public Page</a> |
-                <button type="button" class="submitdelete" onclick="confirmDeleteRow('posts', '${rowEnc}')">Delete</button>
+                <button type="button" class="submitdelete" onclick="confirmDeleteRow('posts', '${rowEnc}', this)">Delete</button>
               </div>
             </td>
             <td>
@@ -3098,9 +3181,9 @@
                 </div>
                 <div class="text-xs text-slate-500 mt-1">${esc(ca.specialization || 'General Fitness')} · ${fmtNum(ca.experienceYears)} yrs exp</div>
                 <div class="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60 text-xs">
-                  <button type="button" onclick="quickAction('update_coach_status', { id: ${Number(ca.id)}, value: 'approved', uid: '${esc(ca.userId || '')}' })" class="text-emerald-700 hover:underline font-bold">✓ Approve</button>
+                  <button type="button" onclick="quickAction('update_coach_status', { id: '${esc(ca.id)}', value: 'approved', uid: '${esc(ca.userId || '')}' })" class="text-emerald-700 hover:underline font-bold">✓ Approve</button>
                   <span>·</span>
-                  <button type="button" onclick="quickAction('update_coach_status', { id: ${Number(ca.id)}, value: 'rejected', uid: '${esc(ca.userId || '')}' })" class="text-rose-600 hover:underline">✕ Reject</button>
+                  <button type="button" onclick="quickAction('update_coach_status', { id: '${esc(ca.id)}', value: 'rejected', uid: '${esc(ca.userId || '')}' })" class="text-rose-600 hover:underline">✕ Reject</button>
                   <span>·</span>
                   <button type="button" onclick="openRecordEditorDecoded('coach_applications', '${rowEnc}')" class="text-slate-700 hover:underline font-medium">Edit Details</button>
                 </div>
@@ -3191,7 +3274,7 @@
                     <button type="button" class="text-rose-600 hover:underline" onclick="quickFixMediaPrompt('users', '${esc(u.uid)}', '${u.photoUrl ? 'photoUrl' : 'avatar'}', '${esc(u.photoUrl || u.avatar || '')}')">Fix Avatar</button> |
                     <button type="button" onclick="quickAction('toggle_user_verified', { uid: '${esc(u.uid)}', value: ${u.is_verified ? 0 : 1} })">${u.is_verified ? 'Unverify' : 'Verify'}</button> |
                     <button type="button" onclick="quickAction('toggle_user_admin', { uid: '${esc(u.uid)}', value: ${u.isAdmin ? 0 : 1} })">${u.isAdmin ? 'Revoke Admin' : 'Make Admin'}</button> |
-                    <button type="button" class="submitdelete" onclick="confirmDeleteRow('users', '${rowEnc}')">Delete</button>
+                    <button type="button" class="submitdelete" onclick="confirmDeleteRow('users', '${rowEnc}', this)">Delete</button>
                   </div>
                 </div>
               </div>
@@ -3245,7 +3328,7 @@
             <td class="text-xs font-semibold">@${esc(f.followingUsername || f.followingId)}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('user_follows', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('user_follows', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('user_follows', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3261,7 +3344,7 @@
             <td class="text-xs font-mono-num">${esc(st.mediaType || 'image')} · ${fmtNum(st.viewCount)} views</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('stories', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('stories', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('stories', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3277,7 +3360,7 @@
             <td class="text-xs truncate max-w-36 text-slate-700">${esc(m.messageText || m.content || '—')}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('direct_messages', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('direct_messages', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('direct_messages', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3394,7 +3477,7 @@
                   </button> |
                 ` : ''}
                 <a href="/post/${encodeURIComponent(p.id)}" target="_blank" class="text-emerald-400 hover:underline">Open Public URL</a> |
-                <button type="button" class="submitdelete text-rose-500 hover:underline" onclick="confirmDeleteRow('posts', '${rowEnc}')">Delete</button>
+                <button type="button" class="submitdelete text-rose-500 hover:underline" onclick="confirmDeleteRow('posts', '${rowEnc}', this)">Delete</button>
               </div>
             </td>
             <td>
@@ -3436,7 +3519,7 @@
             <td class="font-mono-num text-xs text-slate-500">${fmtTime(c.timestamp)}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('post_comments', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('post_comments', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Delete</button>
+              <button type="button" onclick="confirmDeleteRow('post_comments', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Delete</button>
             </td>
           </tr>
         `;
@@ -3463,22 +3546,7 @@
         return;
       }
 
-      if (action === 'delete') {
-        if (!confirm(`Are you sure you want to PERMANENTLY delete ${rows.length} records from ${tableName}? This cannot be undone.`)) return;
-
-        const whereKeys = rows.map(r => extractWhereKey(tableName, r));
-        try {
-          const res = await apiRequest(`/api/admin/table/${encodeURIComponent(tableName)}/bulk`, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'delete', whereKeys })
-          });
-          showNotice(res.message);
-          await loadDashboardData(true);
-          if (activeTab === 'explorer') await loadExplorerTable(explorerState.tableName, explorerState.offset);
-        } catch (err) {
-          showNotice(`Bulk delete failed: ${err.message}`, true);
-        }
-      } else if (action.startsWith('status_')) {
+      if (action.startsWith('status_')) {
         const newStatus = action.replace('status_', '');
         const whereKeys = rows.map(r => extractWhereKey(tableName, r));
         try {
@@ -3564,7 +3632,7 @@
             </td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('coach_applications', '${rowEnc}')" class="wp-btn wp-btn-secondary !min-h-[26px] !px-2.5 !text-xs">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('coach_applications', '${rowEnc}')" class="wp-btn wp-btn-danger !min-h-[26px] !px-2.5 !text-xs">Del</button>
+              <button type="button" onclick="confirmDeleteRow('coach_applications', '${rowEnc}', this)" class="wp-btn wp-btn-danger !min-h-[26px] !px-2.5 !text-xs">Del</button>
             </td>
           </tr>
         `;
@@ -3591,7 +3659,7 @@
             <td class="font-mono-num text-xs text-slate-500">${fmtTime(w.timestamp)}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('workouts', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('workouts', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('workouts', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3608,7 +3676,7 @@
             <td class="text-xs text-slate-500">${esc(ex.equipment || 'Bodyweight')}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('exercise_definitions', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('exercise_definitions', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('exercise_definitions', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3625,7 +3693,7 @@
             <td class="font-mono-num text-xs font-semibold">${esc(ex.calories_per_minute || ex.metValue || '—')}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('ai_exercise_library', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('ai_exercise_library', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('ai_exercise_library', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3653,7 +3721,7 @@
             <td class="text-right font-mono-num text-xs">${fmtNum(row.avgHeartRateBpm)} / ${fmtNum(row.restingHeartRateBpm)} bpm</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('health_connect_daily_summaries', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('health_connect_daily_summaries', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('health_connect_daily_summaries', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3675,7 +3743,7 @@
             <td class="text-right font-mono-num text-xs">${fmtNum(nl.proteinGrams || nl.protein)}p · ${fmtNum(nl.carbsGrams || nl.carbs)}c · ${fmtNum(nl.fatGrams || nl.fats)}f</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('nutrition_logs', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('nutrition_logs', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('nutrition_logs', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3697,7 +3765,7 @@
             <td class="text-right font-mono-num text-xs">${fmtNum(f.protein)}p · ${fmtNum(f.carbs)}c · ${fmtNum(f.fat || f.fats)}f</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('foods', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('foods', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('foods', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3723,7 +3791,7 @@
             <td class="font-mono-num text-xs text-slate-500">${fmtTime(g.timestamp)}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('gemini_token_logs', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('gemini_token_logs', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('gemini_token_logs', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3741,7 +3809,7 @@
             <td class="font-mono-num text-xs text-slate-500">${fmtTime(a.timestamp)}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('activities', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('activities', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('activities', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3760,7 +3828,7 @@
             <td class="text-xs">${ua.isUnlocked ? '<span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Unlocked</span>' : 'In Progress'}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('user_achievements', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('user_achievements', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('user_achievements', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3880,7 +3948,7 @@
             <td class="font-mono-num text-xs text-slate-700 break-all">${esc(c.config_value)}</td>
             <td class="text-right whitespace-nowrap">
               <button type="button" onclick="openRecordEditorDecoded('app_config', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('app_config', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('app_config', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3897,7 +3965,7 @@
             <td class="font-mono-num text-xs">${esc(e.status || 'sent')}</td>
             <td class="text-right">
               <button type="button" onclick="openRecordEditorDecoded('email_logs', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('email_logs', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('email_logs', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3916,7 +3984,7 @@
             <td class="text-xs text-slate-600">${esc(b.category)} · ${esc(b.author_name)}</td>
             <td class="text-right whitespace-nowrap">
               <button type="button" onclick="openRecordEditorDecoded('blog_posts', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('blog_posts', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('blog_posts', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -3932,7 +4000,7 @@
             <td class="text-xs text-slate-500">${esc(f.category)}</td>
             <td class="text-right whitespace-nowrap">
               <button type="button" onclick="openRecordEditorDecoded('faqs', '${rowEnc}')" class="text-xs text-slate-700 hover:text-slate-900 font-semibold mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('faqs', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Del</button>
+              <button type="button" onclick="confirmDeleteRow('faqs', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Del</button>
             </td>
           </tr>
         `;
@@ -4584,7 +4652,7 @@
             </td>
             <td class="whitespace-nowrap">
               <button type="button" onclick="openRecordEditorDecoded('${esc(tableName)}', '${rowEnc}')" class="text-xs font-semibold text-slate-800 hover:text-slate-900 hover:underline mr-2">Edit</button>
-              <button type="button" onclick="confirmDeleteRow('${esc(tableName)}', '${rowEnc}')" class="text-xs text-rose-600 hover:underline">Delete</button>
+              <button type="button" onclick="confirmDeleteRow('${esc(tableName)}', '${rowEnc}', this)" class="text-xs text-rose-600 hover:underline">Delete</button>
             </td>
             ${colNames.map(col => {
               const v = row[col];
@@ -5006,6 +5074,14 @@
 
     async function deleteCurrentEditorRecord() {
       const { tableName, whereKey } = editorState;
+      const deleteBtn = document.getElementById('editorDeleteBtn');
+      const origText = deleteBtn.innerHTML;
+
+      if (!confirm(`Permanently delete this record from ${tableName}?`)) return;
+
+      deleteBtn.innerHTML = '<span class="deleting-spinner"></span> Deleting...';
+      deleteBtn.disabled = true;
+
       try {
         const res = await apiRequest(`/api/admin/table/${encodeURIComponent(tableName)}/row`, {
           method: 'DELETE',
@@ -5014,27 +5090,58 @@
         closeRecordEditor();
         showNotice(res.message || `Deleted record from ${tableName}.`);
         await loadDashboardData(true);
+        renderActiveTab();
       } catch (err) {
+        deleteBtn.innerHTML = origText;
+        deleteBtn.disabled = false;
         const errBox = document.getElementById('editorFormError');
         errBox.textContent = err.message;
         errBox.classList.remove('hidden');
       }
     }
 
-    async function confirmDeleteRow(tableName, encodedRow) {
+    async function confirmDeleteRow(tableName, encodedRow, btnEl = null) {
+      if (!confirm(`Permanently delete this record from ${tableName}?`)) return;
+
       const row = decodeRowData(encodedRow);
       const whereKey = extractWhereKey(tableName, row);
+
+      let rowEl = null;
+      if (btnEl) {
+        rowEl = btnEl.closest('tr');
+        if (rowEl) {
+          rowEl.classList.add('row-deleting');
+          if (btnEl.tagName === 'BUTTON') {
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<span class="deleting-spinner"></span>';
+          }
+        }
+      }
+
       try {
         const res = await apiRequest(`/api/admin/table/${encodeURIComponent(tableName)}/row`, {
           method: 'DELETE',
           body: JSON.stringify({ whereKey })
         });
+
+        if (rowEl) {
+          setTimeout(() => rowEl.remove(), 400);
+        }
+
         showNotice(res.message || `Deleted row from ${tableName}.`);
         await loadDashboardData(true);
         if (activeTab === 'explorer') {
-          await loadExplorerTable(explorerState.tableName, explorerState.offset);
+          // Soft refresh pagination data in background
+          loadExplorerTable(explorerState.tableName, explorerState.offset);
         }
       } catch (err) {
+        if (rowEl) {
+          rowEl.classList.remove('row-deleting');
+          if (btnEl && btnEl.tagName === 'BUTTON') {
+            btnEl.disabled = false;
+            btnEl.innerHTML = 'Delete';
+          }
+        }
         showNotice(`Delete error: ${err.message}`, true);
       }
     }
@@ -5042,6 +5149,56 @@
     // =====================================================================
     // ONE-CLICK ANDROID MODERATION & QUICK ACTIONS
     // =====================================================================
+    async function runAiAgentAction(action) {
+      const btnMap = {
+        'generate-post': document.getElementById('aiGenPostBtn'),
+        'generate-likes': document.getElementById('aiGenLikesBtn'),
+        'generate-comments': document.getElementById('aiGenCommentsBtn')
+      };
+      const btn = btnMap[action];
+      if (!btn) return;
+
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="deleting-spinner border-slate-400 border-t-slate-800"></span> Working...';
+
+      try {
+        let payload = {};
+        if (action === 'generate-post') {
+          payload = {
+            topic: document.getElementById('aiPostTopic').value.trim(),
+            userId: document.getElementById('aiPostUserId').value.trim()
+          };
+          if (!payload.topic || !payload.userId) throw new Error('Topic and UserId are required.');
+        } else if (action === 'generate-likes') {
+          payload = {
+            postId: document.getElementById('aiEngagePostId').value.trim(),
+            count: parseInt(document.getElementById('aiLikesCount').value) || 5
+          };
+          if (!payload.postId) throw new Error('Post ID is required.');
+        } else if (action === 'generate-comments') {
+          payload = {
+            postId: document.getElementById('aiEngagePostId').value.trim(),
+            count: parseInt(document.getElementById('aiCommentsCount').value) || 3
+          };
+          if (!payload.postId) throw new Error('Post ID is required.');
+        }
+
+        const res = await apiRequest(`/api/admin/ai/${action}`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        showNotice(res.message);
+        await loadDashboardData(true);
+      } catch (err) {
+        showNotice(`AI Agent error: ${err.message}`, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    }
+
     async function quickAction(actionType, payload) {
       try {
         const res = await apiRequest('/api/admin/quick-action', {

@@ -175,7 +175,7 @@ export const adminController = {
   getAdminPage: (req: Request, res: Response) => {
     const subpage = req.params.subpage || 'dashboard';
     res.render('pages/admin', {
-      title: 'WP-Admin Console | Beyounge Full 54-Table CMS & Database Manager',
+      title: 'Beyounge Admin Console',
       description:
         'Beyounge WordPress-Style Executive Admin CMS — Full CRUD for Users, Posts, Reels, Workouts, Coaches, Nutrition, Health Connect, and all 54 Android MySQL tables.',
       canonical: '/admin',
@@ -929,40 +929,38 @@ export const adminController = {
         });
       }
 
-      if (actionType === 'update_coach_status' && (id !== undefined || uid !== undefined)) {
+      if (actionType === 'update_coach_status' && (id || uid)) {
         const statusVal = String(value || 'approved');
         
         let targetUid = uid ? String(uid) : undefined;
-        if (!targetUid && id !== undefined) {
+        let targetId = id ? String(id) : undefined;
+
+        // If UID is missing, try to find it via application ID
+        if (!targetUid && targetId) {
           const [appRows]: any = await dbPool.query(
-            `SELECT \`userId\` FROM \`coach_applications\` WHERE \`id\` = ? OR \`userId\` = ? LIMIT 1`,
-            [id, String(id)]
+            'SELECT `userId` FROM `coach_applications` WHERE `id` = ? LIMIT 1',
+            [targetId]
           );
           if (appRows && appRows.length > 0) {
             targetUid = appRows[0].userId;
           }
         }
 
-        if (id !== undefined) {
-          await dbPool.query(`UPDATE \`coach_applications\` SET \`status\` = ? WHERE \`id\` = ? OR \`userId\` = ?`, [
-            statusVal,
-            id,
-            String(id)
-          ]);
+        // Update the application status
+        if (targetId) {
+          await dbPool.query('UPDATE `coach_applications` SET `status` = ? WHERE `id` = ?', [statusVal, targetId]);
         } else if (targetUid) {
-          await dbPool.query(`UPDATE \`coach_applications\` SET \`status\` = ? WHERE \`userId\` = ?`, [
-            statusVal,
-            targetUid
-          ]);
+          await dbPool.query('UPDATE `coach_applications` SET `status` = ? WHERE `userId` = ?', [statusVal, targetUid]);
         }
 
+        // If approved, set user role to 'coach'
         if (statusVal === 'approved' && targetUid) {
-          await dbPool.query(`UPDATE \`users\` SET \`role\` = 'coach' WHERE \`uid\` = ?`, [targetUid]);
+          await dbPool.query("UPDATE `users` SET `role` = 'coach' WHERE `uid` = ?", [targetUid]);
         }
 
         return res.json({
           success: true,
-          message: `Coach application marked as ${statusVal.toUpperCase()}${statusVal === 'approved' && targetUid ? ` and user '${targetUid}' role set to 'coach'` : ''}.`
+          message: `Coach application marked as ${statusVal.toUpperCase()}${statusVal === 'approved' && targetUid ? ` and user role set to 'coach'` : ''}.`
         });
       }
 

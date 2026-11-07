@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { formController } from '../controllers/formController.js';
 import { adminController } from '../controllers/adminController.js';
+import { aiController } from '../controllers/aiController.js';
 
 const router = Router();
 
@@ -22,5 +23,10 @@ router.post('/admin/quick-action', adminController.handleQuickAction);
 router.post('/admin/media-audit/scan', adminController.scanMediaHealth);
 router.post('/admin/media-audit/fix', adminController.fixMediaUrl);
 router.post('/admin/media-audit/test-url', adminController.testMediaUrl);
+
+// AI Agent Endpoints
+router.post('/admin/ai/generate-post', aiController.generateAndPublishPost);
+router.post('/admin/ai/generate-likes', aiController.generateDummyLikes);
+router.post('/admin/ai/generate-comments', aiController.generateDummyComments);
 
 export default router;
