@@ -6,11 +6,11 @@
       <div class="footer-brand">
         <a href="/" class="logo">
           <% if (locals.logoUrl && locals.logoUrl.trim().length > 0) { %>
-            <img src="<%= locals.logoUrl %>" alt="<%= locals.brandName || 'Beyounge' %>" class="logo-custom-img" style="height: 32px; width: auto; max-width: 130px; object-fit: contain;">
+            <img src="<%= locals.logoUrl %>" alt="<%= locals.brandName || 'Beyounge' %>" class="logo-custom-img" style="height: 34px; width: auto; max-width: 140px; object-fit: contain;">
           <% } else { %>
             <div class="logo-icon"><%= (locals.brandName || 'B').charAt(0).toUpperCase() %></div>
+            <span style="color: #FFFFFF;"><%= locals.brandName || 'Beyounge' %></span>
           <% } %>
-          <span style="color: #FFFFFF;"><%= locals.brandName || 'Beyounge' %></span>
         </a>
         <p style="font-size: 0.925rem; color: #94A3B8; max-width: 320px; line-height: 1.6;">
           <%= locals.tagline || 'Train Smarter. Live Stronger. AI-powered workouts, nutrition tracking, wellness analytics, and fitness community.' %>
