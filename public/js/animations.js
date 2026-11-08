@@ -26,6 +26,16 @@ function initScrollReveal() {
   }, observerOptions);
 
   elements.forEach(el => observer.observe(el));
+
+  // Fallback: Reveal all elements after 1.5 seconds if they haven't been revealed yet
+  // This prevents blank pages if IntersectionObserver fails to trigger on some devices
+  setTimeout(() => {
+    elements.forEach(el => {
+      if (!el.classList.contains('visible')) {
+        el.classList.add('visible');
+      }
+    });
+  }, 1500);
 }
 
 function initCounters() {
