@@ -3,7 +3,7 @@ import { legalController } from '../controllers/legalController.js';
 
 const router = Router();
 
-router.get(['/privacy-policy', '/privacy'], legalController.getPrivacyPolicy);
+router.get(['/privacy-policy', '/privacy', '/privacy-policy-v2'], legalController.getPrivacyPolicy);
 router.get('/terms-and-conditions', legalController.getTerms);
 router.get('/terms-of-service', legalController.getTermsOfService);
 router.get('/data-deletion', legalController.getDataDeletion);

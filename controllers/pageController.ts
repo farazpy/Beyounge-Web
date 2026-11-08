@@ -45,7 +45,7 @@ function formatJoinedDate(timestamp: any): string {
 export const RESERVED_SLUGS = new Set([
   'admin', 'feed', 'post', 'features', 'benefits', 'ai-coach', 'about', 'contact', 'faq',
   'blog', 'download', 'changelog', 'careers', 'press-kit', 'sitemap',
-  'privacy-policy', 'privacy', 'terms-and-conditions', 'terms-of-service', 'data-deletion',
+  'privacy-policy', 'privacy', 'privacy-policy-v2', 'terms-and-conditions', 'terms-of-service', 'data-deletion',
   'cookie-policy', 'refund-policy', 'community-guidelines', 'accessibility-statement',
   'api', 'robots.txt', 'sitemap.xml', 'favicon.ico', 'images', 'css', 'js', 'assets'
 ]);
